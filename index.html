@@ -2298,9 +2298,23 @@ function renderAnalysis(container) {
 
     const isAdmin = loggedInUser.role === 'Admin';
     
-    // Get unique units and workplaces
-    const units = [...new Set(allEmployees.map(e => e.Unit).filter(Boolean))];
-    const allWorkplaces = [...new Set(allEmployees.map(e => e.WorkPlace).filter(Boolean))];
+    // Get unique units with counts
+    const unitMap = {};
+    allEmployees.forEach(e => {
+        if (e.Unit) {
+            unitMap[e.Unit] = (unitMap[e.Unit] || 0) + 1;
+        }
+    });
+    const units = Object.keys(unitMap).sort();
+    
+    // Get unique workplaces with counts
+    const workplaceMap = {};
+    allEmployees.forEach(e => {
+        if (e.WorkPlace) {
+            workplaceMap[e.WorkPlace] = (workplaceMap[e.WorkPlace] || 0) + 1;
+        }
+    });
+    const allWorkplaces = Object.keys(workplaceMap).sort();
     
     // Get first unit for auto-selection
     const firstUnit = units.length > 0 ? units[0] : '';
@@ -2309,6 +2323,21 @@ function renderAnalysis(container) {
     let ftaCount = allEmployees.filter(e => e.Type === 'FTA').length;
     let vouCount = allEmployees.filter(e => e.Type === 'VOU').length;
     let cnfCount = allEmployees.filter(e => e.Type === 'CNF').length;
+    
+    // Build unit options with counts
+    let unitOptions = '<option value="">All Units (' + allEmployees.length + ')</option>';
+    units.forEach(u => {
+        const count = unitMap[u] || 0;
+        const selected = u === firstUnit ? 'selected' : '';
+        unitOptions += `<option value="${escapeHtml(u)}" ${selected}>${escapeHtml(u)} (${count})</option>`;
+    });
+    
+    // Build workplace options with counts
+    let workplaceOptions = '<option value="">All Workplaces (' + allWorkplaces.length + ')</option>';
+    allWorkplaces.forEach(w => {
+        const count = workplaceMap[w] || 0;
+        workplaceOptions += `<option value="${escapeHtml(w)}">${escapeHtml(w)} (${count})</option>`;
+    });
     
     let html = `
         <div class="section-header">
@@ -2326,15 +2355,13 @@ function renderAnalysis(container) {
             <div class="filter-group">
                 <label><i class="fa fa-building"></i> Unit</label>
                 <select id="analysisUnitFilter" onchange="onUnitChange()">
-                    <option value="">All Units</option>
-                    ${units.sort().map(u => `<option value="${escapeHtml(u)}" ${u === firstUnit ? 'selected' : ''}>${escapeHtml(u)}</option>`).join('')}
+                    ${unitOptions}
                 </select>
             </div>
             <div class="filter-group">
                 <label><i class="fa fa-map-marker"></i> Workplace</label>
                 <select id="analysisWorkplaceFilter" onchange="applyAnalysisFilters()">
-                    <option value="">All Workplaces</option>
-                    ${allWorkplaces.sort().map(w => `<option value="${escapeHtml(w)}">${escapeHtml(w)}</option>`).join('')}
+                    ${workplaceOptions}
                 </select>
             </div>
             <div class="filter-group">
@@ -2509,9 +2536,15 @@ function onUnitChange() {
             applyAnalysisFilters();
         }, 100);
     } else {
-        // If "All Units" selected, show all workplaces
-        const allWorkplaces = [...new Set(allEmployees.map(e => e.WorkPlace).filter(Boolean))];
-        populateWorkplaceDropdown(allWorkplaces);
+        // If "All Units" selected, show all workplaces with counts
+        const workplaceMap = {};
+        allEmployees.forEach(e => {
+            if (e.WorkPlace) {
+                workplaceMap[e.WorkPlace] = (workplaceMap[e.WorkPlace] || 0) + 1;
+            }
+        });
+        const workplaces = Object.keys(workplaceMap).sort();
+        populateWorkplaceDropdownWithCounts(workplaces, workplaceMap);
         workplaceFilter.value = '';
         applyAnalysisFilters();
     }
@@ -2526,23 +2559,67 @@ function onUnitChange() {
 }
 
 function populateWorkplacesForUnit(unit) {
-    // Get workplaces for the selected unit
-    const workplaces = [...new Set(
-        allEmployees
-            .filter(e => e.Unit === unit && e.WorkPlace)
-            .map(e => e.WorkPlace)
-            .filter(Boolean)
-    )];
+    if (!unit) {
+        // If no unit, show all workplaces with counts
+        const workplaceMap = {};
+        allEmployees.forEach(e => {
+            if (e.WorkPlace) {
+                workplaceMap[e.WorkPlace] = (workplaceMap[e.WorkPlace] || 0) + 1;
+            }
+        });
+        const workplaces = Object.keys(workplaceMap).sort();
+        populateWorkplaceDropdownWithCounts(workplaces, workplaceMap);
+        return;
+    }
+    
+    // Get workplaces for the selected unit with counts
+    const workplaceMap = {};
+    allEmployees
+        .filter(e => e.Unit === unit && e.WorkPlace)
+        .forEach(e => {
+            workplaceMap[e.WorkPlace] = (workplaceMap[e.WorkPlace] || 0) + 1;
+        });
+    
+    const workplaces = Object.keys(workplaceMap).sort();
     
     const select = document.getElementById('analysisWorkplaceFilter');
-    const currentValue = select.value;
+    if (!select) return;
     
-    // Clear and repopulate
-    select.innerHTML = '<option value="">All Workplaces</option>';
-    workplaces.sort().forEach(w => {
+    // Clear and repopulate with counts
+    const totalForUnit = allEmployees.filter(e => e.Unit === unit).length;
+    select.innerHTML = `<option value="">All Workplaces (${totalForUnit})</option>`;
+    workplaces.forEach(w => {
+        const count = workplaceMap[w] || 0;
         const option = document.createElement('option');
         option.value = w;
-        option.textContent = w;
+        option.textContent = w + ' (' + count + ')';
+        select.appendChild(option);
+    });
+    
+    // Auto-select first workplace if available
+    if (select.options.length > 1) {
+        select.value = select.options[1].value;
+    } else {
+        select.value = '';
+    }
+}
+
+function populateWorkplaceDropdownWithCounts(workplaces, workplaceMap) {
+    const select = document.getElementById('analysisWorkplaceFilter');
+    if (!select) return;
+    
+    const currentValue = select.value;
+    
+    // Clear existing options
+    const totalWorkplaces = workplaces.length;
+    select.innerHTML = `<option value="">All Workplaces (${totalWorkplaces})</option>`;
+    
+    // Sort workplaces alphabetically
+    workplaces.sort().forEach(w => {
+        const count = workplaceMap[w] || 0;
+        const option = document.createElement('option');
+        option.value = w;
+        option.textContent = w + ' (' + count + ')';
         select.appendChild(option);
     });
     
@@ -2555,8 +2632,9 @@ function populateWorkplacesForUnit(unit) {
             break;
         }
     }
+    
+    // If current selection not found and there are workplaces, select the first one
     if (!found && select.options.length > 1) {
-        // Select first workplace
         select.value = select.options[1].value;
     }
 }
