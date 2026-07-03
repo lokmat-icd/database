@@ -2307,7 +2307,7 @@ function renderAnalysis(container) {
     });
     const units = Object.keys(unitMap).sort();
     
-    // Get unique workplaces with counts
+    // Get unique workplaces with counts (ALL workplaces)
     const workplaceMap = {};
     allEmployees.forEach(e => {
         if (e.WorkPlace) {
@@ -2316,24 +2316,20 @@ function renderAnalysis(container) {
     });
     const allWorkplaces = Object.keys(workplaceMap).sort();
     
-    // Get first unit for auto-selection
-    const firstUnit = units.length > 0 ? units[0] : '';
-    
     // Calculate counts
     let ftaCount = allEmployees.filter(e => e.Type === 'FTA').length;
     let vouCount = allEmployees.filter(e => e.Type === 'VOU').length;
     let cnfCount = allEmployees.filter(e => e.Type === 'CNF').length;
     
-    // Build unit options with counts
-    let unitOptions = '<option value="">All Units (' + allEmployees.length + ')</option>';
+    // Build unit options with counts - "All Units" selected by default
+    let unitOptions = '<option value="" selected>All Units (' + allEmployees.length + ')</option>';
     units.forEach(u => {
         const count = unitMap[u] || 0;
-        const selected = u === firstUnit ? 'selected' : '';
-        unitOptions += `<option value="${escapeHtml(u)}" ${selected}>${escapeHtml(u)} (${count})</option>`;
+        unitOptions += `<option value="${escapeHtml(u)}">${escapeHtml(u)} (${count})</option>`;
     });
     
-    // Build workplace options with counts
-    let workplaceOptions = '<option value="">All Workplaces (' + allWorkplaces.length + ')</option>';
+    // Build workplace options with counts - "All Workplaces" selected by default
+    let workplaceOptions = '<option value="" selected>All Workplaces (' + allWorkplaces.length + ')</option>';
     allWorkplaces.forEach(w => {
         const count = workplaceMap[w] || 0;
         workplaceOptions += `<option value="${escapeHtml(w)}">${escapeHtml(w)} (${count})</option>`;
@@ -2396,7 +2392,7 @@ function renderAnalysis(container) {
             <div class="tw-container" id="twContainer">
                 <div class="tw-left" id="twLeft">
                     <div id="teamWorkloadContent">
-                        <span style="color:#999;">Loading workload data...</span>
+                        <span style="color:#999;">Select a workplace to view workload</span>
                     </div>
                 </div>
                 <div class="tw-right" id="twRight">
@@ -2466,7 +2462,7 @@ function renderAnalysis(container) {
                     </div>
                 </div>
                 <textarea class="cup-textarea" id="cupTextarea" 
-                          placeholder="No common projects for this unit..." 
+                          placeholder="Select a unit to view common projects..." 
                           oninput="onCUPChange()"
                           disabled></textarea>
             </div>
@@ -2488,29 +2484,13 @@ function renderAnalysis(container) {
     // Store current analysis employees for filtering
     window._analysisEmployees = [...allEmployees];
     
-    // Auto-select first unit and populate workplaces
-    const unitFilter = document.getElementById('analysisUnitFilter');
-    const workplaceFilter = document.getElementById('analysisWorkplaceFilter');
+    // Apply initial filters (shows all employees since "All Units" and "All Workplaces" are selected)
+    applyAnalysisFilters();
     
-    if (unitFilter && firstUnit) {
-        unitFilter.value = firstUnit;
-        // Populate workplaces for the first unit
-        populateWorkplacesForUnit(firstUnit);
-        
-        // After workplaces are populated, apply filters
-        setTimeout(() => {
-            applyAnalysisFilters();
-            
-            // Load Common Unit Projects for first unit (Admin only)
-            if (isAdmin && firstUnit) {
-                setTimeout(() => {
-                    updateCommonUnitProjects(firstUnit);
-                }, 300);
-            }
-        }, 200);
-    } else {
-        // If no unit, apply filters anyway
-        applyAnalysisFilters();
+    // For Admin: Load Common Unit Projects for "All Units" (hide it initially)
+    if (isAdmin) {
+        const container = document.getElementById('analysisCommonUnitProjects');
+        if (container) container.classList.remove('visible');
     }
 }
 
@@ -2518,25 +2498,23 @@ function onUnitChange() {
     const unit = document.getElementById('analysisUnitFilter').value;
     const workplaceFilter = document.getElementById('analysisWorkplaceFilter');
     
-    // Clear and repopulate workplaces
     if (unit) {
+        // A specific unit is selected - populate workplaces for this unit
         populateWorkplacesForUnit(unit);
-        // Auto-select first workplace
+        
+        // Auto-select "All Workplaces" for this unit
         setTimeout(() => {
-            const options = workplaceFilter.options;
-            if (options.length > 1) {
-                // Select first actual workplace (skip "All Workplaces")
-                const firstWorkplace = options[1]?.value || '';
-                if (firstWorkplace) {
-                    workplaceFilter.value = firstWorkplace;
-                }
-            } else {
-                workplaceFilter.value = '';
-            }
+            // Set to "All Workplaces" option (first option)
+            workplaceFilter.value = '';
             applyAnalysisFilters();
         }, 100);
+        
+        // Load Common Unit Projects for this unit (Admin only)
+        if (loggedInUser.role === 'Admin') {
+            updateCommonUnitProjects(unit);
+        }
     } else {
-        // If "All Units" selected, show all workplaces with counts
+        // "All Units" selected - show all workplaces
         const workplaceMap = {};
         allEmployees.forEach(e => {
             if (e.WorkPlace) {
@@ -2545,16 +2523,16 @@ function onUnitChange() {
         });
         const workplaces = Object.keys(workplaceMap).sort();
         populateWorkplaceDropdownWithCounts(workplaces, workplaceMap);
+        
+        // Select "All Workplaces"
         workplaceFilter.value = '';
         applyAnalysisFilters();
-    }
-    
-    // Update Common Unit Projects
-    if (unit && loggedInUser.role === 'Admin') {
-        updateCommonUnitProjects(unit);
-    } else if (loggedInUser.role === 'Admin') {
-        const container = document.getElementById('analysisCommonUnitProjects');
-        if (container) container.classList.remove('visible');
+        
+        // Hide Common Unit Projects
+        if (loggedInUser.role === 'Admin') {
+            const container = document.getElementById('analysisCommonUnitProjects');
+            if (container) container.classList.remove('visible');
+        }
     }
 }
 
@@ -2581,12 +2559,12 @@ function populateWorkplacesForUnit(unit) {
         });
     
     const workplaces = Object.keys(workplaceMap).sort();
+    const totalForUnit = allEmployees.filter(e => e.Unit === unit).length;
     
     const select = document.getElementById('analysisWorkplaceFilter');
     if (!select) return;
     
-    // Clear and repopulate with counts
-    const totalForUnit = allEmployees.filter(e => e.Unit === unit).length;
+    // Clear and repopulate with "All Workplaces" as first option
     select.innerHTML = `<option value="">All Workplaces (${totalForUnit})</option>`;
     workplaces.forEach(w => {
         const count = workplaceMap[w] || 0;
@@ -2596,12 +2574,8 @@ function populateWorkplacesForUnit(unit) {
         select.appendChild(option);
     });
     
-    // Auto-select first workplace if available
-    if (select.options.length > 1) {
-        select.value = select.options[1].value;
-    } else {
-        select.value = '';
-    }
+    // Select "All Workplaces" by default
+    select.value = '';
 }
 
 function populateWorkplaceDropdownWithCounts(workplaces, workplaceMap) {
@@ -2639,32 +2613,6 @@ function populateWorkplaceDropdownWithCounts(workplaces, workplaceMap) {
     }
 }
 
-function populateWorkplaceDropdown(workplaces) {
-    const select = document.getElementById('analysisWorkplaceFilter');
-    const currentValue = select.value;
-    
-    select.innerHTML = '<option value="">All Workplaces</option>';
-    workplaces.sort().forEach(w => {
-        const option = document.createElement('option');
-        option.value = w;
-        option.textContent = w;
-        select.appendChild(option);
-    });
-    
-    // Try to keep current selection
-    let found = false;
-    for (let i = 0; i < select.options.length; i++) {
-        if (select.options[i].value === currentValue) {
-            select.value = currentValue;
-            found = true;
-            break;
-        }
-    }
-    if (!found && select.options.length > 1) {
-        select.value = select.options[1].value;
-    }
-}
-
 // ============================================================
 // ANALYSIS FILTERS
 // ============================================================
@@ -2677,15 +2625,22 @@ function applyAnalysisFilters() {
     
     let filtered = window._analysisEmployees || allEmployees;
     
+    // Apply unit filter (if a specific unit is selected)
     if (unit) {
         filtered = filtered.filter(e => e.Unit === unit);
     }
+    
+    // Apply workplace filter (if a specific workplace is selected)
     if (workplace) {
         filtered = filtered.filter(e => e.WorkPlace === workplace);
     }
+    
+    // Apply type filter
     if (analysisTypeFilter !== 'all') {
         filtered = filtered.filter(e => e.Type === analysisTypeFilter);
     }
+    
+    // Apply search filter
     if (searchTerm) {
         filtered = filtered.filter(e => e.Name.toLowerCase().includes(searchTerm));
     }
@@ -2719,34 +2674,15 @@ function applyAnalysisFilters() {
     
     // Update workload bars based on selected workplace
     if (workplace) {
+        // A specific workplace is selected - show its data
         updateTeamWorkload(workplace);
         updateWPOWData(workplace);
-    } else if (filtered.length > 0) {
-        const firstWorkplace = filtered[0].WorkPlace;
-        if (firstWorkplace) {
-            // Also update the workplace filter to show the selected workplace
-            const workplaceFilter = document.getElementById('analysisWorkplaceFilter');
-            if (workplaceFilter) {
-                // Check if this workplace exists in the dropdown
-                let found = false;
-                for (let i = 0; i < workplaceFilter.options.length; i++) {
-                    if (workplaceFilter.options[i].value === firstWorkplace) {
-                        workplaceFilter.value = firstWorkplace;
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found && workplaceFilter.options.length > 1) {
-                    workplaceFilter.value = workplaceFilter.options[1].value;
-                }
-            }
-            // Now update with the actual selected workplace
-            const selectedWorkplace = document.getElementById('analysisWorkplaceFilter').value;
-            if (selectedWorkplace) {
-                updateTeamWorkload(selectedWorkplace);
-                updateWPOWData(selectedWorkplace);
-            }
-        }
+    } else {
+        // "All Workplaces" is selected - hide workload bars or show summary
+        const teamBar = document.getElementById('analysisTeamWorkloadBar');
+        const wpowBar = document.getElementById('analysisWPOWBar');
+        if (teamBar) teamBar.classList.remove('visible');
+        if (wpowBar) wpowBar.classList.remove('visible');
     }
 }
 
