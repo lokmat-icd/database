@@ -1,0 +1,5027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICD Unified Dashboard</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            background: #f0f2f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+        }
+        .container-fluid { max-width: 1600px; margin: 0 auto; }
+
+        /* LOGIN OVERLAY */
+        #loginOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #loginOverlay .login-box {
+            background: white;
+            padding: 40px 50px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            max-width: 420px;
+            width: 100%;
+        }
+        #loginOverlay .login-box .logo {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        #loginOverlay .login-box .logo img {
+            width: 100%;
+            height: auto;
+            max-height: 80px;
+            object-fit: cover;
+            object-position: center;
+            border-radius: 8px;
+        }
+        #loginOverlay .login-box h3 {
+            text-align: center;
+            color: #1a3a6b;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        #loginOverlay .login-box p.sub {
+            text-align: center;
+            color: #888;
+            font-size: 13px;
+            margin-bottom: 25px;
+        }
+        #loginOverlay .login-box .form-group {
+            margin-bottom: 18px;
+        }
+        #loginOverlay .login-box .form-group label {
+            font-weight: 600;
+            font-size: 13px;
+            color: #555;
+        }
+        #loginOverlay .login-box .form-group input {
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            padding: 10px 14px;
+            font-size: 14px;
+            width: 100%;
+        }
+        #loginOverlay .login-box .form-group input:focus {
+            outline: none;
+            border-color: #2a5298;
+            box-shadow: 0 0 0 2px rgba(42,82,152,0.15);
+        }
+        #loginOverlay .login-box .login-btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #1a3a6b 0%, #2a5298 100%);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        #loginOverlay .login-box .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(42,82,152,0.3);
+        }
+        #loginOverlay .login-box .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        #loginOverlay .login-box .login-error {
+            color: #dc3545;
+            font-size: 13px;
+            text-align: center;
+            margin-top: 12px;
+            display: none;
+        }
+        #loginOverlay .login-box .login-error.show { display: block; }
+
+        /* HEADER */
+        .header {
+            background: linear-gradient(135deg, #1a3a6b 0%, #2a5298 100%);
+            color: white;
+            padding: 12px 22px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+        .header-row1 {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px 15px;
+            min-height: 48px;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .header-logo {
+            height: 42px;
+            width: auto;
+            object-fit: contain;
+        }
+        .header-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255,255,255,0.1);
+            padding: 4px 12px 4px 16px;
+            border-radius: 30px;
+            flex-shrink: 0;
+        }
+        .header-user .user-name {
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .header-user .user-role {
+            font-size: 10px;
+            opacity: 0.7;
+        }
+        .header-user .logout-header-btn {
+            background: rgba(255,255,255,0.15);
+            border: none;
+            color: white;
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .header-user .logout-header-btn:hover {
+            background: rgba(255,255,255,0.25);
+        }
+
+        /* HEADER COUNTS */
+        .header-counts {
+            display: flex;
+            align-items: center;
+            gap: 8px 14px;
+            flex-wrap: wrap;
+            flex: 1;
+            justify-content: center;
+        }
+        .header-counts .count-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(255,255,255,0.1);
+            padding: 3px 12px 3px 10px;
+            border-radius: 18px;
+            font-size: 12px;
+            font-weight: 500;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        .header-counts .count-chip .count-label {
+            opacity: 0.7;
+            font-weight: 400;
+            font-size: 11px;
+        }
+        .header-counts .count-chip .count-value {
+            font-weight: 700;
+            font-size: 14px;
+        }
+        .header-counts .count-chip.total .count-value { color: #7eb8ff; }
+        .header-counts .count-chip.fta .count-value { color: #7eb8ff; }
+        .header-counts .count-chip.vou .count-value { color: #ffb74d; }
+        .header-counts .count-chip.cnf .count-value { color: #81c784; }
+        .header-counts .count-chip.icd-head .count-value { color: #ce93d8; }
+        .header-counts .count-divider {
+            color: rgba(255,255,255,0.15);
+            font-size: 14px;
+            font-weight: 100;
+        }
+
+        /* HEADER SKILL STRENGTH */
+        .header-row2 {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255,255,255,0.12);
+            margin-top: 6px;
+            flex-wrap: wrap;
+        }
+        .header-stats {
+            display: flex;
+            gap: 8px 16px;
+            background: rgba(255,255,255,0.06);
+            padding: 5px 16px;
+            border-radius: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+            width: 100%;
+        }
+        .header-stats .stat-label {
+            font-size: 12px;
+            opacity: 0.8;
+            font-weight: 600;
+            margin-right: 4px;
+            letter-spacing: 0.3px;
+        }
+        .header-stats .skill-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            font-size: 12px;
+            font-weight: 500;
+            background: rgba(255,255,255,0.1);
+            padding: 2px 12px 2px 8px;
+            border-radius: 18px;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        .header-stats .skill-item .skill-name {
+            font-weight: 500;
+            font-size: 12px;
+        }
+        .header-stats .skill-item .skill-count {
+            font-weight: 700;
+            background: rgba(255,255,255,0.15);
+            padding: 0 6px;
+            border-radius: 10px;
+            font-size: 11px;
+        }
+
+        /* TABS */
+        .tabs-section {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            margin-bottom: 16px;
+            padding: 6px 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            border-bottom: 3px solid #e8ecf1;
+        }
+        .tab-btn {
+            padding: 10px 20px;
+            border: none;
+            background: transparent;
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            border-radius: 6px 6px 0 0;
+            transition: all 0.2s;
+            position: relative;
+        }
+        .tab-btn:hover {
+            background: #f0f2f5;
+            color: #1a3a6b;
+        }
+        .tab-btn.active {
+            color: #1a3a6b;
+            background: #e8ecf1;
+        }
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #2a5298;
+        }
+
+        /* TAB CONTENT */
+        .tab-content {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            min-height: 400px;
+            overflow-x: auto;
+        }
+
+        /* TABLES */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        .data-table th {
+            background: #1a3a6b;
+            color: white;
+            padding: 10px 12px;
+            text-align: left;
+            font-weight: 600;
+            white-space: nowrap;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .data-table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid #e8ecf1;
+            vertical-align: middle;
+        }
+        .data-table tr:hover td {
+            background: #e8f0fe;
+        }
+        .data-table .total-row {
+            background: #dce3ed !important;
+            font-weight: 700;
+        }
+        .data-table .total-row td {
+            border-top: 2px solid #1a3a6b;
+        }
+        .data-table .editable-input {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 12px;
+            width: 100%;
+            min-width: 120px;
+            background: white;
+            transition: border-color 0.2s;
+        }
+        .data-table .editable-input:focus {
+            outline: none;
+            border-color: #2a5298;
+            box-shadow: 0 0 0 2px rgba(42,82,152,0.1);
+        }
+        .data-table .editable-input.text-input {
+            min-width: 140px;
+        }
+        .data-table .editable-input.changed {
+            border-color: #ff9800;
+            background: #fff8e1;
+        }
+        .data-table .text-cnf {
+            color: #dc3545;
+            font-weight: 600;
+        }
+        /* Alternate row colors - increased contrast */
+        .data-table tbody tr:nth-child(even) {
+            background-color: #f0f4fa;
+        }
+        .data-table tbody tr:nth-child(odd) {
+            background-color: #ffffff;
+        }
+        /* For total row override */
+        .data-table tbody tr.total-row {
+            background-color: #dce3ed !important;
+        }
+
+        .table-responsive-wrapper {
+            max-height: 600px;
+            overflow-y: auto;
+            border-radius: 8px;
+            border: 1px solid #e8ecf1;
+        }
+
+        /* SECTION HEADERS */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .section-header h3 {
+            margin: 0;
+            color: #1a3a6b;
+            font-weight: 600;
+            font-size: 18px;
+        }
+        .section-header .totals-box {
+            display: flex;
+            gap: 20px;
+            background: #f0f2f5;
+            padding: 6px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+        .section-header .totals-box span {
+            font-weight: 600;
+        }
+        .section-header .totals-box .num {
+            color: #1a3a6b;
+            font-size: 16px;
+        }
+        .section-header .summary-totals {
+            font-size: 12px;
+            color: #555;
+            background: #f0f2f5;
+            padding: 4px 14px;
+            border-radius: 6px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 14px;
+        }
+        .section-header .summary-totals span {
+            white-space: nowrap;
+        }
+        .section-header .summary-totals strong {
+            color: #1a3a6b;
+        }
+
+        /* MODEL STATS BAR - 2 Column Layout */
+        .model-stats-container {
+            display: flex;
+            gap: 20px;
+            background: #f0f4fa;
+            padding: 12px 18px;
+            border-radius: 8px;
+            border: 1px solid #e0e6ef;
+            margin-bottom: 16px;
+            align-items: stretch;
+        }
+        .model-stats-left {
+            flex: 0 0 28%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 6px;
+            padding-right: 15px;
+            border-right: 2px solid #dce3ed;
+        }
+        .model-stats-left .stat-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a3a6b;
+            margin-bottom: 4px;
+            letter-spacing: 0.3px;
+        }
+        .model-stats-left .model-stat-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+            font-weight: 500;
+            background: white;
+            padding: 4px 14px 4px 12px;
+            border-radius: 18px;
+            border: 1px solid #d0d8e4;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .model-stats-left .model-stat-item .stat-name {
+            font-weight: 500;
+            font-size: 12px;
+            color: #444;
+        }
+        .model-stats-left .model-stat-item .stat-count {
+            font-weight: 700;
+            background: #2a5298;
+            color: white;
+            padding: 0 10px;
+            border-radius: 10px;
+            font-size: 13px;
+            line-height: 22px;
+        }
+        .model-stats-left .model-stat-item.existing .stat-count { background: #1a3a6b; }
+        .model-stats-left .model-stat-item.model-a .stat-count { background: #2a5298; }
+        .model-stats-left .model-stat-item.model-b .stat-count { background: #2a5298; }
+        .model-stats-left .model-stat-item.model-c .stat-count { background: #2a5298; }
+        
+        .model-stats-right {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            gap: 5px;
+            padding-left: 5px;
+        }
+        .chart-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            min-width: 0;
+        }
+        .chart-item canvas {
+            max-width: 130px;
+            max-height: 130px;
+            width: 100%;
+            height: auto;
+        }
+        .chart-item .chart-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #1a3a6b;
+            margin-top: 4px;
+            text-align: center;
+        }
+        .chart-item .chart-value {
+			font-size: 18px;
+			color: #555;
+			text-align: center;
+			font-weight: 700;
+		}
+
+        @media (max-width: 768px) {
+            .model-stats-container {
+                flex-direction: column;
+            }
+            .model-stats-left {
+                flex: 1;
+                border-right: none;
+                border-bottom: 2px solid #dce3ed;
+                padding-right: 0;
+                padding-bottom: 10px;
+                margin-bottom: 10px;
+            }
+            .model-stats-right {
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+            .chart-item {
+                flex: 0 0 45%;
+            }
+            .chart-item canvas {
+                max-width: 100px;
+                max-height: 100px;
+            }
+        }
+        @media (max-width: 480px) {
+            .chart-item {
+                flex: 0 0 100%;
+            }
+            .chart-item canvas {
+                max-width: 120px;
+                max-height: 120px;
+            }
+        }
+
+        /* PUBLICATION UNITS - Collapsible */
+        .unit-publication {
+            margin-bottom: 24px;
+            border: 1px solid #e8ecf1;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .unit-publication .unit-header {
+            background: #f0f2f5;
+            padding: 10px 16px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: #1a3a6b;
+            transition: background 0.2s;
+        }
+        .unit-publication .unit-header:hover {
+            background: #e8ecf1;
+        }
+        .unit-publication .unit-header .unit-totals {
+            font-weight: 400;
+            font-size: 13px;
+            color: #555;
+        }
+        .unit-publication .unit-header .unit-totals span {
+            margin-left: 12px;
+        }
+        .unit-publication .unit-header .unit-totals .num {
+            font-weight: 700;
+            color: #1a3a6b;
+        }
+        .unit-publication .unit-body {
+            padding: 0 16px 16px;
+            display: none;
+        }
+        .unit-publication .unit-body.open {
+            display: block;
+        }
+        .unit-publication .unit-body .data-table {
+            font-size: 12px;
+        }
+        .unit-publication .unit-body .data-table th {
+            background: #2a5298;
+        }
+        .unit-publication .unit-body .data-table td {
+            padding: 6px 10px;
+        }
+        .unit-publication .unit-body .data-table .total-row td {
+            background: #dce3ed;
+            font-weight: 700;
+        }
+        .pub-collapse-icon {
+            transition: transform 0.2s;
+            display: inline-block;
+        }
+        .pub-collapse-icon.open {
+            transform: rotate(90deg);
+        }
+
+        /* EMPLOYEE UNITS - Collapsible for Lists */
+        .unit-employee {
+            margin-bottom: 24px;
+            border: 1px solid #e8ecf1;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .unit-employee .unit-header {
+            background: #f0f2f5;
+            padding: 10px 16px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: #1a3a6b;
+            transition: background 0.2s;
+        }
+        .unit-employee .unit-header:hover {
+            background: #e8ecf1;
+        }
+        .unit-employee .unit-header .unit-totals {
+            font-weight: 400;
+            font-size: 13px;
+            color: #555;
+        }
+        .unit-employee .unit-header .unit-totals span {
+            margin-left: 12px;
+        }
+        .unit-employee .unit-header .unit-totals .num {
+            font-weight: 700;
+            color: #1a3a6b;
+        }
+        .unit-employee .unit-body {
+            padding: 0 16px 16px;
+            display: none;
+        }
+        .unit-employee .unit-body.open {
+            display: block;
+        }
+        .unit-employee .unit-body .data-table {
+            font-size: 12px;
+        }
+        .unit-employee .unit-body .data-table th {
+            background: #2a5298;
+        }
+        .unit-employee .unit-body .data-table td {
+            padding: 6px 10px;
+        }
+        .unit-employee .unit-body .data-table .text-cnf {
+            color: #dc3545;
+            font-weight: 600;
+        }
+
+        /* EMPLOYEE TABLE - 3 Column Layout */
+        .employee-table th {
+            text-align: center;
+            font-size: 13px;
+            padding: 10px 12px;
+        }
+        .employee-table td {
+            text-align: center;
+            padding: 6px 10px;
+            vertical-align: middle;
+        }
+
+        /* FILTERS */
+        .filters-section {
+            background: white;
+            padding: 14px 18px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            margin-bottom: 18px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px 20px;
+        }
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .filter-group label {
+            font-weight: 600;
+            font-size: 12px;
+            color: #444;
+            margin: 0;
+        }
+        .filter-group select {
+            padding: 5px 10px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            background: white;
+            font-size: 12px;
+            min-width: 120px;
+        }
+        .filter-group select:focus {
+            outline: none;
+            border-color: #2a5298;
+            box-shadow: 0 0 0 2px rgba(42,82,152,0.15);
+        }
+        .type-filters { display: flex; gap: 4px; flex-wrap: wrap; }
+        .type-btn {
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+            background: white;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .type-btn:hover { background: #e8ecf1; }
+        .type-btn.active { background: #2a5298; color: white; border-color: #2a5298; }
+        .type-count { font-size: 10px; color: #666; margin-left: 2px; }
+        .type-btn.active .type-count { color: rgba(255,255,255,0.7); }
+        .search-box {
+            padding: 5px 12px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            font-size: 12px;
+            min-width: 160px;
+        }
+        .search-box:focus {
+            outline: none;
+            border-color: #2a5298;
+            box-shadow: 0 0 0 2px rgba(42,82,152,0.15);
+        }
+
+        /* STATS BAR */
+        .stats-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 24px;
+            background: white;
+            padding: 10px 18px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            margin-bottom: 18px;
+            align-items: center;
+        }
+        .stats-bar .stat-item { font-size: 12px; color: #555; }
+        .stats-bar .stat-item strong { color: #1a3a6b; font-size: 14px; }
+        .stats-bar .stat-divider { color: #ddd; }
+        .stats-bar .stat-expertise {
+            font-size: 12px;
+            color: #555;
+        }
+        .stats-bar .stat-expertise strong { color: #1a3a6b; font-size: 13px; }
+        .stats-bar .expertise-tag-stat {
+            background: #e8f0fe;
+            color: #1a3a6b;
+            padding: 1px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+            margin: 0 2px;
+        }
+
+        /* EMPLOYEE GRID */
+        .employee-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 16px;
+        }
+
+        /* EMPLOYEE CARD */
+        .employee-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            overflow: hidden;
+            transition: all 0.25s ease;
+            border: 1px solid #e8ecf1;
+            display: flex;
+            flex-direction: column;
+        }
+        .employee-card:hover {
+            box-shadow: 0 6px 25px rgba(0,0,0,0.10);
+            transform: translateY(-3px);
+        }
+        .card-header {
+            padding: 14px 16px 10px;
+            border-bottom: 1px solid #f0f2f5;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .card-header .name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1a3a6b;
+        }
+        .card-header .badge-group {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+        .card-header .role-badge {
+            font-size: 10px;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        .role-badge.admin { background: #dc3545; color: white; }
+        .role-badge.icd-head { background: #ff9800; color: white; }
+        .role-badge.employee { background: #2a5298; color: white; }
+        .role-badge.unknown { background: #6c757d; color: white; }
+        .type-badge {
+            font-size: 10px;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            background: #e8ecf1;
+            color: #333;
+        }
+        .type-badge.fta { background: #1a3a6b; color: white; }
+        .type-badge.vou { background: #ff9800; color: white; }
+        .type-badge.cnf { background: #28a745; color: white; }
+
+        .card-body { padding: 12px 16px 14px; flex: 1; }
+
+        .detail-row-inline {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3px 6px;
+            font-size: 12px;
+            color: #444;
+            margin-bottom: 3px;
+            align-items: baseline;
+        }
+        .detail-row-inline .label {
+            color: #888;
+            font-weight: 500;
+        }
+        .detail-row-inline .value {
+            color: #222;
+            word-break: break-word;
+        }
+        .detail-row-inline .divider {
+            color: #ccc;
+            margin: 0 3px;
+        }
+
+        /* EXPERTISE */
+        .expertise-editable {
+            margin-top: 6px;
+            padding-top: 6px;
+            border-top: 1px solid #f0f2f5;
+        }
+        .expertise-editable .exp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3px;
+        }
+        .expertise-editable .exp-header label {
+            font-weight: 600;
+            font-size: 11px;
+            color: #555;
+            margin: 0;
+        }
+        .expertise-editable .exp-select {
+            width: 100%;
+            padding: 4px 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 12px;
+            font-family: inherit;
+            background: white;
+            color: #444;
+            transition: border-color 0.2s;
+        }
+        .expertise-editable .exp-select:focus {
+            outline: none;
+            border-color: #2a5298;
+            box-shadow: 0 0 0 2px rgba(42,82,152,0.1);
+        }
+        .expertise-editable .exp-select:disabled {
+            background: #f5f5f5;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .exp-save-status {
+            font-size: 10px;
+            margin-left: 6px;
+            display: none;
+        }
+        .exp-save-status.show {
+            display: inline-block;
+        }
+        .exp-save-status.saving {
+            color: #ff9800;
+        }
+        .exp-save-status.saved {
+            color: #28a745;
+        }
+        .exp-save-status.error {
+            color: #dc3545;
+        }
+        .expertise-description {
+            margin-top: 3px;
+            padding: 3px 8px;
+            background: #f0f7ff;
+            border-radius: 4px;
+            font-size: 11px;
+            color: #1a3a6b;
+            min-height: 22px;
+            border-left: 3px solid #2a5298;
+        }
+        .expertise-description i {
+            color: #2a5298;
+            margin-right: 3px;
+        }
+        .expertise-description .empty {
+            color: #999;
+        }
+
+        /* WORKLOAD */
+        .workload-section {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #f0f2f5;
+        }
+        .workload-section .wl-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 4px;
+        }
+        .workload-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3px 6px;
+        }
+        .workload-item {
+            background: #f5f7fa;
+            font-size: 10px;
+            padding: 1px 8px;
+            border-radius: 12px;
+            color: #444;
+        }
+        .workload-item .num { font-weight: 600; color: #1a3a6b; }
+
+        /* SPECIAL PROJECTS */
+        .special-projects-editable {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #f0f2f5;
+        }
+        .special-projects-editable .sp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3px;
+        }
+        .special-projects-editable .sp-header label {
+            font-weight: 600;
+            font-size: 11px;
+            color: #555;
+            margin: 0;
+        }
+        .special-projects-editable .sp-header .sp-save-btn {
+            padding: 2px 10px;
+            border-radius: 4px;
+            border: none;
+            background: #28a745;
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .special-projects-editable .sp-header .sp-save-btn:hover {
+            background: #218838;
+        }
+        .special-projects-editable .sp-header .sp-save-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .special-projects-editable .sp-header .sp-save-btn.saved {
+            background: #6c757d;
+        }
+        .special-projects-editable .sp-textarea {
+            width: 100%;
+            padding: 5px 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 12px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 40px;
+            transition: border-color 0.2s;
+            color: #444;
+            line-height: 1.4;
+        }
+        .special-projects-editable .sp-textarea:focus {
+            outline: none;
+            border-color: #2a5298;
+            box-shadow: 0 0 0 2px rgba(42,82,152,0.1);
+        }
+        .special-projects-editable .sp-textarea::placeholder {
+            color: #aaa;
+        }
+        .special-projects-editable .sp-textarea:disabled {
+            background: #f5f5f5;
+            cursor: not-allowed;
+        }
+
+        .card-footer {
+            padding: 8px 16px 12px;
+            border-top: 1px solid #f0f2f5;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+            background: #fafbfc;
+            border-radius: 0 0 12px 12px;
+        }
+
+        /* SAVE AREA */
+        .save-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #e8ecf1;
+        }
+        .save-area .save-btn {
+            padding: 8px 24px;
+            border: none;
+            border-radius: 6px;
+            background: #28a745;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .save-area .save-btn:hover {
+            background: #218838;
+        }
+        .save-area .save-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .save-area .save-btn.saved {
+            background: #6c757d;
+        }
+        .save-status {
+            font-size: 12px;
+            display: none;
+        }
+        .save-status.show {
+            display: inline-block;
+        }
+        .save-status.saving {
+            color: #ff9800;
+        }
+        .save-status.saved {
+            color: #28a745;
+        }
+        .save-status.error {
+            color: #dc3545;
+        }
+
+        /* COMMON UNIT PROJECTS */
+        .common-unit-projects {
+            background: white;
+            padding: 14px 18px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            margin-bottom: 18px;
+            border-left: 4px solid #6f42c1;
+            display: none;
+        }
+        .common-unit-projects.visible { display: block; }
+        .common-unit-projects .cup-container {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .common-unit-projects .cup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .common-unit-projects .cup-title {
+            font-weight: 600;
+            color: #1a3a6b;
+            font-size: 13px;
+        }
+        .common-unit-projects .cup-title i { color: #6f42c1; margin-right: 6px; }
+        .common-unit-projects .cup-title .cup-unit-name {
+            background: #e8ecf1;
+            color: #1a3a6b;
+            padding: 1px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+            margin-left: 6px;
+        }
+        .common-unit-projects .cup-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .common-unit-projects .cup-save-status {
+            font-size: 10px;
+            display: none;
+        }
+        .common-unit-projects .cup-save-status.show { display: inline-block; }
+        .common-unit-projects .cup-save-status.saving { color: #ff9800; }
+        .common-unit-projects .cup-save-status.saved { color: #28a745; }
+        .common-unit-projects .cup-save-status.error { color: #dc3545; }
+        .common-unit-projects .cup-save-btn {
+            padding: 3px 14px;
+            border-radius: 4px;
+            border: none;
+            background: #6f42c1;
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: none;
+        }
+        .common-unit-projects .cup-save-btn:hover { background: #5a32a3; }
+        .common-unit-projects .cup-save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .common-unit-projects .cup-save-btn.saved { background: #6c757d; }
+        .common-unit-projects .cup-textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 12px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 60px;
+            transition: border-color 0.2s;
+            color: #444;
+            line-height: 1.5;
+            background: #fafbfc;
+        }
+        .common-unit-projects .cup-textarea:focus {
+            outline: none;
+            border-color: #6f42c1;
+            box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.15);
+        }
+        .common-unit-projects .cup-textarea:disabled {
+            background: #f5f5f5;
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+
+        /* TEAM WORKLOAD BAR */
+        .team-workload-bar {
+            background: white;
+            padding: 14px 18px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            margin-bottom: 18px;
+            border-left: 4px solid #28a745;
+            display: none;
+        }
+        .team-workload-bar.visible { display: block; }
+        .team-workload-bar .tw-title {
+            font-weight: 600;
+            color: #1a3a6b;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+        .team-workload-bar .tw-title i { color: #28a745; margin-right: 6px; }
+        .tw-container {
+            display: flex;
+            gap: 16px;
+            min-height: 100px;
+        }
+        .tw-container.full-width .tw-left { flex: 1; }
+        .tw-container.full-width .tw-right { display: none; }
+        .tw-left {
+            flex: 1.2;
+            background: #f8f9fa;
+            padding: 10px 14px;
+            border-radius: 8px;
+        }
+        .tw-right {
+            flex: 1;
+            background: #f8f9fa;
+            padding: 10px 14px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+        }
+        .tw-editions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 16px;
+        }
+        .tw-edition {
+            font-size: 12px;
+        }
+        .tw-edition strong { color: #1a3a6b; }
+        .tw-total {
+            font-weight: 600;
+            color: #28a745;
+            font-size: 13px;
+            margin-top: 6px;
+        }
+        .tw-employees {
+            font-size: 11px;
+            color: #666;
+        }
+        .tw-remark-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+            flex-shrink: 0;
+        }
+        .tw-remark-header label {
+            font-weight: 600;
+            font-size: 12px;
+            color: #555;
+            margin: 0;
+        }
+        .tw-remark-header .save-btn {
+            padding: 2px 12px;
+            border-radius: 4px;
+            border: none;
+            background: #28a745;
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .tw-remark-header .save-btn:hover { background: #218838; }
+        .tw-remark-header .save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .tw-remark-header .save-btn.saved { background: #6c757d; }
+        .tw-remark-textarea {
+            flex: 1;
+            width: 100%;
+            padding: 6px 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 12px;
+            font-family: inherit;
+            resize: none;
+            min-height: 50px;
+            transition: border-color 0.2s;
+        }
+        .tw-remark-textarea:focus {
+            outline: none;
+            border-color: #2a5298;
+            box-shadow: 0 0 0 2px rgba(42,82,152,0.1);
+        }
+
+        /* WPOW BAR */
+        .wpow-bar {
+            background: white;
+            padding: 14px 18px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            margin-bottom: 18px;
+            border-left: 4px solid #ff9800;
+            display: none;
+        }
+        .wpow-bar.visible { display: block; }
+        .wpow-bar .wpow-title {
+            font-weight: 600;
+            color: #1a3a6b;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+        .wpow-bar .wpow-title i { color: #ff9800; margin-right: 6px; }
+        .wpow-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px 16px;
+            padding: 2px 0;
+        }
+        .wpow-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+        .wpow-item label {
+            font-weight: 600;
+            color: #555;
+            font-size: 11px;
+            margin: 0;
+        }
+        .wpow-item input {
+            padding: 3px 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 12px;
+            width: 55px;
+            text-align: center;
+            transition: border-color 0.2s;
+        }
+        .wpow-item input:focus {
+            outline: none;
+            border-color: #2a5298;
+            box-shadow: 0 0 0 2px rgba(42,82,152,0.1);
+        }
+        .wpow-item input:disabled {
+            background: #f5f5f5;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .wpow-other-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex: 1;
+            min-width: 120px;
+        }
+        .wpow-other-item label {
+            font-weight: 600;
+            color: #555;
+            font-size: 11px;
+            white-space: nowrap;
+            margin: 0;
+        }
+        .wpow-other-item textarea {
+            padding: 3px 6px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 12px;
+            font-family: inherit;
+            resize: none;
+            width: 100%;
+            min-width: 80px;
+            max-width: 200px;
+            min-height: 26px;
+            height: 26px;
+            transition: border-color 0.2s;
+            line-height: 1.3;
+        }
+        .wpow-other-item textarea:focus {
+            outline: none;
+            border-color: #2a5298;
+            box-shadow: 0 0 0 2px rgba(42,82,152,0.1);
+        }
+        .wpow-other-item textarea:disabled {
+            background: #f5f5f5;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .wpow-save-area {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: 2px;
+        }
+        .wpow-save-status {
+            font-size: 10px;
+            display: none;
+        }
+        .wpow-save-status.show { display: inline-block; }
+        .wpow-save-status.saving { color: #ff9800; }
+        .wpow-save-status.saved { color: #28a745; }
+        .wpow-save-status.error { color: #dc3545; }
+        .wpow-save-btn {
+            padding: 3px 14px;
+            border-radius: 4px;
+            border: none;
+            background: #28a745;
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: none;
+        }
+        .wpow-save-btn:hover { background: #218838; }
+        .wpow-save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .wpow-save-btn.saved { background: #6c757d; }
+
+        .no-data {
+            text-align: center;
+            padding: 40px 20px;
+            color: #888;
+        }
+        .no-data i {
+            font-size: 36px;
+            opacity: 0.3;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        /* TOAST */
+        .custom-toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 24px;
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 10000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            max-width: 400px;
+            animation: slideIn 0.3s ease;
+        }
+        .custom-toast.success { background: #28a745; }
+        .custom-toast.error { background: #dc3545; }
+        .custom-toast.info { background: #17a2b8; }
+
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .header-row1 { flex-direction: column; align-items: center; }
+            .header-counts { justify-content: center; }
+            .header-stats { justify-content: center; }
+            .tabs-section { justify-content: center; }
+            .tab-btn { padding: 8px 12px; font-size: 12px; }
+            .filters-section { flex-direction: column; align-items: stretch; }
+            .filter-group { justify-content: center; }
+            .employee-grid { grid-template-columns: 1fr; }
+            .stats-bar { justify-content: center; }
+            .tw-container { flex-direction: column; }
+            .tw-left, .tw-right { flex: none; }
+            .tw-right { min-height: 120px; }
+            .section-header { flex-direction: column; align-items: stretch; }
+            .section-header .totals-box { justify-content: center; flex-wrap: wrap; }
+            .section-header .summary-totals { justify-content: center; }
+            .data-table { font-size: 11px; }
+            .data-table th, .data-table td { padding: 5px 8px; }
+            .table-responsive-wrapper { max-height: 400px; }
+            #loginOverlay .login-box { padding: 30px 25px; margin: 15px; }
+        }
+        @media (max-width: 480px) {
+            .card-header { flex-direction: column; align-items: stretch; }
+            .data-table .editable-input { min-width: 60px; }
+            .data-table .editable-input.text-input { min-width: 80px; }
+            .tab-btn { padding: 6px 10px; font-size: 11px; }
+            .wpow-row { gap: 4px 8px; }
+            .wpow-item input { width: 45px; font-size: 11px; }
+            .wpow-other-item textarea { min-width: 60px; max-width: 100px; font-size: 11px; }
+            .header-stats .skill-item { font-size: 11px; padding: 1px 8px; }
+            .header-stats .skill-item .skill-name { font-size: 11px; }
+            .header-stats .skill-item .skill-count { font-size: 10px; }
+            .header-stats .stat-label { font-size: 11px; }
+            .header-counts .count-chip { font-size: 11px; padding: 2px 8px; }
+            .header-counts .count-chip .count-value { font-size: 12px; }
+            .header-counts .count-chip .count-label { font-size: 10px; }
+        }
+		
+		/* Skill filter buttons */
+.skill-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 4px;
+}
+.skill-filter-btn {
+    padding: 3px 12px;
+    border-radius: 16px;
+    border: 1px solid #ddd;
+    background: white;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+.skill-filter-btn:hover {
+    background: #e8ecf1;
+}
+.skill-filter-btn.active {
+    background: #6f42c1;
+    color: white;
+    border-color: #6f42c1;
+}
+.skill-filter-btn .skill-count {
+    font-weight: 700;
+    font-size: 10px;
+    background: rgba(0,0,0,0.1);
+    padding: 0 6px;
+    border-radius: 10px;
+}
+.skill-filter-btn.active .skill-count {
+    background: rgba(255,255,255,0.2);
+    color: white;
+}
+
+/* ADVT DESK SLIDES - Fixed height with nav buttons inline with title */
+.advt-slide-container {
+    position: relative;
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 1px solid #e0e6ef;
+    overflow: hidden;
+    min-height: 420px;
+    display: flex;
+    flex-direction: column;
+}
+.advt-slide-wrapper {
+    flex: 1;
+    padding: 0;
+    position: relative;
+    min-height: 360px;
+}
+.advt-slide {
+    display: none;
+    animation: fadeIn 0.4s ease;
+    padding: 28px 36px;
+    height: 100%;
+    min-height: 360px;
+}
+.advt-slide.active {
+    display: block;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateX(15px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+.advt-slide-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a3a6b;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid #2a5298;
+}
+.advt-slide-content {
+    font-size: 15px;
+    line-height: 1.8;
+    color: #333;
+}
+.advt-slide-content ul {
+    list-style: none;
+    padding: 0;
+}
+.advt-slide-content ul li {
+    padding: 6px 14px;
+    margin-bottom: 4px;
+    background: white;
+    border-radius: 6px;
+    border-left: 4px solid #2a5298;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+.advt-slide-content ul li strong {
+    color: #1a3a6b;
+}
+.advt-slide-content .highlight-box {
+    background: #e8f0fe;
+    padding: 12px 16px;
+    border-radius: 6px;
+    border-left: 4px solid #ff9800;
+    margin: 8px 0;
+}
+.advt-slide-content .highlight-box strong {
+    color: #1a3a6b;
+}
+.advt-slide-content .metric-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px;
+    margin: 10px 0;
+}
+.advt-slide-content .metric-card {
+    background: white;
+    padding: 10px 14px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    border: 1px solid #e8ecf1;
+}
+.advt-slide-content .metric-card .metric-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1a3a6b;
+    display: block;
+}
+.advt-slide-content .metric-card .metric-label {
+    font-size: 11px;
+    color: #666;
+    margin-top: 3px;
+}
+.advt-slide-content .workflow-steps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 8px 0;
+}
+.advt-slide-content .workflow-steps .step {
+    background: white;
+    padding: 6px 14px;
+    border-radius: 18px;
+    border: 1px solid #d0d8e4;
+    font-size: 12px;
+    font-weight: 500;
+    color: #1a3a6b;
+}
+.advt-slide-content .workflow-steps .step .step-num {
+    background: #2a5298;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    margin-right: 5px;
+}
+.advt-slide-content .two-col-layout {
+    display: flex;
+    gap: 20px;
+    align-items: stretch;
+}
+.advt-slide-content .two-col-layout .left-col {
+    flex: 1.2;
+}
+.advt-slide-content .two-col-layout .right-col {
+    flex: 0.8;
+    display: flex;
+    align-items: center;
+}
+.advt-slide-content .slide-image-placeholder {
+    background: #e8ecf1;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    min-height: 160px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed #b0b8c8;
+    width: 100%;
+}
+.advt-slide-content .slide-image-placeholder i {
+    font-size: 40px;
+    color: #8a9bb8;
+    margin-bottom: 8px;
+}
+.advt-slide-content .slide-image-placeholder span {
+    color: #6a7b98;
+    font-size: 12px;
+}
+.advt-slide-content .impact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin: 8px 0;
+}
+.advt-slide-content .impact-grid .impact-item {
+    background: white;
+    padding: 8px 14px;
+    border-radius: 6px;
+    border-left: 3px solid #2a5298;
+    font-size: 13px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.advt-slide-content .impact-grid .impact-item .impact-icon {
+    margin-right: 6px;
+}
+
+@media (max-width: 768px) {
+    .advt-slide-content .two-col-layout {
+        flex-direction: column;
+    }
+    .advt-slide-content .two-col-layout .right-col {
+        flex: 1;
+    }
+    .advt-slide-content .impact-grid {
+        grid-template-columns: 1fr;
+    }
+    .advt-slide {
+        padding: 16px 18px;
+        min-height: 300px;
+    }
+    .advt-slide-title {
+        font-size: 17px;
+    }
+    .advt-slide-content {
+        font-size: 14px;
+    }
+}
+
+/* Slide Navigation - Inline with title */
+.advt-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+.advt-header .title-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.advt-header .title-section h3 {
+    margin: 0;
+    color: #1a3a6b;
+    font-weight: 600;
+    font-size: 18px;
+}
+.advt-header .nav-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.advt-header .nav-controls .nav-btn {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 6px;
+    background: #2a5298;
+    color: white;
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.advt-header .nav-controls .nav-btn:hover {
+    background: #1a3a6b;
+    transform: translateY(-1px);
+}
+.advt-header .nav-controls .nav-btn:disabled {
+    background: #b0b8c8;
+    cursor: not-allowed;
+    transform: none;
+}
+.advt-header .nav-controls .slide-counter {
+    font-size: 13px;
+    color: #555;
+    font-weight: 500;
+    min-width: 50px;
+    text-align: center;
+}
+.advt-header .nav-controls .slide-dots {
+    display: flex;
+    gap: 6px;
+}
+.advt-header .nav-controls .slide-dots .dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #d0d8e4;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.advt-header .nav-controls .slide-dots .dot.active {
+    background: #2a5298;
+    transform: scale(1.15);
+}
+@media (max-width: 600px) {
+    .advt-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .advt-header .nav-controls {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+}
+    </style>
+</head>
+<body>
+
+<!-- LOGIN OVERLAY -->
+<div id="loginOverlay">
+    <div class="login-box">
+        <div class="logo">
+            <img src="https://lh3.googleusercontent.com/d/1uLdST5g0rbVFpAV_i7qJXAI1nZJo20lQ" alt="LOKMAT">
+            <h3>ICD Unified Dashboard</h3>
+            <p class="sub">Task · Execution · Delivery — Unified Dashboard</p>
+        </div>
+        <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="loginEmail" placeholder="Enter your email" autocomplete="username">
+        </div>
+        <div class="form-group">
+            <label>Password (Last 4 digits of Mobile)</label>
+            <input type="password" id="loginPassword" placeholder="Enter last 4 digits" maxlength="4" autocomplete="current-password">
+        </div>
+        <button class="login-btn" id="loginBtn" onclick="handleLogin()">
+            <i class="fa fa-sign-in"></i> Sign In
+        </button>
+        <div class="login-error" id="loginError">Invalid email or password. Please try again.</div>
+    </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="container-fluid" id="mainContent" style="display:none;">
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="header-row1">
+            <div class="header-left">
+                <img src="https://lh3.googleusercontent.com/d/1uLdST5g0rbVFpAV_i7qJXAI1nZJo20lQ" 
+                     alt="LOKMAT" class="header-logo"
+                     onerror="this.style.display='none'">
+            </div>
+            <div class="header-counts" id="headerCounts"></div>
+            <div class="header-user">
+                <div>
+                    <div class="user-name" id="headerUserName">User</div>
+                    <div class="user-role" id="headerUserRole">Role</div>
+                </div>
+                <button class="logout-header-btn" onclick="logout()"><i class="fa fa-sign-out"></i> Logout</button>
+            </div>
+        </div>
+        <div class="header-row2" id="headerRow2"></div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs-section" id="tabsContainer"></div>
+
+    <!-- TAB CONTENT -->
+    <div class="tab-content" id="tabContent"></div>
+
+</div>
+
+<script>
+// ============================================================
+// CONFIGURATION - REPLACE WITH YOUR DEPLOYED URL
+// ============================================================
+const API_BASE_URL = 'https://script.google.com/macros/s/AKfycbykc4et8d6ftrX8MoRTcVBKcX7-1WUwQSBu5L974mwWO-G5F68t89_L0HstbcEIrDVMYg/exec';
+
+// ============================================================
+// EXPERTISE OPTIONS
+// ============================================================
+const EXPERTISE_OPTIONS = [
+    { value: '', description: 'Select an expertise...' },
+    { value: 'Normal Pagination', description: 'Designer mostly does pagination work' },
+    { value: 'Creative/Feature Page Design', description: 'Designer mostly does Creative/Feature page design' },
+    { value: 'Event/Creative Advt', description: 'Designer mostly does Event and Creative Advertisement work' },
+    { value: 'Notice/Display Advt', description: 'Designer mostly does Notice and Display Advertisement work' },
+    { value: 'Photo', description: 'Designer mostly does Photo editing work' },
+    { value: 'PDF Final/QC', description: 'Designer mostly does PDF Making & Checking work' },
+    { value: 'Allrounder', description: 'Designer is Expert in all work' }
+];
+
+// ============================================================
+// GLOBAL STATE
+// ============================================================
+let loggedInUser = null;
+let allEmployees = [];
+let filteredEmployees = [];
+let currentTypeFilter = 'all';
+let currentTab = '';
+let allData = {};
+
+// Publication state
+let publicationChanges = {};
+let isSaving = false;
+
+// WPOW state
+let currentWorkplace = '';
+let currentWPOWData = {};
+let wpowChanged = false;
+let wpowSaving = false;
+
+// Remark state
+let currentRemark = '';
+let remarkChanged = false;
+let remarkSaving = false;
+
+// Common Unit Projects state
+let currentCommonUnit = '';
+let currentCommonProjects = '';
+let cupChanged = false;
+let cupSaving = false;
+
+// Advt Desk Slides
+let currentSlide = 0;
+const totalSlides = 5;
+
+// ============================================================
+// LOGIN SYSTEM
+// ============================================================
+async function handleLogin() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value.trim();
+    const errorEl = document.getElementById('loginError');
+    const loginBtn = document.getElementById('loginBtn');
+    
+    errorEl.classList.remove('show');
+    
+    if (!email || !password) {
+        errorEl.textContent = 'Please enter both email and password.';
+        errorEl.classList.add('show');
+        return;
+    }
+    
+    if (!/^\d{4}$/.test(password)) {
+        errorEl.textContent = 'Password must be exactly 4 digits (last 4 digits of mobile).';
+        errorEl.classList.add('show');
+        return;
+    }
+    
+    loginBtn.disabled = true;
+    loginBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Authenticating...';
+    
+    try {
+        const result = await callAPI('authenticateUser', { 
+            email: email, 
+            password: password 
+        });
+        
+        if (result.success && result.user) {
+            loggedInUser = result.user;
+            
+            if (!loggedInUser.units || loggedInUser.units.length === 0) {
+                loggedInUser.units = [loggedInUser.unit || ''];
+            }
+            
+            document.getElementById('loginOverlay').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
+            document.getElementById('headerUserName').textContent = loggedInUser.name;
+            document.getElementById('headerUserRole').textContent = loggedInUser.role + 
+                (loggedInUser.role === 'ICD Head' ? ' - ' + loggedInUser.units.join(', ') : '');
+            
+            await loadAllData();
+        } else {
+            errorEl.textContent = result.message || 'Invalid email or password.';
+            errorEl.classList.add('show');
+            loginBtn.disabled = false;
+            loginBtn.innerHTML = '<i class="fa fa-sign-in"></i> Sign In';
+        }
+    } catch(err) {
+        errorEl.textContent = 'Error connecting to server. Please try again.';
+        errorEl.classList.add('show');
+        loginBtn.disabled = false;
+        loginBtn.innerHTML = '<i class="fa fa-sign-in"></i> Sign In';
+        console.error('Login error:', err);
+    }
+}
+
+async function logout() {
+    if (loggedInUser && loggedInUser.email) {
+        try {
+            await callAPI('logoutUser', { email: loggedInUser.email });
+        } catch(e) {
+            console.error('Logout error:', e);
+        }
+    }
+    
+    loggedInUser = null;
+    document.getElementById('mainContent').style.display = 'none';
+    document.getElementById('loginOverlay').style.display = 'flex';
+    document.getElementById('loginEmail').value = '';
+    document.getElementById('loginPassword').value = '';
+    document.getElementById('loginError').classList.remove('show');
+    document.getElementById('loginBtn').disabled = false;
+    document.getElementById('loginBtn').innerHTML = '<i class="fa fa-sign-in"></i> Sign In';
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('loginPassword').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') handleLogin();
+    });
+    document.getElementById('loginEmail').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') document.getElementById('loginPassword').focus();
+    });
+});
+
+// ============================================================
+// API CALL
+// ============================================================
+function callAPI(action, params) {
+    return new Promise((resolve, reject) => {
+        let url = API_BASE_URL + '?action=' + encodeURIComponent(action);
+        if (params) {
+            url += '&params=' + encodeURIComponent(JSON.stringify(params));
+        }
+        
+        const callbackName = 'jsonp_cb_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        window[callbackName] = function(data) {
+            delete window[callbackName];
+            resolve(data);
+        };
+        
+        const script = document.createElement('script');
+        script.src = url + '&callback=' + callbackName;
+        script.onerror = function() {
+            delete window[callbackName];
+            fetch(url)
+                .then(response => response.json())
+                .then(data => resolve(data))
+                .catch(err => reject(err));
+        };
+        document.body.appendChild(script);
+        
+        setTimeout(() => {
+            if (window[callbackName]) {
+                delete window[callbackName];
+                reject(new Error('Request timeout'));
+            }
+        }, 15000);
+    });
+}
+
+// ============================================================
+// LOAD ALL DATA
+// ============================================================
+async function loadAllData() {
+    try {
+        const isAdmin = loggedInUser.role === 'Admin';
+        
+        // Load employees
+        const empResult = await callAPI('getEmployees', { 
+            email: loggedInUser.email,
+            role: loggedInUser.role,
+            units: loggedInUser.units
+        });
+        
+        if (empResult.success) {
+            allEmployees = empResult.employees || [];
+            filteredEmployees = [...allEmployees];
+        } else if (empResult.error === 'Session expired. Please login again.') {
+            showToast('Session expired. Please login again.', 'error');
+            logout();
+            return;
+        } else {
+            console.error('Failed to load employees:', empResult.error);
+            showToast('Failed to load employees: ' + empResult.error, 'error');
+        }
+        
+        // If Admin, load additional data
+        if (isAdmin) {
+            const actions = ['getWorkload', 'getSkills', 'getModels', 'getAllTables'];
+            const results = await Promise.all(actions.map(action => 
+                callAPI(action, { email: loggedInUser.email })
+            ));
+            
+            allData.workload = results[0].success ? results[0].data : [];
+            allData.skills = results[1].success ? results[1].data : [];
+            allData.models = results[2].success ? results[2].data : {};
+            allData.allTables = results[3].success ? results[3].data : [];
+            
+            // Load publication data
+            const pubResult = await callAPI('getAllPublication', { email: loggedInUser.email });
+            allData.publication = pubResult.success ? pubResult.data : {};
+        } else {
+            // ICD Head - load only their publication data
+            const pubResult = await callAPI('getPublication', { 
+                email: loggedInUser.email,
+                units: loggedInUser.units 
+            });
+            allData.publication = pubResult.success ? pubResult.data : {};
+        }
+        
+        updateHeaderStats();
+        renderTabs();
+        renderTabContent(currentTab || getDefaultTab());
+        
+    } catch(error) {
+        console.error('Error loading data:', error);
+        showToast('Error loading data: ' + error.message, 'error');
+    }
+}
+
+function getDefaultTab() {
+    if (loggedInUser.role === 'Admin') {
+        return 'workload';
+    } else {
+        return 'job-profile';
+    }
+}
+
+// ============================================================
+// UPDATE HEADER STATS
+// ============================================================
+function updateHeaderStats() {
+    const countsContainer = document.getElementById('headerCounts');
+    const skillContainer = document.getElementById('headerRow2');
+    
+    if (!loggedInUser || !allEmployees) {
+        countsContainer.innerHTML = '';
+        skillContainer.innerHTML = '';
+        return;
+    }
+    
+    // Use ALL employees (not filtered) for header counts
+    // For ICD Head, allEmployees is already filtered to their units
+    const employees = allEmployees; // ← Use all employees, not filtered
+    
+    let total = employees.length;
+    let fta = 0, vou = 0, cnf = 0, icdHead = 0;
+    
+    const expertiseCounts = {
+        'Normal Pagination': 0,
+        'Creative/Feature Page Design': 0,
+        'Event/Creative Advt': 0,
+        'Notice/Display Advt': 0,
+        'Photo': 0,
+        'PDF Final/QC': 0,
+        'Allrounder': 0
+    };
+    
+    employees.forEach(emp => {
+        if (emp.Type === 'FTA') fta++;
+        else if (emp.Type === 'VOU') vou++;
+        else if (emp.Type === 'CNF') cnf++;
+        if (emp.Role === 'ICD Head') icdHead++;
+        
+        if (emp.Expertise && expertiseCounts.hasOwnProperty(emp.Expertise)) {
+            expertiseCounts[emp.Expertise]++;
+        }
+    });
+    
+    // Header counts - FIXED (show all employees)
+    countsContainer.innerHTML = `
+        <span class="count-chip total">
+            <span class="count-label">Total</span>
+            <span class="count-value">${total}</span>
+        </span>
+        <span class="count-divider">|</span>
+        <span class="count-chip fta">
+            <span class="count-label">FTA</span>
+            <span class="count-value">${fta}</span>
+        </span>
+        <span class="count-divider">|</span>
+        <span class="count-chip vou">
+            <span class="count-label">VOU</span>
+            <span class="count-value">${vou}</span>
+        </span>
+        <span class="count-divider">|</span>
+        <span class="count-chip cnf">
+            <span class="count-label">CNF</span>
+            <span class="count-value">${cnf}</span>
+        </span>
+        <span class="count-divider">|</span>
+        <span class="count-chip icd-head">
+            <span class="count-label">ICD Heads</span>
+            <span class="count-value">${icdHead}</span>
+        </span>
+    `;
+    
+    // Skill strength - FIXED (show all employees)
+    let skillHtml = '';
+    const skillOrder = ['Allrounder', 'Creative/Feature Page Design', 'Event/Creative Advt', 
+                        'Notice/Display Advt', 'Photo', 'Normal Pagination', 'PDF Final/QC'];
+    skillOrder.forEach(skill => {
+        const count = expertiseCounts[skill] || 0;
+        if (count > 0) {
+            skillHtml += `<span class="skill-item"><span class="skill-name">${skill}</span><span class="skill-count">${count}</span></span>`;
+        }
+    });
+    
+    if (skillHtml) {
+        skillContainer.innerHTML = `
+            <div class="header-stats">
+                <span class="stat-label">Skill Strength:</span>
+                ${skillHtml}
+            </div>
+        `;
+    } else {
+        skillContainer.innerHTML = '';
+    }
+}
+
+// ============================================================
+// RENDER TABS
+// ============================================================
+function renderTabs() {
+    const container = document.getElementById('tabsContainer');
+    let html = '';
+    
+    if (loggedInUser.role === 'Admin') {
+        const tabs = [
+            { id: 'workload', label: '📊 Workload' },
+            { id: 'skills', label: '📋 Skills' },
+            { id: 'all-models', label: '📊 All Models' },
+            { id: 'advt-desk', label: '📰 Advt Desk' },
+            { id: 'model-a', label: '📈 Model-A' },
+            { id: 'model-b', label: '📈 Model-B' },
+            { id: 'model-c', label: '📈 Model-C' },
+            { id: 'publications', label: '📰 Publications' },
+            { id: 'analysis', label: '📋 Analysis' }
+        ];
+        tabs.forEach(tab => {
+            const active = tab.id === currentTab || (!currentTab && tab.id === 'workload') ? 'active' : '';
+            html += `<button class="tab-btn ${active}" data-tab="${tab.id}" onclick="switchTab('${tab.id}')">${tab.label}</button>`;
+        });
+    } else if (loggedInUser.role === 'ICD Head') {
+        html += `<button class="tab-btn active" data-tab="job-profile" onclick="switchTab('job-profile')">📋 Job Profile</button>`;
+        html += `<button class="tab-btn" data-tab="publications" onclick="switchTab('publications')">📰 Publications</button>`;
+    }
+    
+    container.innerHTML = html;
+}
+
+function switchTab(tabId) {
+    currentTab = tabId;
+    currentSlide = 0;
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === tabId);
+    });
+    renderTabContent(tabId);
+}
+
+// ============================================================
+// RENDER TAB CONTENT
+// ============================================================
+function renderTabContent(tabId) {
+    const container = document.getElementById('tabContent');
+    
+    if (loggedInUser.role === 'Admin') {
+        switch(tabId) {
+            case 'workload':
+                renderWorkload(container);
+                break;
+            case 'skills':
+                renderSkills(container);
+                break;
+            case 'all-models':
+                renderAllModels(container);
+                break;
+            case 'advt-desk':
+                renderAdvtDesk(container);
+                break;
+            case 'model-a':
+                renderModel(container, 'A', 'Centralised Pagination by ICD (Existing Process)');
+                break;
+            case 'model-b':
+                renderModel(container, 'B', 'Automated Pagination by ICD');
+                break;
+            case 'model-c':
+                renderModel(container, 'C', 'Automated Pagination by Editorial');
+                break;
+            case 'publications':
+                renderPublications(container);
+                break;
+            case 'analysis':
+                renderAnalysis(container);
+                break;
+            default:
+                container.innerHTML = '<div class="no-data"><i class="fa fa-file"></i>Select a tab</div>';
+        }
+    } else if (loggedInUser.role === 'ICD Head') {
+        switch(tabId) {
+            case 'job-profile':
+                renderAnalysis(container);
+                break;
+            case 'publications':
+                renderICDPublications(container);
+                break;
+            default:
+                container.innerHTML = '<div class="no-data"><i class="fa fa-file"></i>Select a tab</div>';
+        }
+    }
+}
+
+// ============================================================
+// RENDER ADVT DESK (4 Slides with fixed height)
+// ============================================================
+function renderAdvtDesk(container) {
+    const slides = [
+        {
+            title: 'The Task, In One Line',
+            content: `
+                <div class="advt-slide-content">
+                    <div class="two-col-layout">
+                        <div class="left-col" style="flex:1.4;">
+                            <!-- Main Stat Cards -->
+                            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px;">
+                                <div style="background:linear-gradient(135deg,#1a3a6b,#2a5298);padding:14px 10px;border-radius:10px;text-align:center;color:white;box-shadow:0 4px 12px rgba(26,58,107,0.25);">
+                                    <div style="font-size:28px;font-weight:700;line-height:1.2;">41 <span style="font-size:16px;font-weight:400;">→</span> 13</div>
+                                    <div style="font-size:11px;opacity:0.85;margin-top:2px;">Centres Consolidated</div>
+                                </div>
+                                <div style="background:linear-gradient(135deg,#e68a2e,#f5a623);padding:14px 10px;border-radius:10px;text-align:center;color:white;box-shadow:0 4px 12px rgba(230,138,46,0.3);">
+                                    <div style="font-size:28px;font-weight:700;line-height:1.2;">~400</div>
+                                    <div style="font-size:11px;opacity:0.85;margin-top:2px;">Ads Handled Daily</div>
+                                </div>
+                                <div style="background:linear-gradient(135deg,#1a8a4a,#28a745);padding:14px 10px;border-radius:10px;text-align:center;color:white;box-shadow:0 4px 12px rgba(40,167,69,0.3);">
+                                    <div style="font-size:28px;font-weight:700;line-height:1.2;">🔄</div>
+                                    <div style="font-size:11px;opacity:0.85;margin-top:2px;">Common Workflow</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Description -->
+                            <p style="font-size:15px;color:#444;line-height:1.7;margin:0 0 8px 0;background:#f8fafc;padding:12px 16px;border-radius:8px;border-left:4px solid #2a5298;">
+                                <i class="fa fa-rocket" style="color:#2a5298;margin-right:6px;"></i>
+                                <strong>Any center can support another center</strong> when workload is high, helping us produce around <strong>400 advertisements every day</strong> through a common workflow system.
+                            </p>
+                            
+                            <!-- Cross-Center Support -->
+                            <div style="background:linear-gradient(135deg,#1a3a6b,#2a5298);padding:14px 10px;border-radius:10px;text-align:center;color:white;box-shadow:0 4px 12px rgba(26,58,107,0.25);">
+                                <div style="font-size:28px;font-weight:700;line-height:1.2;">🤝 Cross-Center Support</div>
+                                <div style="font-size:11px;opacity:0.85;margin-top:2px;">Any center can support another when workload is high</div>
+                            </div>
+                        </div>
+                        <div class="right-col" style="flex:0.9;display:flex;align-items:center;justify-content:center;">
+                            <img src="Desk.jpg" alt="Centralised Advertisement Workflow Diagram" 
+                                 style="width:100%;max-width:320px;height:auto;border-radius:10px;border:1px solid #e0e6ef;background:#e8ecf1;box-shadow:0 4px 16px rgba(0,0,0,0.08);">
+                        </div>
+                    </div>
+                </div>
+            `
+        },
+        {
+            title: 'Transformation: Fragmentation to Integration',
+            content: `
+                <div class="advt-slide-content">
+                    <div style="display:flex;gap:30px;height:100%;">
+                        <!-- Left Column - Physical Nodes -->
+                        <div style="flex:0 0 38%;display:flex;flex-direction:column;">
+                            <div style="background:white;border-radius:10px;border:1px solid #e0e6ef;padding:24px 28px;flex:1;box-shadow:0 4px 16px rgba(0,0,0,0.05);">
+                                <h2 style="text-align:center;color:#4d5968;letter-spacing:2px;font-size:15px;font-weight:600;margin:0 0 30px 0;text-transform:uppercase;">Physical Nodes</h2>
+                                
+                                <!-- Current State -->
+                                <div style="margin-bottom:28px;">
+                                    <div style="font-size:14px;font-weight:600;color:#1a3a6b;">Current State</div>
+                                    <div style="color:#888;font-size:13px;margin-bottom:8px;">Isolated Centres</div>
+                                    <div style="height:44px;background:#e8ecf1;border-radius:6px;overflow:hidden;position:relative;">
+                                        <div style="width:100%;height:100%;background:linear-gradient(90deg,#8192aa,#68788f);color:white;font-size:20px;font-weight:700;display:flex;justify-content:flex-end;align-items:center;padding-right:16px;">
+                                            41
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Proposed State -->
+                                <div style="margin-bottom:20px;">
+                                    <div style="font-size:14px;font-weight:600;color:#1a3a6b;">Proposed State</div>
+                                    <div style="color:#888;font-size:13px;margin-bottom:8px;">Connected Hubs</div>
+                                    <div style="height:44px;background:#e8ecf1;border-radius:6px;overflow:hidden;position:relative;">
+                                        <div style="width:31.7%;height:100%;background:#2a5298;color:white;font-size:20px;font-weight:700;display:flex;justify-content:center;align-items:center;">
+                                            13
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Note -->
+                                <div style="margin-top:20px;padding-top:16px;border-top:2px solid #e8ecf1;color:#666;font-style:italic;font-size:14px;line-height:1.6;">
+                                    Both states handle the exact same volume of approximately <strong style="color:#1a3a6b;">400 advertisements daily.</strong> The proposed state eliminates peak bottlenecks.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Right Column - Boxes -->
+						<div style="flex:1;display:flex;flex-direction:column;gap:16px;">
+							<!-- Current State Limitations - Red Box -->
+							<div style="background:#fff6f6;border-radius:10px;padding:18px 24px;border-left:5px solid #dc3545;flex:1;box-shadow:0 4px 16px rgba(0,0,0,0.05);">
+								<h3 style="color:#dc3545;font-size:16px;font-weight:700;margin:0 0 10px 0;letter-spacing:0.5px;">⚠️ CURRENT STATE LIMITATIONS</h3>
+								<ul style="list-style:none;padding:0;margin:0;">
+									<li style="padding:6px 0 6px 20px;font-size:13px;line-height:1.5;border-bottom:1px solid rgba(220,53,69,0.08);">
+										Each centre works independently and cannot easily support other centres during heavy workload.
+									</li>
+									<li style="padding:6px 0 6px 20px;font-size:13px;line-height:1.5;border-bottom:1px solid rgba(220,53,69,0.08);">
+										Design quality, turnaround time, and work processes differ from centre to centre.
+									</li>
+									<li style="padding:6px 0 6px 20px;font-size:13px;line-height:1.5;">
+										During festivals, elections and special events, some centres become overloaded while others have spare capacity.
+									</li>
+								</ul>
+							</div>
+							
+							<!-- Proposed Integration - Green Box -->
+							<div style="background:#f4fff8;border-radius:10px;padding:18px 24px;border-left:5px solid #28a745;flex:1;box-shadow:0 4px 16px rgba(0,0,0,0.05);">
+								<h3 style="color:#28a745;font-size:16px;font-weight:700;margin:0 0 10px 0;letter-spacing:0.5px;">✅ PROPOSED AUTOMATED INTEGRATION</h3>
+								<ul style="list-style:none;padding:0;margin:0;">
+									<li style="padding:5px 0 5px 20px;font-size:13px;line-height:1.5;border-bottom:1px solid rgba(40,167,69,0.08);">
+										Create <strong>13 well-equipped regional hubs</strong> across Maharashtra.
+									</li>
+									<li style="padding:5px 0 5px 20px;font-size:13px;line-height:1.5;border-bottom:1px solid rgba(40,167,69,0.08);">
+										Creative production tools assist with layout creation, resizing and adaptation of advertisements.
+									</li>
+									<li style="padding:5px 0 5px 20px;font-size:13px;line-height:1.5;border-bottom:1px solid rgba(40,167,69,0.08);">
+										All centers work through a <strong>common job queue</strong>.
+									</li>
+									<li style="padding:5px 0 5px 20px;font-size:13px;line-height:1.5;">
+										If one centre is busy, another centre can take over the work <strong>without delay</strong>.
+									</li>
+								</ul>
+							</div>
+						</div>
+                    </div>
+                </div>
+            `
+        },
+        {
+            title: 'Strategic Impact Analysis',
+            content: `
+                <div class="advt-slide-content">
+                    <div style="overflow-x:auto;margin-top:4px;">
+                        <table class="data-table" style="font-size:14px;min-width:700px;">
+                            <thead>
+                                <tr>
+                                    <th style="background:#1a3a6b;color:white;padding:12px 16px;text-align:left;font-weight:600;font-size:14px;">Metric</th>
+                                    <th style="background:#1a3a6b;color:white;padding:12px 16px;text-align:left;font-weight:600;font-size:14px;">Current State</th>
+                                    <th style="background:#1a3a6b;color:white;padding:12px 16px;text-align:left;font-weight:600;font-size:14px;">Target State</th>
+                                    <th style="background:#1a3a6b;color:white;padding:12px 16px;text-align:left;font-weight:600;font-size:14px;">Expected Impact</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-weight:600;font-size:13px;">Number of centres</td>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-size:13px;">41 across Maharashtra</td>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-size:13px;font-weight:500;color:#1a3a6b;">13 interconnected hubs</td>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-size:13px;color:#28a745;font-weight:600;">Better resource utilisation</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-weight:600;font-size:13px;">Ad volume handled</td>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-size:13px;">~400 ads spread thinly</td>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-size:13px;font-weight:500;color:#1a3a6b;">~400 ads consolidated</td>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-size:13px;color:#28a745;font-weight:600;">Better workload distribution</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-weight:600;font-size:13px;">Ad creation method</td>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-size:13px;">Manual, centre-by-centre</td>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-size:13px;font-weight:500;color:#1a3a6b;">Automated + templated workflows</td>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-size:13px;color:#28a745;font-weight:600;">Faster advertisement delivery</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-weight:600;font-size:13px;">Workload flexibility</td>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-size:13px;">Each centre handles only its own load</td>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-size:13px;font-weight:500;color:#1a3a6b;">Any hub can pick up another's job</td>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-size:13px;color:#28a745;font-weight:600;">Smooth operations during overload</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-weight:600;font-size:13px;">Consistency of output</td>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-size:13px;">Varies significantly by team</td>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-size:13px;font-weight:500;color:#1a3a6b;">Standardised templates &amp; rules</td>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-size:13px;color:#28a745;font-weight:600;">Consistent design quality</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-weight:600;font-size:13px;">Scalability (Peaks)</td>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-size:13px;">Severe bottlenecks at individual centres</td>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-size:13px;font-weight:500;color:#1a3a6b;">Load automatically redistributed</td>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-size:13px;color:#28a745;font-weight:600;">Better handling of high-volume periods</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Summary Tags -->
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px;padding-top:12px;border-top:2px solid #e8ecf1;">
+                        <span style="background:#1a3a6b;color:white;padding:5px 18px;border-radius:20px;font-size:12px;font-weight:500;">41 → 13 Centres</span>
+                        <span style="background:#2a5298;color:white;padding:5px 18px;border-radius:20px;font-size:12px;font-weight:500;">~400 Ads/Day</span>
+                        <span style="background:#28a745;color:white;padding:5px 18px;border-radius:20px;font-size:12px;font-weight:500;">Auto Load Balancing</span>
+                        <span style="background:#ff9800;color:white;padding:5px 18px;border-radius:20px;font-size:12px;font-weight:500;">Standardised Quality</span>
+                    </div>
+                </div>
+            `
+        },
+        {
+            title: 'Centralised Advertisement Workflow',
+            content: `
+                <div class="advt-slide-content">
+                    <div style="width:100%;display:flex;align-items:center;justify-content:center;height:100%;min-height:320px;">
+                        <img src="Flowchart.jpg" alt="Centralised Advertisement Workflow" 
+                             style="width:100%;height:auto;max-height:400px;object-fit:contain;border-radius:8px;border:1px solid #e0e6ef;background:#ffffff;box-shadow:0 4px 16px rgba(0,0,0,0.06);">
+                    </div>
+                </div>
+            `
+        },
+        {
+            title: 'Implementation Roadmap',
+            content: `
+                <div class="advt-slide-content">
+                    <!-- 4 Phase Cards in a Row -->
+                    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px;margin-bottom:16px;">
+                        <!-- Phase 1 -->
+                        <div style="background:white;border-radius:10px;border:1px solid #e0e6ef;padding:14px 16px 16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+                            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                                <span style="background:#1a3a6b;color:white;font-weight:700;font-size:13px;padding:2px 12px;border-radius:20px;">1</span>
+                                <h4 style="font-size:14px;font-weight:700;color:#1a3a6b;margin:0;">FOUNDATION</h4>
+                            </div>
+                            <p style="font-size:12px;color:#555;line-height:1.6;margin:0;">
+                                Consolidate advertisement operations into <strong>13 regional centers</strong>. Implement a common system where all centers can access and manage jobs.
+                            </p>
+                        </div>
+                        
+                        <!-- Phase 2 -->
+                        <div style="background:white;border-radius:10px;border:1px solid #e0e6ef;padding:14px 16px 16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+                            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                                <span style="background:#2a5298;color:white;font-weight:700;font-size:13px;padding:2px 12px;border-radius:20px;">2</span>
+                                <h4 style="font-size:14px;font-weight:700;color:#2a5298;margin:0;">AUTOMATION</h4>
+                            </div>
+                            <p style="font-size:12px;color:#555;line-height:1.6;margin:0;">
+                                Launch a <strong>central job allocation and tracking system</strong> to streamline workflow and improve efficiency.
+                            </p>
+                        </div>
+                        
+                        <!-- Phase 3 -->
+                        <div style="background:white;border-radius:10px;border:1px solid #e0e6ef;padding:14px 16px 16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+                            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                                <span style="background:#4a7ab8;color:white;font-weight:700;font-size:13px;padding:2px 12px;border-radius:20px;">3</span>
+                                <h4 style="font-size:14px;font-weight:700;color:#4a7ab8;margin:0;">OPTIMISATION</h4>
+                            </div>
+                            <p style="font-size:12px;color:#555;line-height:1.6;margin:0;">
+                                Automatically assign work to available centers during high workload. Create <strong>dashboards</strong> to monitor workload, time and quality.
+                            </p>
+                        </div>
+                        
+                        <!-- Phase 4 -->
+                        <div style="background:white;border-radius:10px;border:1px solid #e0e6ef;padding:14px 16px 16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+                            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                                <span style="background:#6f9ad0;color:white;font-weight:700;font-size:13px;padding:2px 12px;border-radius:20px;">4</span>
+                                <h4 style="font-size:14px;font-weight:700;color:#6f9ad0;margin:0;">SCALE</h4>
+                            </div>
+                            <p style="font-size:12px;color:#555;line-height:1.6;margin:0;">
+                                Review performance, measure savings and <strong>improve processes</strong> based on results for continuous growth.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Way Forward Section -->
+                    <div style="display:flex;border-radius:10px;overflow:hidden;border:1px solid #e0e6ef;box-shadow:0 4px 16px rgba(0,0,0,0.06);">
+						<div style="width:180px;background:linear-gradient(135deg,#1a3a6b,#2a5298);display:flex;justify-content:center;align-items:center;padding:30px 20px;flex-shrink:0;">
+							<h2 style="font-family:'Segoe UI',Arial,sans-serif;font-size:36px;color:white;line-height:1.2;text-align:center;margin:0;font-weight:700;letter-spacing:1px;">Way<br>Forward</h2>
+						</div>
+						<div style="flex:1;background:#f8fafc;padding:22px 28px;">
+							<ul style="list-style:none;padding:0;margin:0;">
+								<li style="color:#1a3a6b;font-size:14px;margin-bottom:12px;display:flex;align-items:flex-start;padding-left:0;position:relative;line-height:1.5;">
+									<span style="color:#2a5298;font-weight:700;margin-right:8px;">•</span>
+									Advertisement creation, review and approval processes will be managed through a <strong>common digital platform</strong>.
+								</li>
+								<li style="color:#1a3a6b;font-size:14px;margin-bottom:12px;display:flex;align-items:flex-start;padding-left:0;position:relative;line-height:1.5;">
+									<span style="color:#2a5298;font-weight:700;margin-right:8px;">•</span>
+									Advertisement operations will be consolidated from <strong>41 centres</strong> into <strong>13 regional centres.</strong>
+								</li>
+								<li style="color:#1a3a6b;font-size:14px;display:flex;align-items:flex-start;padding-left:0;position:relative;line-height:1.5;">
+									<span style="color:#2a5298;font-weight:700;margin-right:8px;">•</span>
+									Selection and implementation of advertisement production tools and a <strong>shared workflow management system</strong>.
+								</li>
+							</ul>
+						</div>
+					</div>
+                </div>
+            `
+        }
+    ];
+
+    // Build header with title and nav controls
+    let html = `
+        <div class="advt-header">
+            <div class="title-section">
+                <i class="fa fa-newspaper-o" style="color:#2a5298;font-size:20px;"></i>
+                <h3>Centralised Advertisement Management</h3>
+            </div>
+            <div class="nav-controls">
+                <button class="nav-btn" id="prevSlideBtn" onclick="changeSlide(-1)">
+                    <i class="fa fa-chevron-left"></i>
+                </button>
+                <div class="slide-dots" id="slideDots">
+    `;
+    for (let i = 0; i < totalSlides; i++) {
+        html += `<button class="dot ${i === 0 ? 'active' : ''}" onclick="goToSlide(${i})"></button>`;
+    }
+    html += `
+                </div>
+                <span class="slide-counter" id="slideCounter">1 / ${totalSlides}</span>
+                <button class="nav-btn" id="nextSlideBtn" onclick="changeSlide(1)">
+                    <i class="fa fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+        <div class="advt-slide-container">
+            <div class="advt-slide-wrapper" id="advtSlides">
+    `;
+
+    slides.forEach((slide, index) => {
+        html += `
+            <div class="advt-slide ${index === 0 ? 'active' : ''}" data-slide="${index}">
+                <div class="advt-slide-title">${slide.title}</div>
+                ${slide.content}
+            </div>
+        `;
+    });
+
+    html += `
+            </div>
+        </div>
+    `;
+
+    container.innerHTML = html;
+    currentSlide = 0;
+    updateSlideUI();
+}
+
+// ============================================================
+// SLIDE NAVIGATION
+// ============================================================
+function changeSlide(direction) {
+    const newSlide = currentSlide + direction;
+    if (newSlide < 0 || newSlide >= totalSlides) return;
+    currentSlide = newSlide;
+    updateSlideUI();
+}
+
+function goToSlide(index) {
+    if (index < 0 || index >= totalSlides) return;
+    currentSlide = index;
+    updateSlideUI();
+}
+
+function updateSlideUI() {
+    // Update slides
+    document.querySelectorAll('.advt-slide').forEach((slide, index) => {
+        slide.classList.toggle('active', index === currentSlide);
+    });
+
+    // Update dots
+    document.querySelectorAll('.dot').forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentSlide);
+    });
+
+    // Update counter
+    const counter = document.getElementById('slideCounter');
+    if (counter) {
+        counter.textContent = `${currentSlide + 1} / ${totalSlides}`;
+    }
+
+    // Update buttons
+    const prevBtn = document.getElementById('prevSlideBtn');
+    const nextBtn = document.getElementById('nextSlideBtn');
+    if (prevBtn) prevBtn.disabled = currentSlide === 0;
+    if (nextBtn) nextBtn.disabled = currentSlide === totalSlides - 1;
+}
+
+// ============================================================
+// RENDER ALL MODELS (Admin - from All-Tables sheet)
+// ============================================================
+function renderAllModels(container) {
+    const data = allData.allTables || [];
+    
+    if (!data || data.length === 0) {
+        container.innerHTML = '<div class="no-data"><i class="fa fa-database"></i>No data available in All-Tables sheet</div>';
+        return;
+    }
+    
+    // Calculate totals for stats bar
+    let totalExisting = 0, totalModelA = 0, totalModelB = 0, totalModelC = 0;
+    
+    data.forEach(row => {
+        totalExisting += parseFloat(row['Existing']) || 0;
+        totalModelA += parseFloat(row['Model-A']) || 0;
+        totalModelB += parseFloat(row['Model-B']) || 0;
+        totalModelC += parseFloat(row['Model-C']) || 0;
+    });
+    
+    const headers = Object.keys(data[0] || {});
+    
+    let html = `
+        <div class="section-header">
+            <h3><i class="fa fa-cubes"></i> All Models - Combined View</h3>
+            <span style="font-size:13px;color:#888;">Total Units: ${data.length}</span>
+        </div>
+        
+        <!-- 2-Column Stats Layout -->
+        <div class="model-stats-container">
+            <div class="model-stats-left">
+                <div class="stat-label"><i class="fa fa-bar-chart"></i> All Models Summary</div>
+                <div class="model-stat-item existing">
+                    <span class="stat-name">Existing</span>
+                    <span class="stat-count">${totalExisting}</span>
+                </div>
+                <div class="model-stat-item model-a">
+                    <span class="stat-name">Model-A</span>
+                    <span class="stat-count">${totalModelA}</span>
+                </div>
+                <div class="model-stat-item model-b">
+                    <span class="stat-name">Model-B</span>
+                    <span class="stat-count">${totalModelB}</span>
+                </div>
+                <div class="model-stat-item model-c">
+                    <span class="stat-name">Model-C</span>
+                    <span class="stat-count">${totalModelC}</span>
+                </div>
+            </div>
+            <div class="model-stats-right" id="chartContainer">
+                <!-- Charts will be rendered here by drawCharts() -->
+            </div>
+        </div>
+        
+        <div class="table-responsive-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        ${headers.map(h => `<th>${escapeHtml(h)}</th>`).join('')}
+                    </tr>
+                </thead>
+                <tbody>
+    `;
+    
+    data.forEach(row => {
+        html += '<tr>';
+        headers.forEach(h => {
+            const val = row[h] !== undefined && row[h] !== null ? row[h] : '';
+            html += `<td>${escapeHtml(String(val))}</td>`;
+        });
+        html += '</tr>';
+    });
+    
+    html += `
+                </tbody>
+            </table>
+        </div>
+    `;
+    
+    container.innerHTML = html;
+    
+    // Draw charts after DOM is updated
+    setTimeout(() => {
+        drawCharts(totalExisting, totalModelA, totalModelB, totalModelC);
+    }, 50);
+}
+
+// ============================================================
+// DRAW PIE CHARTS - Highlighting the Difference/Gap Value
+// ============================================================
+function drawCharts(existing, modelA, modelB, modelC) {
+    const container = document.getElementById('chartContainer');
+    if (!container) return;
+    
+    // Clear container
+    container.innerHTML = '';
+    
+    // Chart configurations - all using same color #2a5298
+    // For model charts, we highlight the DIFFERENCE (existing - model value)
+    const charts = [
+        { id: 'chart-existing', label: 'Existing', value: existing, isBase: true },
+        { id: 'chart-modelA', label: 'Model-A', value: existing - modelA, isBase: false, modelValue: modelA },
+        { id: 'chart-modelB', label: 'Model-B', value: existing - modelB, isBase: false, modelValue: modelB },
+        { id: 'chart-modelC', label: 'Model-C', value: existing - modelC, isBase: false, modelValue: modelC }
+    ];
+    
+    charts.forEach((chart) => {
+        const chartDiv = document.createElement('div');
+        chartDiv.className = 'chart-item';
+        
+        const canvas = document.createElement('canvas');
+        canvas.id = chart.id;
+        canvas.width = 220;
+        canvas.height = 220;
+        
+        const labelDiv = document.createElement('div');
+        labelDiv.className = 'chart-label';
+        labelDiv.textContent = chart.label;
+        
+        const valueDiv = document.createElement('div');
+        valueDiv.className = 'chart-value';
+        
+        if (chart.isBase) {
+            valueDiv.textContent = `${chart.value}`;
+        } else {
+            // Show: Model Value / Difference
+            valueDiv.textContent = `${chart.modelValue} / ${chart.value}`;
+        }
+        
+        chartDiv.appendChild(canvas);
+        chartDiv.appendChild(labelDiv);
+        chartDiv.appendChild(valueDiv);
+        container.appendChild(chartDiv);
+        
+        // Draw the chart
+        const ctx = canvas.getContext('2d');
+        drawPieChart(ctx, canvas.width, canvas.height, chart, existing);
+    });
+}
+
+function drawPieChart(ctx, width, height, chart, existing) {
+    const centerX = width / 2;
+    const centerY = height / 2;
+    const radius = Math.min(width, height) / 2 - 15;
+    const color = '#2a5298';
+    
+    ctx.clearRect(0, 0, width, height);
+    
+    if (chart.isBase) {
+        // Full circle for Existing
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+        ctx.fillStyle = '#428bca';
+        ctx.fill();
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+        
+        // Center text
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 28px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(chart.value, centerX, centerY);
+    } else {
+        // Pie chart showing the DIFFERENCE (existing - model value) as the highlighted portion
+        const diffValue = chart.value;
+        const percentage = existing > 0 ? diffValue / existing : 0;
+        const startAngle = -Math.PI / 2;
+        const endAngle = startAngle + (percentage * 2 * Math.PI);
+        
+        // Draw background (the model value portion - light gray)
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+        ctx.fillStyle = '#428bca';
+        ctx.fill();
+        
+        // Draw filled portion (the DIFFERENCE - highlighted in blue)
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+        ctx.closePath();
+        ctx.fillStyle = color;
+        ctx.fill();
+        
+        // Draw border
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+        
+        // Draw center circle for donut effect
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius * 0.45, 0, 2 * Math.PI);
+        ctx.fillStyle = '#ffffff';
+        ctx.fill();
+        ctx.strokeStyle = '#428bca';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        
+        // Center text - show percentage of difference
+        ctx.fillStyle = '#1a3a6b';
+        ctx.font = 'bold 24px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(Math.round(percentage * 100) + '%', centerX, centerY);
+    }
+}
+
+// ============================================================
+// RENDER WORKLOAD (Admin)
+// ============================================================
+function renderWorkload(container) {
+    const data = allData.workload || [];
+    
+    if (!data || data.length === 0) {
+        container.innerHTML = '<div class="no-data"><i class="fa fa-database"></i>No workload data available</div>';
+        return;
+    }
+    
+    const headers = Object.keys(data[0] || {});
+    
+    let html = `
+        <div class="section-header">
+            <h3><i class="fa fa-tasks"></i> Workload by Unit</h3>
+            <span style="font-size:13px;color:#888;">Total Units: ${data.length}</span>
+        </div>
+        <div class="table-responsive-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        ${headers.map(h => `<th>${escapeHtml(h)}</th>`).join('')}
+                    </tr>
+                </thead>
+                <tbody>
+    `;
+    
+    data.forEach(row => {
+        html += '<tr>';
+        headers.forEach(h => {
+            const val = row[h] !== undefined && row[h] !== null ? row[h] : '';
+            html += `<td>${escapeHtml(String(val))}</td>`;
+        });
+        html += '</tr>';
+    });
+    
+    html += `
+                </tbody>
+            </table>
+        </div>
+    `;
+    
+    container.innerHTML = html;
+}
+
+// ============================================================
+// RENDER SKILLS (Admin)
+// ============================================================
+function renderSkills(container) {
+    const data = allData.skills || [];
+    
+    if (!data || data.length === 0) {
+        container.innerHTML = '<div class="no-data"><i class="fa fa-database"></i>No skills data available</div>';
+        return;
+    }
+    
+    let totalNews = 0, totalCreative = 0, totalEventAdvt = 0, totalExperts = 0;
+    let totalNotice = 0, totalPhoto = 0, totalPDF = 0;
+    
+    data.forEach(row => {
+        totalNews += row.Normal_Page_Designer || 0;
+        totalCreative += row.Creative_Page_Designer || 0;
+        totalEventAdvt += row.Event_Advt_Designer || 0;
+        totalExperts += row.Versatile || 0;
+        totalNotice += row.Notice_Display_Ad || 0;
+        totalPhoto += row.Photo_Editor || 0;
+        totalPDF += row.PDF_Maker || 0;
+    });
+    
+    const headers = ['Unit', 'Total', 'News Pages', 'Creative Pages', 
+                     'Event/Advt', 'Experts', 'Notice/Display Ad', 'Photo Editor', 'PDF Maker'];
+    
+    let html = `
+        <div class="section-header">
+            <h3><i class="fa fa-tags"></i> Skills Distribution</h3>
+            <div class="summary-totals">
+                <span>📰 News Page Expert: <strong>${totalNews}</strong></span>
+                <span>🎨 Creative Pages Expert: <strong>${totalCreative}</strong></span>
+                <span>🎪 Event/Advt Expert: <strong>${totalEventAdvt}</strong></span>
+                <span>⭐ Versatile Experts: <strong>${totalExperts}</strong></span>
+                <span>📋 Notice/Display Ad: <strong>${totalNotice}</strong></span>
+                <span>📷 Photo Expert: <strong>${totalPhoto}</strong></span>
+                <span>📄 PDF/QC Expert: <strong>${totalPDF}</strong></span>
+            </div>
+        </div>
+        <div class="table-responsive-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        ${headers.map(h => `<th>${escapeHtml(h)}</th>`).join('')}
+                    </tr>
+                </thead>
+                <tbody>
+    `;
+    
+    data.forEach(row => {
+        html += '<tr>';
+        html += `<td>${escapeHtml(row.Unit || '')}</td>`;
+        html += `<td>${row.Total || 0}</td>`;
+        html += `<td>${row.Normal_Page_Designer || 0}</td>`;
+        html += `<td>${row.Creative_Page_Designer || 0}</td>`;
+        html += `<td>${row.Event_Advt_Designer || 0}</td>`;
+        html += `<td>${row.Versatile || 0}</td>`;
+        html += `<td>${row.Notice_Display_Ad || 0}</td>`;
+        html += `<td>${row.Photo_Editor || 0}</td>`;
+        html += `<td>${row.PDF_Maker || 0}</td>`;
+        html += '</tr>';
+    });
+    
+    html += `
+                </tbody>
+            </table>
+        </div>
+    `;
+    
+    container.innerHTML = html;
+}
+
+// ============================================================
+// RENDER MODEL (Admin)
+// ============================================================
+function renderModel(container, modelType, title) {
+    const models = allData.models || {};
+    const data = models[modelType] || [];
+    
+    if (!data || data.length === 0) {
+        container.innerHTML = '<div class="no-data"><i class="fa fa-database"></i>No model data available</div>';
+        return;
+    }
+    
+    let totalPD = 0, totalADVT = 0, totalReliever = 0, totalEvent = 0, totalOther = 0;
+    
+    data.forEach(row => {
+        totalPD += row['Page Designer'] || 0;
+        totalADVT += row['ADVT'] || 0;
+        totalReliever += row['Reliever'] || 0;
+        totalEvent += row['Event'] || 0;
+        totalOther += row['Other'] || 0;
+    });
+    
+    const grandTotal = totalPD + totalADVT + totalReliever + totalEvent + totalOther;
+    const headers = Object.keys(data[0] || {});
+    
+    let html = `
+        <div class="section-header">
+            <h3><i class="fa fa-cubes"></i> ${escapeHtml(title)} - <span style="color:#1a3a6b;font-weight:700;">${grandTotal}</span></h3>
+            <div class="summary-totals">
+                <span>📐 Page Designer: <strong>${totalPD}</strong></span>
+                <span>📢 ADVT: <strong>${totalADVT}</strong></span>
+                <span>🔄 Reliever: <strong>${totalReliever}</strong></span>
+                <span>🎪 Event: <strong>${totalEvent}</strong></span>
+                <span>📋 Other: <strong>${totalOther}</strong></span>
+            </div>
+        </div>
+        <div class="table-responsive-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        ${headers.map(h => `<th>${escapeHtml(h)}</th>`).join('')}
+                    </tr>
+                </thead>
+                <tbody>
+    `;
+    
+    data.forEach(row => {
+        html += '<tr>';
+        headers.forEach(h => {
+            const val = row[h] !== undefined && row[h] !== null ? row[h] : '';
+            html += `<td>${val}</td>`;
+        });
+        html += '</tr>';
+    });
+    
+    html += `
+                </tbody>
+            </table>
+        </div>
+    `;
+    
+    container.innerHTML = html;
+}
+
+// ============================================================
+// RENDER PUBLICATIONS (Admin - All Units)
+// ============================================================
+function renderPublications(container) {
+    const data = allData.publication || {};
+    const units = Object.keys(data);
+    
+    if (!units || units.length === 0) {
+        container.innerHTML = '<div class="no-data"><i class="fa fa-newspaper-o"></i>No publication data available</div>';
+        return;
+    }
+    
+    let grandTotalPages = 0, grandTotalFresh = 0, grandTotalAlter = 0;
+    units.forEach(unit => {
+        const unitData = data[unit] || [];
+        unitData.forEach(row => {
+            grandTotalPages += row.Total_Pages || 0;
+            grandTotalFresh += row.Fresh_Pagination || 0;
+            grandTotalAlter += row.Alter_Pagination || 0;
+        });
+    });
+    
+    let html = `
+        <div class="section-header">
+            <h3><i class="fa fa-newspaper-o"></i> All Publications by Unit</h3>
+            <div class="totals-box">
+                <span>📄 Total Pages: <span class="num">${grandTotalPages}</span></span>
+                <span>🆕 Fresh: <span class="num">${grandTotalFresh}</span></span>
+                <span>🔄 Alter: <span class="num">${grandTotalAlter}</span></span>
+            </div>
+        </div>
+    `;
+    
+    units.sort().forEach(unit => {
+        const unitData = data[unit] || [];
+        if (unitData.length === 0) return;
+        
+        let totalPages = 0, totalFresh = 0, totalAlter = 0;
+        unitData.forEach(row => {
+            totalPages += row.Total_Pages || 0;
+            totalFresh += row.Fresh_Pagination || 0;
+            totalAlter += row.Alter_Pagination || 0;
+        });
+        
+        const unitId = 'pub_unit_' + unit.replace(/[^a-zA-Z0-9]/g, '_');
+        
+        html += `
+            <div class="unit-publication">
+                <div class="unit-header" onclick="togglePublication('${unitId}')">
+                    <span>
+                        <i class="fa fa-chevron-right pub-collapse-icon" id="${unitId}_icon"></i>
+                        ${escapeHtml(unit)}
+                    </span>
+                    <div class="unit-totals">
+                        <span>📄 Total: <span class="num">${totalPages}</span></span>
+                        <span>🆕 Fresh: <span class="num">${totalFresh}</span></span>
+                        <span>🔄 Alter: <span class="num">${totalAlter}</span></span>
+                    </div>
+                </div>
+                <div class="unit-body" id="${unitId}">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Edition</th>
+                                <th>Editorial Content Ready</th>
+                                <th>Page Design & PDF Slot</th>
+                                <th>Total Pages</th>
+                                <th>Fresh</th>
+                                <th>Alter</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+        `;
+        
+        unitData.forEach(row => {
+            html += `
+                <tr>
+                    <td><strong>${escapeHtml(row.Edition || '')}</strong></td>
+                    <td>${escapeHtml(row.Editorial_Content_Ready || '')}</td>
+                    <td>${escapeHtml(row.Page_Design_PDF_Slot || '')}</td>
+                    <td>${row.Total_Pages || 0}</td>
+                    <td>${row.Fresh_Pagination || 0}</td>
+                    <td>${row.Alter_Pagination || 0}</td>
+                </tr>
+            `;
+        });
+        
+        html += `
+                        </tbody>
+                        <tfoot>
+                            <tr class="total-row">
+                                <th>TOTAL</th>
+                                <td></td>
+                                <td></td>
+                                <td>${totalPages}</td>
+                                <td>${totalFresh}</td>
+                                <td>${totalAlter}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+}
+
+function togglePublication(unitId) {
+    const body = document.getElementById(unitId);
+    const icon = document.getElementById(unitId + '_icon');
+    if (body) {
+        body.classList.toggle('open');
+        if (icon) {
+            icon.classList.toggle('open');
+        }
+    }
+}
+
+// ============================================================
+// RENDER LIST EMPLOYEES (Admin - 3 Column Layout)
+// ============================================================
+// This function is kept but no longer used since we removed the tabs.
+// Keeping it as a placeholder in case it's needed elsewhere.
+function renderListEmployees(container, listKey, listTitle) {
+    const data = allData[listKey] || {};
+    const units = Object.keys(data);
+    
+    if (!units || units.length === 0) {
+        container.innerHTML = `<div class="no-data"><i class="fa fa-users"></i>No employee data available for ${listTitle}</div>`;
+        return;
+    }
+    
+    let grandExisting = 0, grandProposed = 0, grandEliminated = 0;
+    units.forEach(unit => {
+        const unitData = data[unit] || [];
+        unitData.forEach(emp => {
+            grandExisting++;
+            if (emp.Continue && emp.Continue.toLowerCase() === 'yes') {
+                grandProposed++;
+            } else if (emp.Continue && emp.Continue.toLowerCase() === 'no') {
+                grandEliminated++;
+            }
+        });
+    });
+    
+    // SUBTRACT 1 FROM GRAND EXISTING ONLY FOR LIST-MODEL-A
+    if (listKey === 'listA') {
+        grandExisting = grandExisting - 1;
+    }
+    
+    let html = `
+        <div class="section-header">
+            <h3><i class="fa fa-users"></i> ${escapeHtml(listTitle)} - Employees by Unit</h3>
+            <div class="totals-box">
+                <span>👥 Existing: <span class="num">${grandExisting}</span></span>
+                <span>✅ Proposed: <span class="num">${grandProposed}</span></span>
+                <span>❌ Eliminated: <span class="num">${grandEliminated}</span></span>
+            </div>
+        </div>
+    `;
+    
+    units.sort().forEach(unit => {
+        const unitData = data[unit] || [];
+        if (unitData.length === 0) return;
+        
+        const existing = [];
+        const proposed = [];
+        const eliminated = [];
+        
+        unitData.forEach(emp => {
+            existing.push(emp);
+            if (emp.Continue && emp.Continue.toLowerCase() === 'yes') {
+                proposed.push(emp);
+            } else if (emp.Continue && emp.Continue.toLowerCase() === 'no') {
+                eliminated.push(emp);
+            }
+        });
+        
+        const sortByName = (arr) => arr.sort((a, b) => (a.Name || '').localeCompare(b.Name || ''));
+        sortByName(existing);
+        sortByName(proposed);
+        sortByName(eliminated);
+        
+        const unitExisting = existing.length;
+        const unitProposed = proposed.length;
+        const unitEliminated = eliminated.length;
+        
+        const maxRows = Math.max(existing.length, proposed.length, eliminated.length);
+        const unitId = 'emp_unit_' + listKey + '_' + unit.replace(/[^a-zA-Z0-9]/g, '_');
+        
+        html += `
+            <div class="unit-employee">
+                <div class="unit-header" onclick="toggleEmployeeUnit('${unitId}')">
+                    <span>
+                        <i class="fa fa-chevron-right pub-collapse-icon" id="${unitId}_icon"></i>
+                        ${escapeHtml(unit)}
+                    </span>
+                    <div class="unit-totals">
+                        <span>👥 Existing: <span class="num">${unitExisting}</span></span>
+                        <span>✅ Proposed: <span class="num">${unitProposed}</span></span>
+                        <span>❌ Eliminated: <span class="num">${unitEliminated}</span></span>
+                    </div>
+                </div>
+                <div class="unit-body" id="${unitId}">
+                    <table class="data-table employee-table">
+                        <thead>
+                            <tr>
+                                <th style="width:33.33%;background:#28a745;color:white;">Existing</th>
+                                <th style="width:33.33%;background:#17a2b8;color:white;">Proposed</th>
+                                <th style="width:33.33%;background:#dc3545;color:white;">Eliminated</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+        `;
+        
+        for (let i = 0; i < maxRows; i++) {
+            const empExisting = existing[i] || null;
+            const empProposed = proposed[i] || null;
+            const empEliminated = eliminated[i] || null;
+            
+            const getNameWithColor = (emp) => {
+                if (!emp) return '';
+                const isCNF = emp.Type && emp.Type.toUpperCase() === 'CNF';
+                const name = escapeHtml(emp.Name || '');
+                return isCNF ? `<span class="text-cnf">${name}</span>` : name;
+            };
+            
+            html += `
+                <tr>
+                    <td>${getNameWithColor(empExisting)}</td>
+                    <td>${getNameWithColor(empProposed)}</td>
+                    <td>${getNameWithColor(empEliminated)}</td>
+                </tr>
+            `;
+        }
+        
+        html += `
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+}
+
+function toggleEmployeeUnit(unitId) {
+    const body = document.getElementById(unitId);
+    const icon = document.getElementById(unitId + '_icon');
+    if (body) {
+        body.classList.toggle('open');
+        if (icon) {
+            icon.classList.toggle('open');
+        }
+    }
+}
+
+
+// Add this to your existing analysis filter state
+let analysisSkillFilter = 'all';
+
+// Add this function to handle skill filter clicks
+function setAnalysisSkillFilter(skill) {
+    analysisSkillFilter = skill;
+    document.querySelectorAll('#analysisSkillFilters .skill-filter-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.skill === skill);
+    });
+    applyAnalysisFilters();
+}
+
+// ============================================================
+// RENDER ANALYSIS (Admin & ICD Head - Employee Directory)
+// ============================================================
+
+function renderAnalysis(container) {
+    if (!allEmployees || allEmployees.length === 0) {
+        container.innerHTML = '<div class="no-data"><i class="fa fa-users"></i>No employees found</div>';
+        return;
+    }
+
+    const isAdmin = loggedInUser.role === 'Admin';
+    
+    // Get unique units with counts
+    const unitMap = {};
+    allEmployees.forEach(e => {
+        if (e.Unit) {
+            unitMap[e.Unit] = (unitMap[e.Unit] || 0) + 1;
+        }
+    });
+    const units = Object.keys(unitMap).sort();
+    
+    // Get unique workplaces with counts (ALL workplaces)
+    const workplaceMap = {};
+    allEmployees.forEach(e => {
+        if (e.WorkPlace) {
+            workplaceMap[e.WorkPlace] = (workplaceMap[e.WorkPlace] || 0) + 1;
+        }
+    });
+    const allWorkplaces = Object.keys(workplaceMap).sort();
+    
+    // Calculate counts
+    let ftaCount = allEmployees.filter(e => e.Type === 'FTA').length;
+    let vouCount = allEmployees.filter(e => e.Type === 'VOU').length;
+    let cnfCount = allEmployees.filter(e => e.Type === 'CNF').length;
+    
+    // Build unit options with counts - "All Units" selected by default
+    let unitOptions = '<option value="" selected>All Units (' + allEmployees.length + ')</option>';
+    units.forEach(u => {
+        const count = unitMap[u] || 0;
+        unitOptions += `<option value="${escapeHtml(u)}">${escapeHtml(u)} (${count})</option>`;
+    });
+    
+    // Build workplace options with counts - "All Workplaces" selected by default
+    let workplaceOptions = '<option value="" selected>All Workplaces (' + allWorkplaces.length + ')</option>';
+    allWorkplaces.forEach(w => {
+        const count = workplaceMap[w] || 0;
+        workplaceOptions += `<option value="${escapeHtml(w)}">${escapeHtml(w)} (${count})</option>`;
+    });
+    
+    // Build skill strength filter options
+    const skillCounts = {
+        'Allrounder': 0,
+        'Creative/Feature Page Design': 0,
+        'Event/Creative Advt': 0,
+        'Notice/Display Advt': 0,
+        'Photo': 0,
+        'Normal Pagination': 0,
+        'PDF Final/QC': 0
+    };
+    
+    allEmployees.forEach(emp => {
+        if (emp.Expertise && skillCounts.hasOwnProperty(emp.Expertise)) {
+            skillCounts[emp.Expertise]++;
+        }
+    });
+    
+    // Skill strength filter HTML
+    let skillFilterHtml = `
+        <div class="filter-group" style="flex:1;min-width:100%;">
+            <label><i class="fa fa-trophy"></i> Skill Strength</label>
+            <div class="skill-filters" id="analysisSkillFilters">
+                <button class="skill-filter-btn active" data-skill="all" onclick="setAnalysisSkillFilter('all')">
+                    All <span class="skill-count">${allEmployees.length}</span>
+                </button>
+    `;
+    
+    const skillOrder = ['Allrounder', 'Creative/Feature Page Design', 'Event/Creative Advt', 
+                        'Notice/Display Advt', 'Photo', 'Normal Pagination', 'PDF Final/QC'];
+    
+    skillOrder.forEach(skill => {
+        const count = skillCounts[skill] || 0;
+        if (count > 0) {
+            const shortSkill = skill.replace('Creative/Feature Page Design', 'Creative/Feature')
+                                   .replace('Event/Creative Advt', 'Event/Advt')
+                                   .replace('Notice/Display Advt', 'Notice/Display');
+            skillFilterHtml += `
+                <button class="skill-filter-btn" data-skill="${escapeHtml(skill)}" onclick="setAnalysisSkillFilter('${escapeHtml(skill)}')">
+                    ${escapeHtml(shortSkill)} <span class="skill-count">${count}</span>
+                </button>
+            `;
+        }
+    });
+    
+    skillFilterHtml += `
+            </div>
+        </div>
+    `;
+    
+    let html = `
+        <div class="section-header">
+            <h3><i class="fa fa-users"></i> Employee Directory</h3>
+            <div class="totals-box">
+                <span>👥 Total: <span class="num">${allEmployees.length}</span></span>
+                <span>📋 FTA: <span class="num">${ftaCount}</span></span>
+                <span>📋 VOU: <span class="num">${vouCount}</span></span>
+                <span>📋 CNF: <span class="num">${cnfCount}</span></span>
+            </div>
+        </div>
+        
+        <!-- Filters -->
+        <div class="filters-section">
+            <div class="filter-group">
+                <label><i class="fa fa-building"></i> Unit</label>
+                <select id="analysisUnitFilter" onchange="onUnitChange()">
+                    ${unitOptions}
+                </select>
+            </div>
+            <div class="filter-group">
+                <label><i class="fa fa-map-marker"></i> Workplace</label>
+                <select id="analysisWorkplaceFilter" onchange="applyAnalysisFilters()">
+                    ${workplaceOptions}
+                </select>
+            </div>
+            <div class="filter-group">
+                <label><i class="fa fa-tag"></i> Type</label>
+                <div class="type-filters">
+                    <button class="type-btn active" data-type="all" onclick="setAnalysisTypeFilter('all')">All</button>
+                    <button class="type-btn" data-type="FTA" onclick="setAnalysisTypeFilter('FTA')">FTA</button>
+                    <button class="type-btn" data-type="VOU" onclick="setAnalysisTypeFilter('VOU')">VOU</button>
+                    <button class="type-btn" data-type="CNF" onclick="setAnalysisTypeFilter('CNF')">CNF</button>
+                </div>
+            </div>
+            ${skillFilterHtml}
+            <div class="filter-group" style="flex:1; justify-content:flex-end;">
+                <input type="text" class="search-box" id="analysisSearchInput" placeholder="🔍 Search by name..." oninput="applyAnalysisFilters()">
+            </div>
+        </div>
+        
+        <!-- Stats Bar -->
+        <div class="stats-bar" id="analysisStatsBar">
+            <span class="stat-item">👥 <strong id="analysisDisplayCount">${allEmployees.length}</strong> employees shown</span>
+            <span class="stat-divider">|</span>
+            <span class="stat-item">📋 <strong id="analysisDisplayFTA">${ftaCount}</strong> FTA</span>
+            <span class="stat-item">📋 <strong id="analysisDisplayVOU">${vouCount}</strong> VOU</span>
+            <span class="stat-item">📋 <strong id="analysisDisplayCNF">${cnfCount}</strong> CNF</span>
+            <span class="stat-divider">|</span>
+            <span class="stat-item">🏢 <strong id="analysisDisplayUnits">${units.length}</strong> units</span>
+            <span class="stat-item">📍 <strong id="analysisDisplayWorkplaces">${allWorkplaces.length}</strong> workplaces</span>
+        </div>
+        
+        <!-- Team Workload Bar -->
+        <div class="team-workload-bar" id="analysisTeamWorkloadBar">
+            <div class="tw-title"><i class="fa fa-tasks"></i> 📊 Team Workload</div>
+            <div class="tw-container" id="twContainer">
+                <div class="tw-left" id="twLeft">
+                    <div id="teamWorkloadContent">
+                        <span style="color:#999;">Select a workplace to view workload</span>
+                    </div>
+                </div>
+                <div class="tw-right" id="twRight">
+                    <div class="tw-remark-header">
+                        <label><i class="fa fa-pencil-square-o"></i> WP Remark</label>
+                        <button class="save-btn" id="remarkSaveBtn" onclick="saveRemark()">
+                            <i class="fa fa-save"></i> Save
+                        </button>
+                    </div>
+                    <textarea class="tw-remark-textarea" id="remarkInput" 
+                              placeholder="Workplace remarks and analysis will appear here..." 
+                              oninput="onRemarkChange()"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- WPOW Bar -->
+        <div class="wpow-bar" id="analysisWPOWBar">
+            <div class="wpow-title"><i class="fa fa-tasks"></i> 📋 Work Place Other Workload</div>
+            <div class="wpow-row">
+                <div class="wpow-item">
+                    <label>Daily Ads</label>
+                    <input type="number" id="wpowDailyAds" min="0" step="1" placeholder="0" oninput="onWPOWChange()">
+                </div>
+                <div class="wpow-item">
+                    <label>AnniversaryPG</label>
+                    <input type="number" id="wpowAnniversaryPG" min="0" step="1" placeholder="0" oninput="onWPOWChange()">
+                </div>
+                <div class="wpow-item">
+                    <label>AdvertorialPG</label>
+                    <input type="number" id="wpowAdvertorialPG" min="0" step="1" placeholder="0" oninput="onWPOWChange()">
+                </div>
+                <div class="wpow-item">
+                    <label>Diwali Issue</label>
+                    <input type="number" id="wpowDiwaliIssue" min="0" step="1" placeholder="0" oninput="onWPOWChange()">
+                </div>
+                <div class="wpow-item">
+                    <label>CT-Book</label>
+                    <input type="number" id="wpowCtBook" min="0" step="1" placeholder="0" oninput="onWPOWChange()">
+                </div>
+                <div class="wpow-other-item">
+                    <label>Other</label>
+                    <textarea id="wpowOther" placeholder="..." oninput="onWPOWChange()"></textarea>
+                </div>
+                <div class="wpow-save-area">
+                    <span class="wpow-save-status" id="wpowStatus"></span>
+                    <button class="wpow-save-btn" id="wpowSaveBtn" onclick="saveWPOWData()">
+                        <i class="fa fa-save"></i> Save
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Common Unit Projects (Admin only) -->
+        <div class="common-unit-projects" id="analysisCommonUnitProjects">
+            <div class="cup-container">
+                <div class="cup-header">
+                    <div class="cup-title">
+                        <i class="fa fa-folder-open"></i> Common Unit Projects
+                        <span class="cup-unit-name" id="cupUnitName"></span>
+                    </div>
+                    <div class="cup-actions">
+                        <span class="cup-save-status" id="cupStatus"></span>
+                        <button class="cup-save-btn" id="cupSaveBtn" onclick="saveCommonUnitProjects()">
+                            <i class="fa fa-save"></i> Save
+                        </button>
+                    </div>
+                </div>
+                <textarea class="cup-textarea" id="cupTextarea" 
+                          placeholder="Select a unit to view common projects..." 
+                          oninput="onCUPChange()"
+                          disabled></textarea>
+            </div>
+        </div>
+        
+        <!-- Employee Grid -->
+        <div class="employee-grid" id="analysisEmployeeGrid">
+    `;
+    
+    // Initial render of all employees
+    html += buildEmployeeCards(allEmployees);
+    
+    html += `
+        </div>
+    `;
+    
+    container.innerHTML = html;
+    
+    // Store current analysis employees for filtering
+    window._analysisEmployees = [...allEmployees];
+    
+    // Apply initial filters (shows all employees since "All Units" and "All Workplaces" are selected)
+    applyAnalysisFilters();
+    
+    // For Admin: Load Common Unit Projects for "All Units" (hide it initially)
+    if (isAdmin) {
+        const container = document.getElementById('analysisCommonUnitProjects');
+        if (container) container.classList.remove('visible');
+    }
+}
+
+function onUnitChange() {
+    const unit = document.getElementById('analysisUnitFilter').value;
+    const workplaceFilter = document.getElementById('analysisWorkplaceFilter');
+    
+    if (unit) {
+        // A specific unit is selected - populate workplaces for this unit
+        populateWorkplacesForUnit(unit);
+        
+        // Auto-select "All Workplaces" for this unit
+        setTimeout(() => {
+            // Set to "All Workplaces" option (first option)
+            workplaceFilter.value = '';
+            applyAnalysisFilters();
+        }, 100);
+        
+        // Load Common Unit Projects for this unit (Admin only)
+        if (loggedInUser.role === 'Admin') {
+            updateCommonUnitProjects(unit);
+        }
+    } else {
+        // "All Units" selected - show all workplaces
+        const workplaceMap = {};
+        allEmployees.forEach(e => {
+            if (e.WorkPlace) {
+                workplaceMap[e.WorkPlace] = (workplaceMap[e.WorkPlace] || 0) + 1;
+            }
+        });
+        const workplaces = Object.keys(workplaceMap).sort();
+        populateWorkplaceDropdownWithCounts(workplaces, workplaceMap);
+        
+        // Select "All Workplaces"
+        workplaceFilter.value = '';
+        applyAnalysisFilters();
+        
+        // Hide Common Unit Projects
+        if (loggedInUser.role === 'Admin') {
+            const container = document.getElementById('analysisCommonUnitProjects');
+            if (container) container.classList.remove('visible');
+        }
+    }
+}
+
+function populateWorkplacesForUnit(unit) {
+    if (!unit) {
+        // If no unit, show all workplaces with counts
+        const workplaceMap = {};
+        allEmployees.forEach(e => {
+            if (e.WorkPlace) {
+                workplaceMap[e.WorkPlace] = (workplaceMap[e.WorkPlace] || 0) + 1;
+            }
+        });
+        const workplaces = Object.keys(workplaceMap).sort();
+        populateWorkplaceDropdownWithCounts(workplaces, workplaceMap);
+        return;
+    }
+    
+    // Get workplaces for the selected unit with counts
+    const workplaceMap = {};
+    allEmployees
+        .filter(e => e.Unit === unit && e.WorkPlace)
+        .forEach(e => {
+            workplaceMap[e.WorkPlace] = (workplaceMap[e.WorkPlace] || 0) + 1;
+        });
+    
+    const workplaces = Object.keys(workplaceMap).sort();
+    const totalForUnit = allEmployees.filter(e => e.Unit === unit).length;
+    
+    const select = document.getElementById('analysisWorkplaceFilter');
+    if (!select) return;
+    
+    // Clear and repopulate with "All Workplaces" as first option
+    select.innerHTML = `<option value="">All Workplaces (${totalForUnit})</option>`;
+    workplaces.forEach(w => {
+        const count = workplaceMap[w] || 0;
+        const option = document.createElement('option');
+        option.value = w;
+        option.textContent = w + ' (' + count + ')';
+        select.appendChild(option);
+    });
+    
+    // Select "All Workplaces" by default
+    select.value = '';
+}
+
+function populateWorkplaceDropdownWithCounts(workplaces, workplaceMap) {
+    const select = document.getElementById('analysisWorkplaceFilter');
+    if (!select) return;
+    
+    const currentValue = select.value;
+    
+    // Clear existing options
+    const totalWorkplaces = workplaces.length;
+    select.innerHTML = `<option value="">All Workplaces (${totalWorkplaces})</option>`;
+    
+    // Sort workplaces alphabetically
+    workplaces.sort().forEach(w => {
+        const count = workplaceMap[w] || 0;
+        const option = document.createElement('option');
+        option.value = w;
+        option.textContent = w + ' (' + count + ')';
+        select.appendChild(option);
+    });
+    
+    // Try to keep current selection if it still exists
+    let found = false;
+    for (let i = 0; i < select.options.length; i++) {
+        if (select.options[i].value === currentValue) {
+            select.value = currentValue;
+            found = true;
+            break;
+        }
+    }
+    
+    // If current selection not found and there are workplaces, select the first one
+    if (!found && select.options.length > 1) {
+        select.value = select.options[1].value;
+    }
+}
+
+// ============================================================
+// ANALYSIS FILTERS
+// ============================================================
+
+let analysisTypeFilter = 'all';
+
+function applyAnalysisFilters() {
+    const unit = document.getElementById('analysisUnitFilter').value;
+    const workplace = document.getElementById('analysisWorkplaceFilter').value;
+    const searchTerm = document.getElementById('analysisSearchInput').value.toLowerCase().trim();
+    
+    let filtered = window._analysisEmployees || allEmployees;
+    
+    // Apply unit filter (if a specific unit is selected)
+    if (unit) {
+        filtered = filtered.filter(e => e.Unit === unit);
+    }
+    
+    // Apply workplace filter (if a specific workplace is selected)
+    if (workplace) {
+        filtered = filtered.filter(e => e.WorkPlace === workplace);
+    }
+    
+    // Apply type filter
+    if (analysisTypeFilter !== 'all') {
+        filtered = filtered.filter(e => e.Type === analysisTypeFilter);
+    }
+    
+    // Apply skill filter - THIS IS THE MISSING PART
+    if (analysisSkillFilter !== 'all') {
+        filtered = filtered.filter(e => e.Expertise === analysisSkillFilter);
+    }
+    
+    // Apply search filter
+    if (searchTerm) {
+        filtered = filtered.filter(e => e.Name.toLowerCase().includes(searchTerm));
+    }
+    
+    // Update stats bar (DYNAMIC - shows filtered counts)
+    const fta = filtered.filter(e => e.Type === 'FTA').length;
+    const vou = filtered.filter(e => e.Type === 'VOU').length;
+    const cnf = filtered.filter(e => e.Type === 'CNF').length;
+    const units = [...new Set(filtered.map(e => e.Unit).filter(Boolean))];
+    const workplaces = [...new Set(filtered.map(e => e.WorkPlace).filter(Boolean))];
+    
+    document.getElementById('analysisDisplayCount').textContent = filtered.length;
+    document.getElementById('analysisDisplayFTA').textContent = fta;
+    document.getElementById('analysisDisplayVOU').textContent = vou;
+    document.getElementById('analysisDisplayCNF').textContent = cnf;
+    document.getElementById('analysisDisplayUnits').textContent = units.length;
+    document.getElementById('analysisDisplayWorkplaces').textContent = workplaces.length;
+    
+    // Update grids
+    const grid = document.getElementById('analysisEmployeeGrid');
+    if (filtered.length === 0) {
+        grid.innerHTML = `
+            <div class="no-results" style="grid-column:1/-1;text-align:center;padding:40px;color:#888;">
+                <i class="fa fa-search" style="font-size:36px;opacity:0.3;display:block;margin-bottom:12px;"></i>
+                No employees found matching the current filters
+            </div>
+        `;
+    } else {
+        grid.innerHTML = buildEmployeeCards(filtered);
+    }
+    
+    // Update workload bars based on selected workplace
+    if (workplace) {
+        // A specific workplace is selected - show its data
+        updateTeamWorkload(workplace);
+        updateWPOWData(workplace);
+    } else {
+        // "All Workplaces" is selected - hide workload bars or show summary
+        const teamBar = document.getElementById('analysisTeamWorkloadBar');
+        const wpowBar = document.getElementById('analysisWPOWBar');
+        if (teamBar) teamBar.classList.remove('visible');
+        if (wpowBar) wpowBar.classList.remove('visible');
+    }
+}
+
+function setAnalysisTypeFilter(type) {
+    analysisTypeFilter = type;
+    document.querySelectorAll('#analysisEmployeeGrid .type-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.type === type);
+    });
+    applyAnalysisFilters();
+}
+
+// ============================================================
+// BUILD EMPLOYEE CARDS
+// ============================================================
+function buildEmployeeCards(employees) {
+    let html = '';
+    employees.forEach(emp => {
+        html += buildEmployeeCard(emp);
+    });
+    return html;
+}
+
+function buildEmployeeCard(emp) {
+    let roleClass = 'unknown';
+    let roleText = emp.Role || 'Employee';
+    if (roleText === 'Admin') { roleClass = 'admin'; }
+    else if (roleText === 'ICD Head') { roleClass = 'icd-head'; }
+    else if (roleText === 'Employee') { roleClass = 'employee'; }
+    
+    let typeClass = '';
+    let typeText = emp.Type || '';
+    if (typeText === 'FTA') typeClass = 'fta';
+    else if (typeText === 'VOU') typeClass = 'vou';
+    else if (typeText === 'CNF') typeClass = 'cnf';
+    
+    let detailHtml = '<div class="detail-row-inline">';
+    detailHtml += `<span class="label">Designation</span>`;
+    detailHtml += `<span class="value">${escapeHtml(emp.Designation || '—')}</span>`;
+    if (emp.Publication) {
+        detailHtml += `<span class="divider">|</span>`;
+        detailHtml += `<span class="label">Publications</span>`;
+        detailHtml += `<span class="value">${escapeHtml(emp.Publication)}</span>`;
+    }
+    if (emp.DutyTime) {
+        detailHtml += `<span class="divider">|</span>`;
+        detailHtml += `<span class="label">Duty</span>`;
+        detailHtml += `<span class="value">${escapeHtml(emp.DutyTime)}</span>`;
+    }
+    detailHtml += '</div>';
+    
+    const empEmail = emp.Email || '';
+    const cleanedEmail = empEmail.replace(/[^a-zA-Z0-9@._-]/g, '_');
+    const spId = 'sp_' + cleanedEmail;
+    const canEdit = loggedInUser && (loggedInUser.role === 'Admin' || loggedInUser.role === 'ICD Head');
+    const currentExpertise = emp.Expertise || '';
+    
+    let optionsHtml = '';
+    EXPERTISE_OPTIONS.forEach(option => {
+        const selected = (currentExpertise === option.value) ? 'selected' : '';
+        optionsHtml += `<option value="${escapeHtml(option.value)}" ${selected}>${escapeHtml(option.value || 'Select...')}</option>`;
+    });
+    
+    const currentDesc = getExpertiseDescription(currentExpertise);
+    const descHtml = currentDesc ? 
+        '<i class="fa fa-info-circle"></i> ' + currentDesc : 
+        '<span class="empty">Select an expertise to see description</span>';
+    
+    let expertiseHtml = `
+        <div class="expertise-editable">
+            <div class="exp-header">
+                <label><i class="fa fa-tag"></i> Expertise</label>
+                <span class="exp-save-status" id="exp_status_${cleanedEmail}"></span>
+            </div>
+            <select class="exp-select" id="exp_select_${cleanedEmail}" 
+                    ${canEdit ? '' : 'disabled'}
+                    onchange="saveExpertise('${escapeHtml(empEmail)}', '${escapeHtml(emp.Name)}')">
+                ${optionsHtml}
+            </select>
+            <div class="expertise-description" id="exp_desc_${cleanedEmail}">
+                ${descHtml}
+            </div>
+        </div>
+    `;
+    
+    let workloadHtml = '';
+    if (emp.DailyWorkload && typeof emp.DailyWorkload === 'object') {
+        const items = [];
+        const wl = emp.DailyWorkload;
+        const labels = {
+            main_full_page_design: 'Main Full Page Design',
+            main_page_alter_ad_schedule: 'Main Page Alter (Ad Schedule)',
+            main_page_alter_news_update: 'Main Page Alter (News Update)',
+            main_infographic: 'Main Infographic',
+            hello_full_page_design: 'Hello Full Page Design',
+            hello_page_alter_ad_schedule: 'Hello Page Alter (Ad Schedule)',
+            hello_page_alter_news_update: 'Hello Page Alter (News Update)',
+            hello_infographic: 'Hello Infographic',
+            display_ad_design: 'Display Ad Design',
+            event_creative: 'Event Creative',
+            supplement_design: 'Supplement Design',
+            ai_image: 'AI Image',
+            photo_correction: 'Photo Correction',
+            pdf_quality_check: 'PDF Quality Check',
+            epaper_page_upload: 'Epaper Page Upload',
+            news_article_typing: 'News/Article Typing (words)'
+        };
+        
+        for (let key in wl) {
+            if (wl[key] && wl[key] > 0 && labels[key]) {
+                items.push({ label: labels[key], num: wl[key] });
+            }
+        }
+        
+        if (items.length > 0) {
+            workloadHtml = '<div class="workload-section"><div class="wl-title"><i class="fa fa-calendar"></i> 📋 Daily Workload</div><div class="workload-items">';
+            items.forEach(item => {
+                workloadHtml += '<span class="workload-item"><span class="num">' + item.num + '</span> ' + item.label + '</span>';
+            });
+            workloadHtml += '</div></div>';
+        }
+    }
+    
+    const projectText = getCleanSpecialProjects(emp);
+    
+    let specialHtml = `
+        <div class="special-projects-editable">
+            <div class="sp-header">
+                <label><i class="fa fa-pencil-square-o"></i> Special Projects</label>
+                <button class="sp-save-btn ${canEdit ? 'show' : ''}" 
+                        id="sp_save_btn_${spId}" 
+                        onclick="saveSpecialProjects('${escapeHtml(empEmail)}', '${escapeHtml(emp.Name)}')" 
+                        style="${!canEdit ? 'display:none;' : ''}">
+                    <i class="fa fa-save"></i> Save
+                </button>
+            </div>
+            <textarea class="sp-textarea" 
+                      id="sp_textarea_${spId}" 
+                      placeholder="No special projects listed..." 
+                      oninput="onSpecialProjectChange('${escapeHtml(empEmail)}')"
+                      ${canEdit ? '' : 'disabled'}>${escapeHtml(projectText)}</textarea>
+        </div>
+    `;
+    
+    return `
+        <div class="employee-card">
+            <div class="card-header">
+                <span class="name">${escapeHtml(emp.Name)}</span>
+                <div class="badge-group">
+                    ${typeText ? `<span class="type-badge ${typeClass}">${escapeHtml(typeText)}</span>` : ''}
+                    <span class="role-badge ${roleClass}">${roleText}</span>
+                </div>
+            </div>
+            <div class="card-body">
+                ${detailHtml}
+                ${expertiseHtml}
+                ${workloadHtml}
+                ${specialHtml}
+            </div>
+            <div class="card-footer">
+                <span style="font-size:10px;color:#888;">${escapeHtml(emp.Unit || '')} ${emp.WorkPlace ? '· ' + escapeHtml(emp.WorkPlace) : ''}</span>
+            </div>
+        </div>
+    `;
+}
+
+// ============================================================
+// HELPERS FOR EMPLOYEE CARDS
+// ============================================================
+function getExpertiseDescription(value) {
+    const option = EXPERTISE_OPTIONS.find(opt => opt.value === value);
+    return option ? option.description : '';
+}
+
+function getCleanSpecialProjects(emp) {
+    let projectText = '';
+    if (emp.SpecialProjects) {
+        if (typeof emp.SpecialProjects === 'object') {
+            projectText = emp.SpecialProjects.special_projects || emp.SpecialProjects.job_description || '';
+        } else if (typeof emp.SpecialProjects === 'string') {
+            projectText = emp.SpecialProjects;
+        }
+    }
+    let cleanText = projectText.trim();
+    cleanText = cleanText.replace(/^\s*\*\s*/gm, '');
+    cleanText = cleanText.replace(/\n/g, ' ');
+    cleanText = cleanText.replace(/\t/g, ' ');
+    cleanText = cleanText.replace(/ +/g, ' ');
+    cleanText = cleanText.trim();
+    return cleanText;
+}
+
+// ============================================================
+// SAVE EXPERTISE
+// ============================================================
+function saveExpertise(empEmail, empName) {
+    const cleanedEmail = empEmail.replace(/[^a-zA-Z0-9@._-]/g, '_');
+    const select = document.getElementById('exp_select_' + cleanedEmail);
+    const statusEl = document.getElementById('exp_status_' + cleanedEmail);
+    
+    if (!select) return;
+    
+    const selectedValue = select.value;
+    
+    statusEl.textContent = '⏳ Saving...';
+    statusEl.className = 'exp-save-status show saving';
+    
+    callAPI('saveExpertise', {
+        email: loggedInUser.email,
+        emp_email: empEmail,
+        expertise: selectedValue
+    })
+    .then(result => {
+        if (result.success) {
+            const emp = allEmployees.find(e => e.Email === empEmail);
+            if (emp) {
+                emp.Expertise = selectedValue;
+            }
+            statusEl.textContent = '✓ Saved';
+            statusEl.className = 'exp-save-status show saved';
+            updateExpertiseDescription(cleanedEmail, selectedValue);
+            showToast('Expertise updated for ' + empName, 'success');
+        } else if (result.error === 'Session expired. Please login again.') {
+            showToast('Session expired. Please login again.', 'error');
+            logout();
+        } else {
+            statusEl.textContent = '✗ Error';
+            statusEl.className = 'exp-save-status show error';
+            showToast('Error saving: ' + (result.error || 'Unknown error'), 'error');
+        }
+        setTimeout(() => {
+            statusEl.className = 'exp-save-status';
+        }, 2000);
+    })
+    .catch(error => {
+        statusEl.textContent = '✗ Error';
+        statusEl.className = 'exp-save-status show error';
+        showToast('Error saving: ' + error.message, 'error');
+        setTimeout(() => {
+            statusEl.className = 'exp-save-status';
+        }, 2000);
+    });
+}
+
+function updateExpertiseDescription(cleanedEmail, value) {
+    const descContainer = document.getElementById('exp_desc_' + cleanedEmail);
+    if (descContainer) {
+        const desc = getExpertiseDescription(value);
+        if (desc) {
+            descContainer.innerHTML = '<i class="fa fa-info-circle"></i> ' + desc;
+        } else {
+            descContainer.innerHTML = '<span class="empty">Select an expertise to see description</span>';
+        }
+    }
+}
+
+// ============================================================
+// SAVE SPECIAL PROJECTS
+// ============================================================
+function saveSpecialProjects(empEmail, empName) {
+    if (!empEmail || empEmail === '') {
+        showToast('Error: Employee email missing', 'error');
+        return;
+    }
+    
+    const cleanedEmail = empEmail.replace(/[^a-zA-Z0-9@._-]/g, '_');
+    const spId = 'sp_' + cleanedEmail;
+    
+    const textarea = document.getElementById('sp_textarea_' + spId);
+    const saveBtn = document.getElementById('sp_save_btn_' + spId);
+    
+    if (!textarea || !saveBtn) {
+        showToast('Error: UI elements not found for ' + empName, 'error');
+        return;
+    }
+    
+    const newText = textarea.value;
+    
+    saveBtn.disabled = true;
+    saveBtn.textContent = '⏳ Saving...';
+    saveBtn.classList.remove('saved');
+    
+    callAPI('saveSpecialProjects', {
+        email: loggedInUser.email,
+        emp_email: empEmail,
+        special_projects: newText
+    })
+    .then(result => {
+        if (result.success) {
+            const emp = allEmployees.find(e => e.Email === empEmail);
+            if (emp) {
+                emp.SpecialProjects = { special_projects: newText };
+            }
+            saveBtn.textContent = '✓ Saved';
+            saveBtn.classList.add('saved');
+            showToast('Special projects saved for ' + empName, 'success');
+        } else if (result.error === 'Session expired. Please login again.') {
+            showToast('Session expired. Please login again.', 'error');
+            logout();
+        } else {
+            saveBtn.textContent = '💾 Save';
+            saveBtn.classList.remove('saved');
+            showToast('Error saving: ' + (result.error || 'Unknown error'), 'error');
+        }
+        saveBtn.disabled = false;
+    })
+    .catch(error => {
+        saveBtn.textContent = '💾 Save';
+        saveBtn.classList.remove('saved');
+        saveBtn.disabled = false;
+        showToast('Error saving: ' + error.message, 'error');
+    });
+}
+
+function onSpecialProjectChange(empEmail) {
+    if (!empEmail) return;
+    
+    const cleanedEmail = empEmail.replace(/[^a-zA-Z0-9@._-]/g, '_');
+    const spId = 'sp_' + cleanedEmail;
+    
+    const textarea = document.getElementById('sp_textarea_' + spId);
+    const saveBtn = document.getElementById('sp_save_btn_' + spId);
+    
+    if (!textarea || !saveBtn) return;
+    
+    saveBtn.textContent = '💾 Save';
+    saveBtn.classList.remove('saved');
+    saveBtn.disabled = false;
+}
+
+// ============================================================
+// UPDATE TEAM WORKLOAD
+// ============================================================
+function updateTeamWorkload(workplace) {
+    const bar = document.getElementById('analysisTeamWorkloadBar');
+    const content = document.getElementById('teamWorkloadContent');
+    const container = document.getElementById('twContainer');
+    const remarkInput = document.getElementById('remarkInput');
+    const saveBtn = document.getElementById('remarkSaveBtn');
+    const remarkSection = document.getElementById('twRight');
+    
+    if (!workplace || workplace === '') {
+        if (bar) bar.classList.remove('visible');
+        return;
+    }
+    
+    // Check if the bar element exists
+    if (!bar) return;
+    
+    callAPI('getWPOWData', { 
+        email: loggedInUser.email,
+        workplace: workplace 
+    })
+    .then(result => {
+        if (result.success && result.data && result.data.teamWorkload) {
+            const teamWorkload = result.data.teamWorkload;
+            
+            if (typeof teamWorkload !== 'object' || Object.keys(teamWorkload).length === 0) {
+                bar.classList.remove('visible');
+                return;
+            }
+            
+            const editions = Object.keys(teamWorkload);
+            
+            let html = '<div class="tw-editions">';
+            let grandTotal = 0;
+            
+            editions.forEach(edition => {
+                const data = teamWorkload[edition];
+                const main = data.main_pages || 0;
+                const hello = data.hello_pages || 0;
+                const editionTotal = main + hello;
+                grandTotal += editionTotal;
+                
+                const helloLabel = (edition.toLowerCase().includes('samachar')) ? 'Apna' : 
+                                   (edition.toLowerCase().includes('times')) ? 'FIRST' : 'Hello';
+                
+                html += `<div class="tw-edition">
+                    <strong>${escapeHtml(edition)}</strong>: 
+                    Main(${main}) + ${helloLabel}(${hello}) = <strong>${editionTotal}</strong> pages
+                </div>`;
+            });
+            
+            html += '</div>';
+            html += `<div class="tw-total">📄 Total: <strong>${grandTotal}</strong> pages across ${editions.length} editions</div>`;
+            
+            // Get employees for this workplace
+            const workplaceEmployees = allEmployees.filter(emp => emp.WorkPlace === workplace);
+            html += `<div class="tw-employees">👥 ${workplaceEmployees.length} employees in this workplace</div>`;
+            
+            if (content) content.innerHTML = html;
+            
+            const isAdmin = loggedInUser && loggedInUser.role === 'Admin';
+            
+            if (container) {
+                if (isAdmin) {
+                    container.classList.remove('full-width');
+                    if (remarkSection) remarkSection.style.display = 'flex';
+                    loadRemark(workplace);
+                } else {
+                    container.classList.add('full-width');
+                    if (remarkSection) remarkSection.style.display = 'none';
+                }
+            }
+            
+            bar.classList.add('visible');
+        } else {
+            bar.classList.remove('visible');
+        }
+    })
+    .catch(error => {
+        console.error('Error loading team workload:', error);
+        if (bar) bar.classList.remove('visible');
+    });
+}
+
+// ============================================================
+// LOAD REMARK (Admin Only)
+// ============================================================
+function loadRemark(workplace) {
+    const remarkInput = document.getElementById('remarkInput');
+    const saveBtn = document.getElementById('remarkSaveBtn');
+    
+    if (!remarkInput || !saveBtn) return;
+    
+    callAPI('getRemark', { 
+        email: loggedInUser.email,
+        workplace: workplace 
+    })
+    .then(result => {
+        if (result.success) {
+            const remark = result.remark || '';
+            remarkInput.value = remark;
+            currentRemark = remark;
+            remarkChanged = false;
+            saveBtn.textContent = '✓ Saved';
+            saveBtn.classList.add('saved');
+            saveBtn.disabled = true;
+        } else {
+            remarkInput.value = '';
+            currentRemark = '';
+            remarkChanged = false;
+            saveBtn.textContent = '✓ Saved';
+            saveBtn.classList.add('saved');
+            saveBtn.disabled = true;
+        }
+    })
+    .catch(() => {
+        remarkInput.value = '';
+        currentRemark = '';
+        remarkChanged = false;
+        saveBtn.textContent = '✓ Saved';
+        saveBtn.classList.add('saved');
+        saveBtn.disabled = true;
+    });
+}
+
+function onRemarkChange() {
+    const remarkInput = document.getElementById('remarkInput');
+    const saveBtn = document.getElementById('remarkSaveBtn');
+    if (!remarkInput || !saveBtn) return;
+    
+    const newValue = remarkInput.value;
+    
+    if (!loggedInUser || loggedInUser.role !== 'Admin') {
+        saveBtn.disabled = true;
+        return;
+    }
+    
+    if (newValue !== currentRemark) {
+        remarkChanged = true;
+        saveBtn.textContent = '💾 Save';
+        saveBtn.classList.remove('saved');
+        saveBtn.disabled = false;
+    } else {
+        remarkChanged = false;
+        saveBtn.textContent = '✓ Saved';
+        saveBtn.classList.add('saved');
+        saveBtn.disabled = true;
+    }
+}
+
+function saveRemark() {
+    const remarkInput = document.getElementById('remarkInput');
+    const saveBtn = document.getElementById('remarkSaveBtn');
+    if (!remarkInput || !saveBtn) return;
+    
+    const fullText = remarkInput.value;
+    const workplace = document.getElementById('analysisWorkplaceFilter')?.value || 
+                     (allEmployees.length > 0 ? allEmployees[0].WorkPlace : '');
+    
+    if (!loggedInUser || loggedInUser.role !== 'Admin') {
+        showToast('Only Admin can save WP Remark', 'error');
+        return;
+    }
+    
+    if (!workplace || workplace === '') {
+        return;
+    }
+    
+    if (remarkSaving) return;
+    remarkSaving = true;
+    saveBtn.disabled = true;
+    saveBtn.textContent = '⏳ Saving...';
+    
+    callAPI('saveRemark', { 
+        email: loggedInUser.email,
+        workplace: workplace, 
+        remark: fullText 
+    })
+    .then(result => {
+        if (result.success) {
+            currentRemark = fullText;
+            remarkChanged = false;
+            saveBtn.textContent = '✓ Saved';
+            saveBtn.classList.add('saved');
+            saveBtn.disabled = true;
+            showToast('Remark saved successfully!', 'success');
+        } else if (result.error === 'Session expired. Please login again.') {
+            showToast('Session expired. Please login again.', 'error');
+            logout();
+        } else {
+            saveBtn.textContent = '💾 Save';
+            saveBtn.classList.remove('saved');
+            saveBtn.disabled = false;
+            showToast('Error saving remark: ' + (result.error || 'Unknown error'), 'error');
+        }
+        remarkSaving = false;
+    })
+    .catch(error => {
+        saveBtn.textContent = '💾 Save';
+        saveBtn.classList.remove('saved');
+        saveBtn.disabled = false;
+        remarkSaving = false;
+        showToast('Error saving remark: ' + error.message, 'error');
+    });
+}
+
+// ============================================================
+// UPDATE WPOW DATA
+// ============================================================
+function updateWPOWData(workplace) {
+    const bar = document.getElementById('analysisWPOWBar');
+    if (!bar) return;
+    
+    const saveBtn = document.getElementById('wpowSaveBtn');
+    const statusEl = document.getElementById('wpowStatus');
+    
+    wpowChanged = false;
+    if (saveBtn) {
+        saveBtn.style.display = 'none';
+        saveBtn.classList.remove('saved');
+        saveBtn.disabled = false;
+    }
+    
+    if (!workplace || workplace === '') {
+        bar.classList.remove('visible');
+        return;
+    }
+    
+    bar.classList.add('visible');
+    
+    const canEdit = loggedInUser && (loggedInUser.role === 'Admin' || loggedInUser.role === 'ICD Head');
+    
+    callAPI('getWPOWData', { 
+        email: loggedInUser.email,
+        workplace: workplace 
+    })
+    .then(result => {
+        if (result.success) {
+            const data = result.data || {};
+            currentWPOWData = data;
+            
+            const dailyAds = document.getElementById('wpowDailyAds');
+            const anniversaryPG = document.getElementById('wpowAnniversaryPG');
+            const advertorialPG = document.getElementById('wpowAdvertorialPG');
+            const diwaliIssue = document.getElementById('wpowDiwaliIssue');
+            const ctBook = document.getElementById('wpowCtBook');
+            const other = document.getElementById('wpowOther');
+            
+            if (dailyAds) dailyAds.value = data.dailyAds || 0;
+            if (anniversaryPG) anniversaryPG.value = data.anniversaryPG || 0;
+            if (advertorialPG) advertorialPG.value = data.advertorialPG || 0;
+            if (diwaliIssue) diwaliIssue.value = data.diwaliIssue || 0;
+            if (ctBook) ctBook.value = data.ctBook || 0;
+            if (other) other.value = data.other || '';
+            
+            const inputs = document.querySelectorAll('#analysisWPOWBar .wpow-item input, #analysisWPOWBar .wpow-other-item textarea');
+            inputs.forEach(input => {
+                input.disabled = !canEdit;
+                if (!canEdit) {
+                    input.title = 'Only Admin and ICD Head can edit Work Place Other Workload';
+                }
+            });
+            
+            if (!canEdit && saveBtn) {
+                saveBtn.style.display = 'none';
+                if (statusEl) {
+                    statusEl.className = 'wpow-save-status';
+                }
+            } else if (canEdit && saveBtn) {
+                if (statusEl) {
+                    statusEl.className = 'wpow-save-status show saved';
+                    statusEl.textContent = '✓ Loaded';
+                    setTimeout(() => {
+                        statusEl.className = 'wpow-save-status';
+                    }, 1500);
+                }
+            }
+            
+            wpowChanged = false;
+            if (saveBtn) saveBtn.style.display = 'none';
+            
+        } else {
+            console.error('Error loading WPOW data:', result.error);
+            const inputs = document.querySelectorAll('#analysisWPOWBar .wpow-item input, #analysisWPOWBar .wpow-other-item textarea');
+            inputs.forEach(input => {
+                input.disabled = !canEdit;
+            });
+            if (saveBtn) saveBtn.style.display = 'none';
+        }
+    })
+    .catch(error => {
+        console.error('Error loading WPOW data:', error);
+        const inputs = document.querySelectorAll('#analysisWPOWBar .wpow-item input, #analysisWPOWBar .wpow-other-item textarea');
+        inputs.forEach(input => {
+            input.disabled = !canEdit;
+        });
+        if (saveBtn) saveBtn.style.display = 'none';
+    });
+}
+
+function onWPOWChange() {
+    const saveBtn = document.getElementById('wpowSaveBtn');
+    const statusEl = document.getElementById('wpowStatus');
+    
+    if (!loggedInUser || (loggedInUser.role !== 'Admin' && loggedInUser.role !== 'ICD Head')) {
+        if (saveBtn) saveBtn.style.display = 'none';
+        return;
+    }
+    
+    const dailyAds = parseInt(document.getElementById('wpowDailyAds')?.value) || 0;
+    const anniversaryPG = parseInt(document.getElementById('wpowAnniversaryPG')?.value) || 0;
+    const advertorialPG = parseInt(document.getElementById('wpowAdvertorialPG')?.value) || 0;
+    const diwaliIssue = parseInt(document.getElementById('wpowDiwaliIssue')?.value) || 0;
+    const ctBook = parseInt(document.getElementById('wpowCtBook')?.value) || 0;
+    const other = document.getElementById('wpowOther')?.value || '';
+    
+    const changed = (dailyAds !== (currentWPOWData.dailyAds || 0)) ||
+                    (anniversaryPG !== (currentWPOWData.anniversaryPG || 0)) ||
+                    (advertorialPG !== (currentWPOWData.advertorialPG || 0)) ||
+                    (diwaliIssue !== (currentWPOWData.diwaliIssue || 0)) ||
+                    (ctBook !== (currentWPOWData.ctBook || 0)) ||
+                    (other !== (currentWPOWData.other || ''));
+    
+    if (changed) {
+        wpowChanged = true;
+        if (saveBtn) {
+            saveBtn.style.display = 'inline-block';
+        }
+        if (statusEl) {
+            statusEl.className = 'wpow-save-status show saving';
+            statusEl.textContent = '⏳ Unsaved changes';
+        }
+    } else {
+        wpowChanged = false;
+        if (saveBtn) saveBtn.style.display = 'none';
+        if (statusEl) statusEl.className = 'wpow-save-status';
+    }
+}
+
+function saveWPOWData() {
+    const saveBtn = document.getElementById('wpowSaveBtn');
+    const statusEl = document.getElementById('wpowStatus');
+    const workplace = document.getElementById('analysisWorkplaceFilter')?.value || 
+                     (allEmployees.length > 0 ? allEmployees[0].WorkPlace : '');
+    
+    if (!loggedInUser || (loggedInUser.role !== 'Admin' && loggedInUser.role !== 'ICD Head')) {
+        showToast('Only Admin and ICD Head can save Work Place Other Workload', 'error');
+        return;
+    }
+    
+    if (!workplace || workplace === '') return;
+    if (wpowSaving) return;
+    if (!wpowChanged) return;
+    
+    const dailyAds = parseInt(document.getElementById('wpowDailyAds')?.value) || 0;
+    const anniversaryPG = parseInt(document.getElementById('wpowAnniversaryPG')?.value) || 0;
+    const advertorialPG = parseInt(document.getElementById('wpowAdvertorialPG')?.value) || 0;
+    const diwaliIssue = parseInt(document.getElementById('wpowDiwaliIssue')?.value) || 0;
+    const ctBook = parseInt(document.getElementById('wpowCtBook')?.value) || 0;
+    const other = document.getElementById('wpowOther')?.value || '';
+    
+    wpowSaving = true;
+    if (saveBtn) {
+        saveBtn.disabled = true;
+    }
+    if (statusEl) {
+        statusEl.className = 'wpow-save-status show saving';
+        statusEl.textContent = '⏳ Saving...';
+    }
+    
+    callAPI('saveWPOWData', {
+        email: loggedInUser.email,
+        workplace: workplace,
+        dailyAds: dailyAds,
+        anniversaryPG: anniversaryPG,
+        advertorialPG: advertorialPG,
+        diwaliIssue: diwaliIssue,
+        ctBook: ctBook,
+        other: other
+    })
+    .then(result => {
+        if (result.success) {
+            currentWPOWData = {
+                dailyAds: dailyAds,
+                anniversaryPG: anniversaryPG,
+                advertorialPG: advertorialPG,
+                diwaliIssue: diwaliIssue,
+                ctBook: ctBook,
+                other: other
+            };
+            wpowChanged = false;
+            if (saveBtn) saveBtn.style.display = 'none';
+            if (statusEl) {
+                statusEl.className = 'wpow-save-status show saved';
+                statusEl.textContent = '✓ Saved';
+            }
+            showToast('Work Place Other Workload saved successfully!', 'success');
+        } else if (result.error === 'Session expired. Please login again.') {
+            showToast('Session expired. Please login again.', 'error');
+            logout();
+        } else {
+            if (statusEl) {
+                statusEl.className = 'wpow-save-status show error';
+                statusEl.textContent = '✗ Error: ' + (result.error || 'Unknown error');
+            }
+            showToast('Error saving workload', 'error');
+        }
+        if (saveBtn) {
+            saveBtn.disabled = false;
+        }
+        wpowSaving = false;
+        setTimeout(() => {
+            if (!wpowChanged && statusEl) {
+                statusEl.className = 'wpow-save-status';
+            }
+        }, 3000);
+    })
+    .catch(error => {
+        if (statusEl) {
+            statusEl.className = 'wpow-save-status show error';
+            statusEl.textContent = '✗ Error';
+        }
+        if (saveBtn) saveBtn.disabled = false;
+        wpowSaving = false;
+        showToast('Error saving: ' + error.message, 'error');
+        setTimeout(() => {
+            if (statusEl) statusEl.className = 'wpow-save-status';
+        }, 3000);
+    });
+}
+
+// ============================================================
+// COMMON UNIT PROJECTS (Admin Only)
+// ============================================================
+function updateCommonUnitProjects(unit) {
+    const container = document.getElementById('analysisCommonUnitProjects');
+    if (!container) return;
+    
+    const textarea = document.getElementById('cupTextarea');
+    const unitName = document.getElementById('cupUnitName');
+    const saveBtn = document.getElementById('cupSaveBtn');
+    const statusEl = document.getElementById('cupStatus');
+    
+    cupChanged = false;
+    if (saveBtn) {
+        saveBtn.style.display = 'none';
+        saveBtn.classList.remove('saved');
+        saveBtn.disabled = false;
+    }
+    if (statusEl) statusEl.className = 'cup-save-status';
+    
+    if (!unit || unit === '' || loggedInUser.role !== 'Admin') {
+        container.classList.remove('visible');
+        return;
+    }
+    
+    const canEdit = loggedInUser && loggedInUser.role === 'Admin';
+    
+    container.classList.add('visible');
+    if (unitName) unitName.textContent = unit;
+    
+    if (textarea) {
+        textarea.disabled = !canEdit;
+        if (!canEdit) {
+            textarea.title = 'Only Admin can edit Common Unit Projects';
+        }
+        textarea.value = 'Loading...';
+    }
+    
+    if (statusEl) {
+        statusEl.className = 'cup-save-status show saving';
+        statusEl.textContent = '⏳ Loading...';
+    }
+    
+    callAPI('getCommonUnitProjects', { 
+        email: loggedInUser.email,
+        unit: unit 
+    })
+    .then(result => {
+        if (result.success) {
+            currentCommonUnit = unit;
+            currentCommonProjects = result.commonProjects || '';
+            if (textarea) textarea.value = currentCommonProjects;
+            
+            if (result.found && statusEl) {
+                statusEl.className = 'cup-save-status show saved';
+                statusEl.textContent = '✓ Loaded';
+            } else if (statusEl) {
+                statusEl.className = 'cup-save-status show';
+                statusEl.textContent = 'ℹ️ No projects found';
+            }
+            
+            cupChanged = false;
+            if (saveBtn) saveBtn.style.display = 'none';
+            
+            setTimeout(() => {
+                if (!cupChanged && statusEl) {
+                    statusEl.className = 'cup-save-status';
+                }
+            }, 2000);
+        } else {
+            if (textarea) textarea.value = '';
+            if (statusEl) {
+                statusEl.className = 'cup-save-status show error';
+                statusEl.textContent = '✗ Error: ' + (result.error || 'Unknown error');
+            }
+            console.error('Error loading common unit projects:', result.error);
+        }
+    })
+    .catch(error => {
+        if (textarea) textarea.value = '';
+        if (statusEl) {
+            statusEl.className = 'cup-save-status show error';
+            statusEl.textContent = '✗ Error loading data';
+        }
+        console.error('Error loading common unit projects:', error);
+    });
+}
+
+function onCUPChange() {
+    const textarea = document.getElementById('cupTextarea');
+    const saveBtn = document.getElementById('cupSaveBtn');
+    const statusEl = document.getElementById('cupStatus');
+    
+    if (!textarea || !saveBtn) return;
+    
+    const newValue = textarea.value;
+    
+    if (!loggedInUser || loggedInUser.role !== 'Admin') {
+        saveBtn.style.display = 'none';
+        return;
+    }
+    
+    if (newValue !== currentCommonProjects) {
+        cupChanged = true;
+        saveBtn.style.display = 'inline-block';
+        if (statusEl) {
+            statusEl.className = 'cup-save-status show saving';
+            statusEl.textContent = '⏳ Unsaved changes';
+        }
+    } else {
+        cupChanged = false;
+        saveBtn.style.display = 'none';
+        if (statusEl) statusEl.className = 'cup-save-status';
+    }
+}
+
+function saveCommonUnitProjects() {
+    const textarea = document.getElementById('cupTextarea');
+    const saveBtn = document.getElementById('cupSaveBtn');
+    const statusEl = document.getElementById('cupStatus');
+    const unit = currentCommonUnit;
+    
+    if (!textarea || !saveBtn) return;
+    
+    if (!loggedInUser || loggedInUser.role !== 'Admin') {
+        showToast('Only Admin can save Common Unit Projects', 'error');
+        return;
+    }
+    
+    if (!unit || unit === '') {
+        showToast('No unit selected', 'error');
+        return;
+    }
+    
+    if (cupSaving) return;
+    if (!cupChanged) return;
+    
+    const newValue = textarea.value;
+    
+    cupSaving = true;
+    saveBtn.disabled = true;
+    if (statusEl) {
+        statusEl.className = 'cup-save-status show saving';
+        statusEl.textContent = '⏳ Saving...';
+    }
+    
+    callAPI('saveCommonUnitProjects', {
+        email: loggedInUser.email,
+        unit: unit,
+        commonProjects: newValue
+    })
+    .then(result => {
+        if (result.success) {
+            currentCommonProjects = newValue;
+            cupChanged = false;
+            saveBtn.style.display = 'none';
+            if (statusEl) {
+                statusEl.className = 'cup-save-status show saved';
+                statusEl.textContent = '✓ Saved';
+            }
+            showToast('Common Unit Projects saved successfully!', 'success');
+        } else if (result.error === 'Session expired. Please login again.') {
+            showToast('Session expired. Please login again.', 'error');
+            logout();
+        } else {
+            if (statusEl) {
+                statusEl.className = 'cup-save-status show error';
+                statusEl.textContent = '✗ Error: ' + (result.error || 'Unknown error');
+            }
+            showToast('Error saving: ' + (result.error || 'Unknown error'), 'error');
+        }
+        saveBtn.disabled = false;
+        cupSaving = false;
+        setTimeout(() => {
+            if (!cupChanged && statusEl) {
+                statusEl.className = 'cup-save-status';
+            }
+        }, 3000);
+    })
+    .catch(error => {
+        if (statusEl) {
+            statusEl.className = 'cup-save-status show error';
+            statusEl.textContent = '✗ Error';
+        }
+        saveBtn.disabled = false;
+        cupSaving = false;
+        showToast('Error saving: ' + error.message, 'error');
+        setTimeout(() => {
+            if (statusEl) statusEl.className = 'cup-save-status';
+        }, 3000);
+    });
+}
+
+// ============================================================
+// ICD HEAD PUBLICATIONS (Editable)
+// ============================================================
+function renderICDPublications(container) {
+    const data = allData.publication || {};
+    const units = loggedInUser.units || [];
+    
+    if (!units || units.length === 0) {
+        container.innerHTML = '<div class="no-data"><i class="fa fa-newspaper-o"></i>No units assigned</div>';
+        return;
+    }
+    
+    let html = '';
+    let hasData = false;
+    
+    units.forEach(unit => {
+        const unitData = data[unit] || [];
+        if (unitData.length === 0) return;
+        hasData = true;
+        
+        let totalPages = 0, totalFresh = 0, totalAlter = 0;
+        unitData.forEach(row => {
+            totalPages += row.Total_Pages || 0;
+            totalFresh += row.Fresh_Pagination || 0;
+            totalAlter += row.Alter_Pagination || 0;
+        });
+        
+        if (!publicationChanges[unit]) {
+            publicationChanges[unit] = {};
+        }
+        
+        html += `
+            <div style="margin-bottom:30px;border:1px solid #e8ecf1;border-radius:8px;padding:16px;background:#fafbfc;">
+                <div class="section-header" style="margin-bottom:12px;">
+                    <h3><i class="fa fa-newspaper-o"></i> ${escapeHtml(unit)}</h3>
+                    <div class="totals-box">
+                        <span>📄 Total Pages: <span class="num">${totalPages}</span></span>
+                        <span>🆕 Fresh: <span class="num">${totalFresh}</span></span>
+                        <span>🔄 Alter: <span class="num">${totalAlter}</span></span>
+                    </div>
+                </div>
+                <div class="table-responsive-wrapper">
+                    <table class="data-table" id="pubTable_${escapeHtml(unit)}">
+                        <thead>
+                            <tr>
+                                <th>Edition</th>
+                                <th>Editorial Content Ready</th>
+                                <th>Page Design & PDF Slot</th>
+                                <th>Total Pages</th>
+                                <th>Fresh</th>
+                                <th>Alter</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+        `;
+        
+        unitData.forEach((row, index) => {
+            const rowId = 'row_' + index;
+            const editorialVal = row.Editorial_Content_Ready || '';
+            const designSlotVal = row.Page_Design_PDF_Slot || '';
+            
+            const changes = publicationChanges[unit] || {};
+            const rowChanges = changes[rowId] || {};
+            const editorialChanged = rowChanges.editorial !== undefined && rowChanges.editorial !== editorialVal;
+            const slotChanged = rowChanges.slot !== undefined && rowChanges.slot !== designSlotVal;
+            
+            html += `
+                <tr id="${rowId}">
+                    <td><strong>${escapeHtml(row.Edition || '')}</strong></td>
+                    <td>
+                        <input type="text" class="editable-input text-input ${editorialChanged ? 'changed' : ''}" 
+                               value="${escapeHtml(editorialVal)}" 
+                               data-unit="${escapeHtml(unit)}" 
+                               data-row="${rowId}" 
+                               data-field="editorial"
+                               onchange="onPublicationChange('${escapeHtml(unit)}', '${rowId}', 'editorial', this.value)"
+                               placeholder="Editorial Content Ready">
+                    </td>
+                    <td>
+                        <input type="text" class="editable-input text-input ${slotChanged ? 'changed' : ''}" 
+                               value="${escapeHtml(designSlotVal)}" 
+                               data-unit="${escapeHtml(unit)}" 
+                               data-row="${rowId}" 
+                               data-field="slot"
+                               onchange="onPublicationChange('${escapeHtml(unit)}', '${rowId}', 'slot', this.value)"
+                               placeholder="Page Design & PDF Slot">
+                    </td>
+                    <td>${row.Total_Pages || 0}</td>
+                    <td>${row.Fresh_Pagination || 0}</td>
+                    <td>${row.Alter_Pagination || 0}</td>
+                </tr>
+            `;
+        });
+        
+        html += `
+                        </tbody>
+                        <tfoot>
+                            <tr class="total-row">
+                                <th>TOTAL</th>
+                                <td></td>
+                                <td></td>
+                                <td>${totalPages}</td>
+                                <td>${totalFresh}</td>
+                                <td>${totalAlter}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="save-area">
+                    <button class="save-btn" id="savePubBtn_${escapeHtml(unit)}" onclick="savePublication('${escapeHtml(unit)}')">
+                        <i class="fa fa-save"></i> Save All Changes
+                    </button>
+                    <span class="save-status" id="pubStatus_${escapeHtml(unit)}"></span>
+                    <span style="font-size:12px;color:#888;margin-left:auto;" id="changeCount_${escapeHtml(unit)}">No changes</span>
+                </div>
+            </div>
+        `;
+    });
+    
+    if (!hasData) {
+        container.innerHTML = '<div class="no-data"><i class="fa fa-newspaper-o"></i>No publication data available for your units</div>';
+        return;
+    }
+    
+    container.innerHTML = html;
+}
+
+function onPublicationChange(unit, rowId, field, value) {
+    if (!publicationChanges[unit]) {
+        publicationChanges[unit] = {};
+    }
+    if (!publicationChanges[unit][rowId]) {
+        publicationChanges[unit][rowId] = {};
+    }
+    publicationChanges[unit][rowId][field] = value;
+    publicationChanges[unit][rowId]['changed'] = true;
+    
+    const input = document.querySelector(`[data-unit="${unit}"][data-row="${rowId}"][data-field="${field}"]`);
+    if (input) {
+        input.classList.add('changed');
+    }
+    
+    updateChangeStatus(unit);
+}
+
+function updateChangeStatus(unit) {
+    const changes = publicationChanges[unit] || {};
+    let count = 0;
+    for (let rowId in changes) {
+        if (changes[rowId].changed) count++;
+    }
+    
+    const statusEl = document.getElementById('changeCount_' + unit);
+    if (statusEl) {
+        statusEl.textContent = count > 0 ? `${count} row(s) changed` : 'No changes';
+        statusEl.style.color = count > 0 ? '#ff9800' : '#888';
+    }
+    
+    const saveBtn = document.getElementById('savePubBtn_' + unit);
+    if (saveBtn) {
+        saveBtn.disabled = count === 0;
+        saveBtn.classList.toggle('saved', count === 0);
+    }
+}
+
+async function savePublication(unit) {
+    const changes = publicationChanges[unit] || {};
+    const hasChanges = Object.keys(changes).some(key => changes[key].changed);
+    
+    if (!hasChanges) {
+        showToast('No changes to save', 'info');
+        return;
+    }
+    
+    if (isSaving) return;
+    isSaving = true;
+    
+    const saveBtn = document.getElementById('savePubBtn_' + unit);
+    const statusEl = document.getElementById('pubStatus_' + unit);
+    
+    if (saveBtn) saveBtn.disabled = true;
+    if (statusEl) {
+        statusEl.className = 'save-status show saving';
+        statusEl.textContent = '⏳ Saving...';
+    }
+    
+    const rowsToSave = [];
+    for (let rowId in changes) {
+        if (changes[rowId].changed) {
+            const table = document.getElementById('pubTable_' + unit);
+            if (table) {
+                const row = table.querySelector('#' + rowId);
+                if (row) {
+                    const edition = row.querySelector('td:first-child strong')?.textContent || '';
+                    rowsToSave.push({
+                        edition: edition,
+                        editorial: changes[rowId].editorial || '',
+                        slot: changes[rowId].slot || ''
+                    });
+                }
+            }
+        }
+    }
+    
+    try {
+        const result = await callAPI('savePublication', {
+            email: loggedInUser.email,
+            unit: unit,
+            rows: rowsToSave
+        });
+        
+        if (result.success) {
+            publicationChanges[unit] = {};
+            updateChangeStatus(unit);
+            
+            document.querySelectorAll(`[data-unit="${unit}"]`).forEach(input => {
+                input.classList.remove('changed');
+            });
+            
+            if (statusEl) {
+                statusEl.className = 'save-status show saved';
+                statusEl.textContent = '✓ Saved successfully';
+            }
+            showToast('Publication data saved successfully!', 'success');
+            
+            setTimeout(() => {
+                if (statusEl) statusEl.className = 'save-status';
+            }, 3000);
+        } else if (result.error === 'Session expired. Please login again.') {
+            showToast('Session expired. Please login again.', 'error');
+            logout();
+        } else {
+            if (statusEl) {
+                statusEl.className = 'save-status show error';
+                statusEl.textContent = '✗ Error: ' + (result.error || 'Unknown error');
+            }
+            showToast('Error saving: ' + (result.error || 'Unknown error'), 'error');
+        }
+    } catch(error) {
+        if (statusEl) {
+            statusEl.className = 'save-status show error';
+            statusEl.textContent = '✗ Error: ' + error.message;
+        }
+        showToast('Error saving: ' + error.message, 'error');
+    }
+    
+    isSaving = false;
+    if (saveBtn) saveBtn.disabled = false;
+}
+
+// ============================================================
+// TOAST NOTIFICATION
+// ============================================================
+function showToast(message, type) {
+    const existing = document.querySelector('.custom-toast');
+    if (existing) existing.remove();
+    
+    const toast = document.createElement('div');
+    toast.className = 'custom-toast ' + (type || 'info');
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(10px)';
+        setTimeout(() => toast.remove(), 400);
+    }, 3000);
+}
+
+// ============================================================
+// HELPER: Escape HTML
+// ============================================================
+function escapeHtml(str) {
+    if (!str) return '';
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize login listeners
+    document.getElementById('loginPassword').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') handleLogin();
+    });
+    document.getElementById('loginEmail').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') document.getElementById('loginPassword').focus();
+    });
+});
+</script>
+</body>
+</html>
