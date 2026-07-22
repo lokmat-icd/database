@@ -15,7 +15,6 @@
         }
         .container-fluid { max-width: 1600px; margin: 0 auto; }
 
-        /* LOGIN OVERLAY */
         #loginOverlay {
             position: fixed;
             top: 0;
@@ -110,7 +109,6 @@
         }
         #loginOverlay .login-box .login-error.show { display: block; }
 
-        /* HEADER */
         .header {
             background: linear-gradient(135deg, #1a3a6b 0%, #2a5298 100%);
             color: white;
@@ -168,7 +166,6 @@
             background: rgba(255,255,255,0.25);
         }
 
-        /* HEADER COUNTS */
         .header-counts {
             display: flex;
             align-items: center;
@@ -208,7 +205,6 @@
             font-weight: 100;
         }
 
-        /* HEADER SKILL STRENGTH */
         .header-row2 {
             display: flex;
             align-items: center;
@@ -258,7 +254,6 @@
             font-size: 11px;
         }
 
-        /* TABS */
         .tabs-section {
             background: white;
             border-radius: 10px;
@@ -300,7 +295,6 @@
             background: #2a5298;
         }
 
-        /* TAB CONTENT */
         .tab-content {
             background: white;
             border-radius: 10px;
@@ -310,7 +304,6 @@
             overflow-x: auto;
         }
 
-        /* TABLES */
         .data-table {
             width: 100%;
             border-collapse: collapse;
@@ -333,10 +326,10 @@
             vertical-align: middle;
         }
         .data-table tr:hover td {
-            background: #f8f9fa;
+            background: #e8f0fe;
         }
         .data-table .total-row {
-            background: #e8ecf1 !important;
+            background: #dce3ed !important;
             font-weight: 700;
         }
         .data-table .total-row td {
@@ -368,6 +361,15 @@
             color: #dc3545;
             font-weight: 600;
         }
+        .data-table tbody tr:nth-child(even) {
+            background-color: #f0f4fa;
+        }
+        .data-table tbody tr:nth-child(odd) {
+            background-color: #ffffff;
+        }
+        .data-table tbody tr.total-row {
+            background-color: #dce3ed !important;
+        }
 
         .table-responsive-wrapper {
             max-height: 600px;
@@ -376,7 +378,6 @@
             border: 1px solid #e8ecf1;
         }
 
-        /* SECTION HEADERS */
         .section-header {
             display: flex;
             justify-content: space-between;
@@ -423,7 +424,110 @@
             color: #1a3a6b;
         }
 
-        /* PUBLICATION UNITS - Collapsible */
+        .model-stats-container {
+            display: flex;
+            gap: 20px;
+            background: #f0f4fa;
+            padding: 12px 18px;
+            border-radius: 8px;
+            border: 1px solid #e0e6ef;
+            margin-bottom: 16px;
+            align-items: stretch;
+        }
+        .model-stats-left {
+            flex: 0 0 28%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 6px;
+            padding-right: 15px;
+            border-right: 2px solid #dce3ed;
+        }
+        .model-stats-left .stat-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a3a6b;
+            margin-bottom: 4px;
+            letter-spacing: 0.3px;
+        }
+        .model-stats-left .model-stat-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+            font-weight: 500;
+            background: white;
+            padding: 4px 14px 4px 12px;
+            border-radius: 18px;
+            border: 1px solid #d0d8e4;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .model-stats-left .model-stat-item .stat-name {
+            font-weight: 500;
+            font-size: 12px;
+            color: #444;
+        }
+        .model-stats-left .model-stat-item .stat-count {
+            font-weight: 700;
+            background: #2a5298;
+            color: white;
+            padding: 0 10px;
+            border-radius: 10px;
+            font-size: 13px;
+            line-height: 22px;
+        }
+        .model-stats-left .model-stat-item.existing .stat-count { background: #1a3a6b; }
+        .model-stats-left .model-stat-item.model-a .stat-count { background: #2a5298; }
+        .model-stats-left .model-stat-item.model-b .stat-count { background: #2a5298; }
+        .model-stats-left .model-stat-item.model-c .stat-count { background: #2a5298; }
+        
+        .model-stats-right {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            gap: 5px;
+            padding-left: 5px;
+        }
+        .chart-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            min-width: 0;
+        }
+        .chart-item canvas {
+            max-width: 130px;
+            max-height: 130px;
+            width: 100%;
+            height: auto;
+        }
+        .chart-item .chart-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #1a3a6b;
+            margin-top: 4px;
+            text-align: center;
+        }
+        .chart-item .chart-value {
+            font-size: 18px;
+            color: #555;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+            .model-stats-container { flex-direction: column; }
+            .model-stats-left { flex: 1; border-right: none; border-bottom: 2px solid #dce3ed; padding-right: 0; padding-bottom: 10px; margin-bottom: 10px; }
+            .model-stats-right { flex-wrap: wrap; gap: 12px; }
+            .chart-item { flex: 0 0 45%; }
+            .chart-item canvas { max-width: 100px; max-height: 100px; }
+        }
+        @media (max-width: 480px) {
+            .chart-item { flex: 0 0 100%; }
+            .chart-item canvas { max-width: 120px; max-height: 120px; }
+        }
+
         .unit-publication {
             margin-bottom: 24px;
             border: 1px solid #e8ecf1;
@@ -441,50 +545,29 @@
             color: #1a3a6b;
             transition: background 0.2s;
         }
-        .unit-publication .unit-header:hover {
-            background: #e8ecf1;
-        }
+        .unit-publication .unit-header:hover { background: #e8ecf1; }
         .unit-publication .unit-header .unit-totals {
             font-weight: 400;
             font-size: 13px;
             color: #555;
         }
-        .unit-publication .unit-header .unit-totals span {
-            margin-left: 12px;
-        }
-        .unit-publication .unit-header .unit-totals .num {
-            font-weight: 700;
-            color: #1a3a6b;
-        }
+        .unit-publication .unit-header .unit-totals span { margin-left: 12px; }
+        .unit-publication .unit-header .unit-totals .num { font-weight: 700; color: #1a3a6b; }
         .unit-publication .unit-body {
             padding: 0 16px 16px;
             display: none;
         }
-        .unit-publication .unit-body.open {
-            display: block;
-        }
-        .unit-publication .unit-body .data-table {
-            font-size: 12px;
-        }
-        .unit-publication .unit-body .data-table th {
-            background: #2a5298;
-        }
-        .unit-publication .unit-body .data-table td {
-            padding: 6px 10px;
-        }
-        .unit-publication .unit-body .data-table .total-row td {
-            background: #e8ecf1;
-            font-weight: 700;
-        }
+        .unit-publication .unit-body.open { display: block; }
+        .unit-publication .unit-body .data-table { font-size: 12px; }
+        .unit-publication .unit-body .data-table th { background: #2a5298; }
+        .unit-publication .unit-body .data-table td { padding: 6px 10px; }
+        .unit-publication .unit-body .data-table .total-row td { background: #dce3ed; font-weight: 700; }
         .pub-collapse-icon {
             transition: transform 0.2s;
             display: inline-block;
         }
-        .pub-collapse-icon.open {
-            transform: rotate(90deg);
-        }
+        .pub-collapse-icon.open { transform: rotate(90deg); }
 
-        /* EMPLOYEE UNITS - Collapsible for Lists */
         .unit-employee {
             margin-bottom: 24px;
             border: 1px solid #e8ecf1;
@@ -502,43 +585,24 @@
             color: #1a3a6b;
             transition: background 0.2s;
         }
-        .unit-employee .unit-header:hover {
-            background: #e8ecf1;
-        }
+        .unit-employee .unit-header:hover { background: #e8ecf1; }
         .unit-employee .unit-header .unit-totals {
             font-weight: 400;
             font-size: 13px;
             color: #555;
         }
-        .unit-employee .unit-header .unit-totals span {
-            margin-left: 12px;
-        }
-        .unit-employee .unit-header .unit-totals .num {
-            font-weight: 700;
-            color: #1a3a6b;
-        }
+        .unit-employee .unit-header .unit-totals span { margin-left: 12px; }
+        .unit-employee .unit-header .unit-totals .num { font-weight: 700; color: #1a3a6b; }
         .unit-employee .unit-body {
             padding: 0 16px 16px;
             display: none;
         }
-        .unit-employee .unit-body.open {
-            display: block;
-        }
-        .unit-employee .unit-body .data-table {
-            font-size: 12px;
-        }
-        .unit-employee .unit-body .data-table th {
-            background: #2a5298;
-        }
-        .unit-employee .unit-body .data-table td {
-            padding: 6px 10px;
-        }
-        .unit-employee .unit-body .data-table .text-cnf {
-            color: #dc3545;
-            font-weight: 600;
-        }
+        .unit-employee .unit-body.open { display: block; }
+        .unit-employee .unit-body .data-table { font-size: 12px; }
+        .unit-employee .unit-body .data-table th { background: #2a5298; }
+        .unit-employee .unit-body .data-table td { padding: 6px 10px; }
+        .unit-employee .unit-body .data-table .text-cnf { color: #dc3545; font-weight: 600; }
 
-        /* EMPLOYEE TABLE - 3 Column Layout */
         .employee-table th {
             text-align: center;
             font-size: 13px;
@@ -550,7 +614,6 @@
             vertical-align: middle;
         }
 
-        /* FILTERS */
         .filters-section {
             background: white;
             padding: 14px 18px;
@@ -587,6 +650,27 @@
             border-color: #2a5298;
             box-shadow: 0 0 0 2px rgba(42,82,152,0.15);
         }
+        .filter-group select.filter-select {
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            background: white;
+            font-size: 12px;
+            min-width: 70px;
+            height: 28px;
+        }
+        .filter-group select.filter-select:focus {
+            outline: none;
+            border-color: #2a5298;
+            box-shadow: 0 0 0 2px rgba(42,82,152,0.15);
+        }
+        .filter-group .filter-label {
+            font-weight: 600;
+            font-size: 12px;
+            color: #444;
+            margin: 0 2px 0 6px;
+        }
+
         .type-filters { display: flex; gap: 4px; flex-wrap: wrap; }
         .type-btn {
             padding: 4px 12px;
@@ -614,7 +698,42 @@
             box-shadow: 0 0 0 2px rgba(42,82,152,0.15);
         }
 
-        /* STATS BAR */
+        .skill-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-top: 4px;
+        }
+        .skill-filter-btn {
+            padding: 3px 12px;
+            border-radius: 16px;
+            border: 1px solid #ddd;
+            background: white;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .skill-filter-btn:hover { background: #e8ecf1; }
+        .skill-filter-btn.active {
+            background: #6f42c1;
+            color: white;
+            border-color: #6f42c1;
+        }
+        .skill-filter-btn .skill-count {
+            font-weight: 700;
+            font-size: 10px;
+            background: rgba(0,0,0,0.1);
+            padding: 0 6px;
+            border-radius: 10px;
+        }
+        .skill-filter-btn.active .skill-count {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+
         .stats-bar {
             display: flex;
             flex-wrap: wrap;
@@ -629,29 +748,13 @@
         .stats-bar .stat-item { font-size: 12px; color: #555; }
         .stats-bar .stat-item strong { color: #1a3a6b; font-size: 14px; }
         .stats-bar .stat-divider { color: #ddd; }
-        .stats-bar .stat-expertise {
-            font-size: 12px;
-            color: #555;
-        }
-        .stats-bar .stat-expertise strong { color: #1a3a6b; font-size: 13px; }
-        .stats-bar .expertise-tag-stat {
-            background: #e8f0fe;
-            color: #1a3a6b;
-            padding: 1px 8px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 500;
-            margin: 0 2px;
-        }
 
-        /* EMPLOYEE GRID */
         .employee-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
             gap: 16px;
         }
 
-        /* EMPLOYEE CARD */
         .employee-card {
             background: white;
             border-radius: 12px;
@@ -731,7 +834,6 @@
             margin: 0 3px;
         }
 
-        /* EXPERTISE */
         .expertise-editable {
             margin-top: 6px;
             padding-top: 6px;
@@ -775,18 +877,10 @@
             margin-left: 6px;
             display: none;
         }
-        .exp-save-status.show {
-            display: inline-block;
-        }
-        .exp-save-status.saving {
-            color: #ff9800;
-        }
-        .exp-save-status.saved {
-            color: #28a745;
-        }
-        .exp-save-status.error {
-            color: #dc3545;
-        }
+        .exp-save-status.show { display: inline-block; }
+        .exp-save-status.saving { color: #ff9800; }
+        .exp-save-status.saved { color: #28a745; }
+        .exp-save-status.error { color: #dc3545; }
         .expertise-description {
             margin-top: 3px;
             padding: 3px 8px;
@@ -797,15 +891,9 @@
             min-height: 22px;
             border-left: 3px solid #2a5298;
         }
-        .expertise-description i {
-            color: #2a5298;
-            margin-right: 3px;
-        }
-        .expertise-description .empty {
-            color: #999;
-        }
+        .expertise-description i { color: #2a5298; margin-right: 3px; }
+        .expertise-description .empty { color: #999; }
 
-        /* WORKLOAD */
         .workload-section {
             margin-top: 8px;
             padding-top: 8px;
@@ -831,7 +919,6 @@
         }
         .workload-item .num { font-weight: 600; color: #1a3a6b; }
 
-        /* SPECIAL PROJECTS */
         .special-projects-editable {
             margin-top: 8px;
             padding-top: 8px;
@@ -860,16 +947,12 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        .special-projects-editable .sp-header .sp-save-btn:hover {
-            background: #218838;
-        }
+        .special-projects-editable .sp-header .sp-save-btn:hover { background: #218838; }
         .special-projects-editable .sp-header .sp-save-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
         }
-        .special-projects-editable .sp-header .sp-save-btn.saved {
-            background: #6c757d;
-        }
+        .special-projects-editable .sp-header .sp-save-btn.saved { background: #6c757d; }
         .special-projects-editable .sp-textarea {
             width: 100%;
             padding: 5px 8px;
@@ -888,9 +971,7 @@
             border-color: #2a5298;
             box-shadow: 0 0 0 2px rgba(42,82,152,0.1);
         }
-        .special-projects-editable .sp-textarea::placeholder {
-            color: #aaa;
-        }
+        .special-projects-editable .sp-textarea::placeholder { color: #aaa; }
         .special-projects-editable .sp-textarea:disabled {
             background: #f5f5f5;
             cursor: not-allowed;
@@ -908,7 +989,6 @@
             border-radius: 0 0 12px 12px;
         }
 
-        /* SAVE AREA */
         .save-area {
             display: flex;
             align-items: center;
@@ -928,34 +1008,21 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        .save-area .save-btn:hover {
-            background: #218838;
-        }
+        .save-area .save-btn:hover { background: #218838; }
         .save-area .save-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
         }
-        .save-area .save-btn.saved {
-            background: #6c757d;
-        }
+        .save-area .save-btn.saved { background: #6c757d; }
         .save-status {
             font-size: 12px;
             display: none;
         }
-        .save-status.show {
-            display: inline-block;
-        }
-        .save-status.saving {
-            color: #ff9800;
-        }
-        .save-status.saved {
-            color: #28a745;
-        }
-        .save-status.error {
-            color: #dc3545;
-        }
+        .save-status.show { display: inline-block; }
+        .save-status.saving { color: #ff9800; }
+        .save-status.saved { color: #28a745; }
+        .save-status.error { color: #dc3545; }
 
-        /* COMMON UNIT PROJECTS */
         .common-unit-projects {
             background: white;
             padding: 14px 18px;
@@ -1019,7 +1086,10 @@
             display: none;
         }
         .common-unit-projects .cup-save-btn:hover { background: #5a32a3; }
-        .common-unit-projects .cup-save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .common-unit-projects .cup-save-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
         .common-unit-projects .cup-save-btn.saved { background: #6c757d; }
         .common-unit-projects .cup-textarea {
             width: 100%;
@@ -1046,7 +1116,6 @@
             opacity: 0.8;
         }
 
-        /* TEAM WORKLOAD BAR */
         .team-workload-bar {
             background: white;
             padding: 14px 18px;
@@ -1129,7 +1198,10 @@
             transition: all 0.2s;
         }
         .tw-remark-header .save-btn:hover { background: #218838; }
-        .tw-remark-header .save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .tw-remark-header .save-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
         .tw-remark-header .save-btn.saved { background: #6c757d; }
         .tw-remark-textarea {
             flex: 1;
@@ -1149,7 +1221,6 @@
             box-shadow: 0 0 0 2px rgba(42,82,152,0.1);
         }
 
-        /* WPOW BAR */
         .wpow-bar {
             background: white;
             padding: 14px 18px;
@@ -1272,7 +1343,10 @@
             display: none;
         }
         .wpow-save-btn:hover { background: #218838; }
-        .wpow-save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .wpow-save-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
         .wpow-save-btn.saved { background: #6c757d; }
 
         .no-data {
@@ -1287,7 +1361,6 @@
             margin-bottom: 12px;
         }
 
-        /* TOAST */
         .custom-toast {
             position: fixed;
             bottom: 20px;
@@ -1309,6 +1382,424 @@
         @keyframes slideIn {
             from { transform: translateY(20px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
+        }
+
+        .advt-slide-container {
+            position: relative;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e0e6ef;
+            overflow: hidden;
+            min-height: 420px;
+            display: flex;
+            flex-direction: column;
+        }
+        .advt-slide-wrapper {
+            flex: 1;
+            padding: 0;
+            position: relative;
+            min-height: 360px;
+        }
+        .advt-slide {
+            display: none;
+            animation: fadeIn 0.4s ease;
+            padding: 28px 36px;
+            height: 100%;
+            min-height: 360px;
+        }
+        .advt-slide.active { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(15px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .advt-slide-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a3a6b;
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #2a5298;
+        }
+        .advt-slide-content {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #333;
+        }
+        .advt-slide-content ul {
+            list-style: none;
+            padding: 0;
+        }
+        .advt-slide-content ul li {
+            padding: 6px 14px;
+            margin-bottom: 4px;
+            background: white;
+            border-radius: 6px;
+            border-left: 4px solid #2a5298;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+        .advt-slide-content ul li strong { color: #1a3a6b; }
+        .advt-slide-content .highlight-box {
+            background: #e8f0fe;
+            padding: 12px 16px;
+            border-radius: 6px;
+            border-left: 4px solid #ff9800;
+            margin: 8px 0;
+        }
+        .advt-slide-content .highlight-box strong { color: #1a3a6b; }
+        .advt-slide-content .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 10px;
+            margin: 10px 0;
+        }
+        .advt-slide-content .metric-card {
+            background: white;
+            padding: 10px 14px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            border: 1px solid #e8ecf1;
+        }
+        .advt-slide-content .metric-card .metric-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a3a6b;
+            display: block;
+        }
+        .advt-slide-content .metric-card .metric-label {
+            font-size: 11px;
+            color: #666;
+            margin-top: 3px;
+        }
+        .advt-slide-content .workflow-steps {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin: 8px 0;
+        }
+        .advt-slide-content .workflow-steps .step {
+            background: white;
+            padding: 6px 14px;
+            border-radius: 18px;
+            border: 1px solid #d0d8e4;
+            font-size: 12px;
+            font-weight: 500;
+            color: #1a3a6b;
+        }
+        .advt-slide-content .workflow-steps .step .step-num {
+            background: #2a5298;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            margin-right: 5px;
+        }
+        .advt-slide-content .two-col-layout {
+            display: flex;
+            gap: 20px;
+            align-items: stretch;
+        }
+        .advt-slide-content .two-col-layout .left-col { flex: 1.2; }
+        .advt-slide-content .two-col-layout .right-col {
+            flex: 0.8;
+            display: flex;
+            align-items: center;
+        }
+        .advt-slide-content .slide-image-placeholder {
+            background: #e8ecf1;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            min-height: 160px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 2px dashed #b0b8c8;
+            width: 100%;
+        }
+        .advt-slide-content .slide-image-placeholder i {
+            font-size: 40px;
+            color: #8a9bb8;
+            margin-bottom: 8px;
+        }
+        .advt-slide-content .slide-image-placeholder span {
+            color: #6a7b98;
+            font-size: 12px;
+        }
+        .advt-slide-content .impact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin: 8px 0;
+        }
+        .advt-slide-content .impact-grid .impact-item {
+            background: white;
+            padding: 8px 14px;
+            border-radius: 6px;
+            border-left: 3px solid #2a5298;
+            font-size: 13px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .advt-slide-content .impact-grid .impact-item .impact-icon { margin-right: 6px; }
+
+        @media (max-width: 768px) {
+            .advt-slide-content .two-col-layout { flex-direction: column; }
+            .advt-slide-content .two-col-layout .right-col { flex: 1; }
+            .advt-slide-content .impact-grid { grid-template-columns: 1fr; }
+            .advt-slide { padding: 16px 18px; min-height: 300px; }
+            .advt-slide-title { font-size: 17px; }
+            .advt-slide-content { font-size: 14px; }
+        }
+
+        .advt-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .advt-header .title-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .advt-header .title-section h3 {
+            margin: 0;
+            color: #1a3a6b;
+            font-weight: 600;
+            font-size: 18px;
+        }
+        .advt-header .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .advt-header .nav-controls .nav-btn {
+            padding: 6px 14px;
+            border: none;
+            border-radius: 6px;
+            background: #2a5298;
+            color: white;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .advt-header .nav-controls .nav-btn:hover {
+            background: #1a3a6b;
+            transform: translateY(-1px);
+        }
+        .advt-header .nav-controls .nav-btn:disabled {
+            background: #b0b8c8;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .advt-header .nav-controls .slide-counter {
+            font-size: 13px;
+            color: #555;
+            font-weight: 500;
+            min-width: 50px;
+            text-align: center;
+        }
+        .advt-header .nav-controls .slide-dots {
+            display: flex;
+            gap: 6px;
+        }
+        .advt-header .nav-controls .slide-dots .dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #d0d8e4;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .advt-header .nav-controls .slide-dots .dot.active {
+            background: #2a5298;
+            transform: scale(1.15);
+        }
+        @media (max-width: 600px) {
+            .advt-header { flex-direction: column; align-items: stretch; }
+            .advt-header .nav-controls { justify-content: center; flex-wrap: wrap; }
+        }
+
+        .model-stats-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 6px;
+            padding: 8px 16px;
+            margin-bottom: 14px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #1a3a6b 0%, #2a5298 100%);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+            border: 1px solid rgba(255,255,255,0.1);
+            align-items: center;
+        }
+        .model-stats-chips .stats-row-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: rgba(255,255,255,0.9);
+            padding: 2px 8px 2px 0;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .model-stats-chips .stats-chip-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 4px 6px;
+            padding: 2px 0;
+            width: 100%;
+        }
+        .model-stats-chips .chip-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            background: rgba(255,255,255,0.12);
+            padding: 3px 14px 3px 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.08);
+            color: white;
+        }
+        .model-stats-chips .chip-item .chip-label {
+            font-weight: 600;
+            font-size: 11px;
+            opacity: 0.8;
+            color: rgba(255,255,255,0.85);
+        }
+        .model-stats-chips .chip-item .chip-value {
+            font-weight: 700;
+            font-size: 15px;
+            color: white;
+        }
+        .model-stats-chips .chip-item .chip-value.chip-total-value {
+            font-size: 16px;
+            color: #81c784;
+        }
+
+        .all-models-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 14px;
+            margin-top: 8px;
+        }
+        .all-models-grid .all-models-col {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .custom-chart-wrapper {
+            background: white;
+            border-radius: 10px;
+            border: 1px solid #e8ecf1;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            transition: all 0.25s ease;
+        }
+        .custom-chart-wrapper:hover {
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            transform: translateY(-2px);
+        }
+        .custom-chart-wrapper .chart-header {
+            padding: 6px 14px 4px;
+            background: #fafbfc;
+            border-bottom: 1px solid #e8ecf1;
+        }
+        .custom-chart-wrapper .chart-header .unit-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1a3a6b;
+        }
+        .custom-chart-wrapper .chart-body {
+            padding: 6px 14px 10px;
+        }
+
+        @media (max-width: 1200px) {
+            .all-models-grid { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 768px) {
+            .all-models-grid { grid-template-columns: 1fr; }
+        }
+
+        .model-pie-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 16px;
+            margin-top: 8px;
+        }
+        .model-pie-item {
+            background: white;
+            border-radius: 10px;
+            border: 1px solid #e8ecf1;
+            padding: 12px 10px 14px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            transition: all 0.25s ease;
+        }
+        .model-pie-item:hover {
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            transform: translateY(-2px);
+        }
+        .model-pie-item canvas {
+            max-width: 140px;
+            max-height: 140px;
+            width: 100%;
+            height: auto;
+            margin: 0 auto;
+        }
+        .model-pie-item .pie-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1a3a6b;
+            margin-top: 6px;
+        }
+        .model-pie-item .pie-total {
+            font-size: 11px;
+            color: #666;
+            font-weight: 500;
+        }
+        .model-pie-item .pie-legend {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 4px 10px;
+            margin-top: 6px;
+            font-size: 10px;
+        }
+        .model-pie-item .pie-legend .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        .model-pie-item .pie-legend .legend-color {
+            width: 10px;
+            height: 10px;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+        .model-pie-item .pie-legend .legend-label { color: #555; }
+        .model-pie-item .pie-legend .legend-value {
+            font-weight: 600;
+            color: #1a3a6b;
+        }
+
+        @media (max-width: 1200px) {
+            .model-pie-grid { grid-template-columns: 1fr 1fr 1fr; }
+        }
+        @media (max-width: 768px) {
+            .model-pie-grid { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 480px) {
+            .model-pie-grid { grid-template-columns: 1fr; }
         }
 
         @media (max-width: 768px) {
@@ -1348,45 +1839,6 @@
             .header-counts .count-chip .count-value { font-size: 12px; }
             .header-counts .count-chip .count-label { font-size: 10px; }
         }
-		
-		/* Skill filter buttons */
-.skill-filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    margin-top: 4px;
-}
-.skill-filter-btn {
-    padding: 3px 12px;
-    border-radius: 16px;
-    border: 1px solid #ddd;
-    background: white;
-    font-size: 11px;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-}
-.skill-filter-btn:hover {
-    background: #e8ecf1;
-}
-.skill-filter-btn.active {
-    background: #6f42c1;
-    color: white;
-    border-color: #6f42c1;
-}
-.skill-filter-btn .skill-count {
-    font-weight: 700;
-    font-size: 10px;
-    background: rgba(0,0,0,0.1);
-    padding: 0 6px;
-    border-radius: 10px;
-}
-.skill-filter-btn.active .skill-count {
-    background: rgba(255,255,255,0.2);
-    color: white;
-}
     </style>
 </head>
 <body>
@@ -1417,7 +1869,6 @@
 <!-- MAIN CONTENT -->
 <div class="container-fluid" id="mainContent" style="display:none;">
 
-    <!-- HEADER -->
     <div class="header">
         <div class="header-row1">
             <div class="header-left">
@@ -1437,19 +1888,16 @@
         <div class="header-row2" id="headerRow2"></div>
     </div>
 
-    <!-- TABS -->
     <div class="tabs-section" id="tabsContainer"></div>
-
-    <!-- TAB CONTENT -->
     <div class="tab-content" id="tabContent"></div>
 
 </div>
 
 <script>
 // ============================================================
-// CONFIGURATION - REPLACE WITH YOUR DEPLOYED URL
+// CONFIGURATION
 // ============================================================
-const API_BASE_URL = 'https://script.google.com/macros/s/AKfycbywhGVJ6lMxgFheQlrNWgEVQysREjRaaLXnwrbqB8GJN2qo2vIP600vpmD4Ft2XudxA/exec';
+const API_BASE_URL = 'https://script.google.com/macros/s/AKfycbwgcjLsWWMLgAjmdyNCeRQoxNCh025cZoKkBmL_nTpMPX2MOM7b3brUUtCSs_GRCnFAcA/exec';
 
 // ============================================================
 // EXPERTISE OPTIONS
@@ -1475,26 +1923,33 @@ let currentTypeFilter = 'all';
 let currentTab = '';
 let allData = {};
 
-// Publication state
 let publicationChanges = {};
 let isSaving = false;
 
-// WPOW state
 let currentWorkplace = '';
 let currentWPOWData = {};
 let wpowChanged = false;
 let wpowSaving = false;
 
-// Remark state
 let currentRemark = '';
 let remarkChanged = false;
 let remarkSaving = false;
 
-// Common Unit Projects state
 let currentCommonUnit = '';
 let currentCommonProjects = '';
 let cupChanged = false;
 let cupSaving = false;
+
+let currentSlide = 0;
+const totalSlides = 5;
+
+// ============================================================
+// ANALYSIS FILTER STATE
+// ============================================================
+let analysisTypeFilter = 'all';
+let analysisSkillFilter = 'all';
+let analysisAgeFilter = '';
+let analysisServiceFilter = '';
 
 // ============================================================
 // LOGIN SYSTEM
@@ -1628,7 +2083,6 @@ async function loadAllData() {
     try {
         const isAdmin = loggedInUser.role === 'Admin';
         
-        // Load employees
         const empResult = await callAPI('getEmployees', { 
             email: loggedInUser.email,
             role: loggedInUser.role,
@@ -1647,9 +2101,8 @@ async function loadAllData() {
             showToast('Failed to load employees: ' + empResult.error, 'error');
         }
         
-        // If Admin, load additional data
         if (isAdmin) {
-            const actions = ['getWorkload', 'getSkills', 'getModels'];
+            const actions = ['getWorkload', 'getSkills', 'getModels', 'getAllTables'];
             const results = await Promise.all(actions.map(action => 
                 callAPI(action, { email: loggedInUser.email })
             ));
@@ -1657,22 +2110,11 @@ async function loadAllData() {
             allData.workload = results[0].success ? results[0].data : [];
             allData.skills = results[1].success ? results[1].data : [];
             allData.models = results[2].success ? results[2].data : {};
+            allData.allTables = results[3].success ? results[3].data : [];
             
-            // Load publication data
             const pubResult = await callAPI('getAllPublication', { email: loggedInUser.email });
             allData.publication = pubResult.success ? pubResult.data : {};
-            
-            // Load List sheets
-            const listAResult = await callAPI('getListA', { email: loggedInUser.email });
-            allData.listA = listAResult.success ? listAResult.data : {};
-            
-            const listBResult = await callAPI('getListB', { email: loggedInUser.email });
-            allData.listB = listBResult.success ? listBResult.data : {};
-            
-            const listCResult = await callAPI('getListC', { email: loggedInUser.email });
-            allData.listC = listCResult.success ? listCResult.data : {};
         } else {
-            // ICD Head - load only their publication data
             const pubResult = await callAPI('getPublication', { 
                 email: loggedInUser.email,
                 units: loggedInUser.units 
@@ -1711,9 +2153,7 @@ function updateHeaderStats() {
         return;
     }
     
-    // Use ALL employees (not filtered) for header counts
-    // For ICD Head, allEmployees is already filtered to their units
-    const employees = allEmployees; // ← Use all employees, not filtered
+    const employees = allEmployees;
     
     let total = employees.length;
     let fta = 0, vou = 0, cnf = 0, icdHead = 0;
@@ -1739,7 +2179,6 @@ function updateHeaderStats() {
         }
     });
     
-    // Header counts - FIXED (show all employees)
     countsContainer.innerHTML = `
         <span class="count-chip total">
             <span class="count-label">Total</span>
@@ -1767,7 +2206,6 @@ function updateHeaderStats() {
         </span>
     `;
     
-    // Skill strength - FIXED (show all employees)
     let skillHtml = '';
     const skillOrder = ['Allrounder', 'Creative/Feature Page Design', 'Event/Creative Advt', 
                         'Notice/Display Advt', 'Photo', 'Normal Pagination', 'PDF Final/QC'];
@@ -1801,13 +2239,12 @@ function renderTabs() {
         const tabs = [
             { id: 'workload', label: '📊 Workload' },
             { id: 'skills', label: '📋 Skills' },
+            { id: 'all-models', label: '📊 All Models' },
+            { id: 'advt-desk', label: '📰 Advt Desk' },
             { id: 'model-a', label: '📈 Model-A' },
             { id: 'model-b', label: '📈 Model-B' },
             { id: 'model-c', label: '📈 Model-C' },
             { id: 'publications', label: '📰 Publications' },
-            { id: 'list-model-a', label: '📋 List-Model-A' },
-            { id: 'list-model-b', label: '📋 List-Model-B' },
-            { id: 'list-model-c', label: '📋 List-Model-C' },
             { id: 'analysis', label: '📋 Analysis' }
         ];
         tabs.forEach(tab => {
@@ -1824,6 +2261,7 @@ function renderTabs() {
 
 function switchTab(tabId) {
     currentTab = tabId;
+    currentSlide = 0;
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.tab === tabId);
     });
@@ -1844,6 +2282,12 @@ function renderTabContent(tabId) {
             case 'skills':
                 renderSkills(container);
                 break;
+            case 'all-models':
+                renderAllModels(container);
+                break;
+            case 'advt-desk':
+                renderAdvtDesk(container);
+                break;
             case 'model-a':
                 renderModel(container, 'A', 'Centralised Pagination by ICD (Existing Process)');
                 break;
@@ -1855,15 +2299,6 @@ function renderTabContent(tabId) {
                 break;
             case 'publications':
                 renderPublications(container);
-                break;
-            case 'list-model-a':
-                renderListEmployees(container, 'listA', 'List-Model-A');
-                break;
-            case 'list-model-b':
-                renderListEmployees(container, 'listB', 'List-Model-B');
-                break;
-            case 'list-model-c':
-                renderListEmployees(container, 'listC', 'List-Model-C');
                 break;
             case 'analysis':
                 renderAnalysis(container);
@@ -1886,10 +2321,860 @@ function renderTabContent(tabId) {
 }
 
 // ============================================================
+// HELPER: Get Publication Totals
+// ============================================================
+function getPublicationTotals() {
+    const data = allData.publication || {};
+    let totalPages = 0, totalFresh = 0, totalAlter = 0;
+    
+    Object.keys(data).forEach(unit => {
+        const unitData = data[unit] || [];
+        unitData.forEach(row => {
+            totalPages += row.Total_Pages || 0;
+            totalFresh += row.Fresh_Pagination || 0;
+            totalAlter += row.Alter_Pagination || 0;
+        });
+    });
+    
+    return { totalPages, totalFresh, totalAlter };
+}
+
+// ============================================================
+// RENDER ALL MODELS (Admin)
+// ============================================================
+function renderAllModels(container) {
+    const data = allData.allTables || [];
+    const pubTotals = getPublicationTotals();
+    
+    if (!data || data.length === 0) {
+        container.innerHTML = '<div class="no-data"><i class="fa fa-database"></i>No data available in All-Tables sheet</div>';
+        return;
+    }
+    
+    let totalExisting = 0, totalModelA = 0, totalModelB = 0, totalModelC = 0;
+    
+    data.forEach(row => {
+        totalExisting += parseFloat(row['Existing']) || 0;
+        totalModelA += parseFloat(row['Model-A']) || 0;
+        totalModelB += parseFloat(row['Model-B']) || 0;
+        totalModelC += parseFloat(row['Model-C']) || 0;
+    });
+    
+    const sortedData = [...data].sort((a, b) => (a.Unit || '').localeCompare(b.Unit || ''));
+    
+    const totalItems = sortedData.length;
+    const itemsPerCol = Math.ceil(totalItems / 3);
+    const col1Data = sortedData.slice(0, itemsPerCol);
+    const col2Data = sortedData.slice(itemsPerCol, itemsPerCol * 2);
+    const col3Data = sortedData.slice(itemsPerCol * 2);
+    
+    let html = `
+        <div class="section-header">
+            <h3><i class="fa fa-cubes"></i> All Models - Combined View</h3>
+            <div class="totals-box">
+                <span>📄 Total Pages: <span class="num">${pubTotals.totalPages}</span></span>
+                <span>🆕 Fresh: <span class="num">${pubTotals.totalFresh}</span></span>
+                <span>🔄 Alter: <span class="num">${pubTotals.totalAlter}</span></span>
+                <span>📢 Advt: <span class="num">400</span></span>
+            </div>
+        </div>
+        
+        <div class="model-stats-container">
+            <div class="model-stats-left">
+                <div class="stat-label"><i class="fa fa-bar-chart"></i> All Models Summary</div>
+                <div class="model-stat-item existing">
+                    <span class="stat-name">Existing</span>
+                    <span class="stat-count">${totalExisting}</span>
+                </div>
+                <div class="model-stat-item model-a">
+                    <span class="stat-name">Model-A</span>
+                    <span class="stat-count">${totalModelA}</span>
+                </div>
+                <div class="model-stat-item model-b">
+                    <span class="stat-name">Model-B</span>
+                    <span class="stat-count">${totalModelB}</span>
+                </div>
+                <div class="model-stat-item model-c">
+                    <span class="stat-name">Model-C</span>
+                    <span class="stat-count">${totalModelC}</span>
+                </div>
+            </div>
+            <div class="model-stats-right" id="chartContainer"></div>
+        </div>
+        
+        <div class="all-models-grid three-col" id="allModelsGrid">
+    `;
+    
+    html += '<div class="all-models-col">';
+    col1Data.forEach(row => {
+        html += buildCustomChartWrapper(row);
+    });
+    html += '</div>';
+    
+    html += '<div class="all-models-col">';
+    col2Data.forEach(row => {
+        html += buildCustomChartWrapper(row);
+    });
+    html += '</div>';
+    
+    html += '<div class="all-models-col">';
+    col3Data.forEach(row => {
+        html += buildCustomChartWrapper(row);
+    });
+    html += '</div>';
+    
+    html += `
+        </div>
+    `;
+    
+    container.innerHTML = html;
+    
+    setTimeout(() => {
+        drawCharts(totalExisting, totalModelA, totalModelB, totalModelC);
+    }, 50);
+}
+
+function buildCustomChartWrapper(row) {
+    const unitName = row.Unit || 'Unknown';
+    const existing = parseFloat(row['Existing']) || 0;
+    const modelA = parseFloat(row['Model-A']) || 0;
+    const modelB = parseFloat(row['Model-B']) || 0;
+    const modelC = parseFloat(row['Model-C']) || 0;
+    
+    const maxVal = Math.max(existing, modelA, modelB, modelC, 1);
+    
+    const barColors = {
+        existing: '#6f9ad0',
+        modelA: '#4a7ab8',
+        modelB: '#2a5298',
+        modelC: '#1a3a6b'
+    };
+    
+    const existingWidth = (existing / maxVal) * 100;
+    const modelAWidth = (modelA / maxVal) * 100;
+    const modelBWidth = (modelB / maxVal) * 100;
+    const modelCWidth = (modelC / maxVal) * 100;
+    
+    return `
+        <div class="chart-wrapper custom-chart-wrapper" style="background:white;border-radius:10px;border:1px solid #e8ecf1;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.04);transition:all 0.25s ease;margin-bottom:10px;">
+            <div class="chart-header" style="padding:6px 14px 4px;background:#fafbfc;border-bottom:1px solid #e8ecf1;">
+                <span class="unit-name" style="font-size:13px;font-weight:600;color:#1a3a6b;">${escapeHtml(unitName)}</span>
+            </div>
+            <div class="chart-body" style="padding:6px 14px 10px;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;">
+                    <span style="font-size:9px;font-weight:600;color:#444;width:44px;text-align:right;flex-shrink:0;">Existing</span>
+                    <div style="flex:1;height:14px;background:#f0f2f5;border-radius:3px;overflow:hidden;position:relative;">
+                        <div style="width:${existingWidth}%;height:100%;background:${barColors.existing};border-radius:3px;transition:width 0.6s ease;"></div>
+                    </div>
+                    <span style="font-size:10px;font-weight:600;color:#555;min-width:35px;text-align:right;">${existing}</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;">
+                    <span style="font-size:9px;font-weight:600;color:#444;width:44px;text-align:right;flex-shrink:0;">Model-A</span>
+                    <div style="flex:1;height:14px;background:#f0f2f5;border-radius:3px;overflow:hidden;position:relative;">
+                        <div style="width:${modelAWidth}%;height:100%;background:${barColors.modelA};border-radius:3px;transition:width 0.6s ease;"></div>
+                    </div>
+                    <span style="font-size:10px;font-weight:600;color:#555;min-width:35px;text-align:right;">${modelA}</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;">
+                    <span style="font-size:9px;font-weight:600;color:#444;width:44px;text-align:right;flex-shrink:0;">Model-B</span>
+                    <div style="flex:1;height:14px;background:#f0f2f5;border-radius:3px;overflow:hidden;position:relative;">
+                        <div style="width:${modelBWidth}%;height:100%;background:${barColors.modelB};border-radius:3px;transition:width 0.6s ease;"></div>
+                    </div>
+                    <span style="font-size:10px;font-weight:600;color:#555;min-width:35px;text-align:right;">${modelB}</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;">
+                    <span style="font-size:9px;font-weight:600;color:#444;width:44px;text-align:right;flex-shrink:0;">Model-C</span>
+                    <div style="flex:1;height:14px;background:#f0f2f5;border-radius:3px;overflow:hidden;position:relative;">
+                        <div style="width:${modelCWidth}%;height:100%;background:${barColors.modelC};border-radius:3px;transition:width 0.6s ease;"></div>
+                    </div>
+                    <span style="font-size:10px;font-weight:600;color:#555;min-width:35px;text-align:right;">${modelC}</span>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// ============================================================
+// DRAW PIE CHARTS
+// ============================================================
+function drawCharts(existing, modelA, modelB, modelC) {
+    const container = document.getElementById('chartContainer');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    const charts = [
+        { id: 'chart-existing', label: 'Existing', value: existing, isBase: true },
+        { id: 'chart-modelA', label: 'Model-A', value: existing - modelA, isBase: false, modelValue: modelA },
+        { id: 'chart-modelB', label: 'Model-B', value: existing - modelB, isBase: false, modelValue: modelB },
+        { id: 'chart-modelC', label: 'Model-C', value: existing - modelC, isBase: false, modelValue: modelC }
+    ];
+    
+    charts.forEach((chart) => {
+        const chartDiv = document.createElement('div');
+        chartDiv.className = 'chart-item';
+        
+        const canvas = document.createElement('canvas');
+        canvas.id = chart.id;
+        canvas.width = 220;
+        canvas.height = 220;
+        
+        const labelDiv = document.createElement('div');
+        labelDiv.className = 'chart-label';
+        labelDiv.textContent = chart.label;
+        
+        const valueDiv = document.createElement('div');
+        valueDiv.className = 'chart-value';
+        
+        if (chart.isBase) {
+            valueDiv.textContent = `${chart.value}`;
+        } else {
+            valueDiv.textContent = `${chart.modelValue}`;
+        }
+        
+        chartDiv.appendChild(canvas);
+        chartDiv.appendChild(labelDiv);
+        chartDiv.appendChild(valueDiv);
+        container.appendChild(chartDiv);
+        
+        const ctx = canvas.getContext('2d');
+        drawPieChart(ctx, canvas.width, canvas.height, chart, existing);
+    });
+}
+
+function drawPieChart(ctx, width, height, chart, existing) {
+    const centerX = width / 2;
+    const centerY = height / 2;
+    const radius = Math.min(width, height) / 2 - 15;
+    const color = '#2a5298';
+    
+    ctx.clearRect(0, 0, width, height);
+    
+    if (chart.isBase) {
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+        ctx.fillStyle = '#428bca';
+        ctx.fill();
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+        
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 28px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(chart.value, centerX, centerY);
+    } else {
+        const diffValue = chart.value;
+        const percentage = existing > 0 ? diffValue / existing : 0;
+        const startAngle = -Math.PI / 2;
+        const endAngle = startAngle + (percentage * 2 * Math.PI);
+        
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+        ctx.fillStyle = '#428bca';
+        ctx.fill();
+        
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+        ctx.closePath();
+        ctx.fillStyle = color;
+        ctx.fill();
+        
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+        
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius * 0.45, 0, 2 * Math.PI);
+        ctx.fillStyle = '#ffffff';
+        ctx.fill();
+        ctx.strokeStyle = '#428bca';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        
+        ctx.fillStyle = '#1a3a6b';
+        ctx.font = 'bold 24px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(Math.round(percentage * 100) + '%', centerX, centerY);
+    }
+}
+
+// ============================================================
+// RENDER MODEL (Admin)
+// ============================================================
+function renderModel(container, modelType, title) {
+    const models = allData.models || {};
+    const data = models[modelType] || [];
+    const pubTotals = getPublicationTotals();
+    
+    if (!data || data.length === 0) {
+        container.innerHTML = '<div class="no-data"><i class="fa fa-database"></i>No model data available</div>';
+        return;
+    }
+    
+    let totalPD = 0, totalADVT = 0, totalReliever = 0, totalEvent = 0, totalOther = 0;
+    
+    data.forEach(row => {
+        totalPD += row['Page Designer'] || 0;
+        totalADVT += row['ADVT'] || 0;
+        totalReliever += row['Reliever'] || 0;
+        totalEvent += row['Event'] || 0;
+        totalOther += row['Other'] || 0;
+    });
+    
+    const grandTotal = totalPD + totalADVT + totalReliever + totalEvent + totalOther;
+    
+    const validData = data.filter(row => {
+        const total = (row['Page Designer'] || 0) + (row['ADVT'] || 0) + (row['Reliever'] || 0) + (row['Event'] || 0) + (row['Other'] || 0);
+        return total > 0;
+    });
+    
+    const pieColors = {
+        'Page Designer': '#2a5298',
+        'ADVT': '#ff9800',
+        'Reliever': '#28a745',
+        'Event': '#dc3545',
+        'Other': '#6c757d'
+    };
+    
+    let html = `
+        <div class="section-header">
+            <h3><i class="fa fa-cubes"></i> ${escapeHtml(title)}</h3>
+            <div class="totals-box">
+                <span>📄 Total Pages: <span class="num">${pubTotals.totalPages}</span></span>
+                <span>🆕 Fresh: <span class="num">${pubTotals.totalFresh}</span></span>
+                <span>🔄 Alter: <span class="num">${pubTotals.totalAlter}</span></span>
+                <span>📢 Advt: <span class="num">400</span></span>
+            </div>
+        </div>
+        
+        <div class="model-stats-chips" style="margin-bottom:16px;">
+            <div class="stats-chip-row" style="display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center;width:100%;">
+                <span class="stats-row-title" style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.9);padding:2px 8px 2px 0;display:flex;align-items:center;gap:4px;">
+                    <i class="fa fa-bar-chart"></i> Summary
+                </span>
+                <span class="chip-item" style="display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:500;background:rgba(255,255,255,0.12);padding:3px 14px 3px 10px;border-radius:20px;border:1px solid rgba(255,255,255,0.08);color:white;">
+                    <span class="chip-label" style="font-weight:600;font-size:11px;opacity:0.8;">📐 Page Designer</span>
+                    <span class="chip-value" style="font-weight:700;font-size:15px;color:#81c784;">${totalPD}</span>
+                </span>
+                <span class="chip-item" style="display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:500;background:rgba(255,255,255,0.12);padding:3px 14px 3px 10px;border-radius:20px;border:1px solid rgba(255,255,255,0.08);color:white;">
+                    <span class="chip-label" style="font-weight:600;font-size:11px;opacity:0.8;">📢 ADVT</span>
+                    <span class="chip-value" style="font-weight:700;font-size:15px;color:#ffd54f;">${totalADVT}</span>
+                </span>
+                <span class="chip-item" style="display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:500;background:rgba(255,255,255,0.12);padding:3px 14px 3px 10px;border-radius:20px;border:1px solid rgba(255,255,255,0.08);color:white;">
+                    <span class="chip-label" style="font-weight:600;font-size:11px;opacity:0.8;">🔄 Reliever</span>
+                    <span class="chip-value" style="font-weight:700;font-size:15px;color:#ce93d8;">${totalReliever}</span>
+                </span>
+                <span class="chip-item" style="display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:500;background:rgba(255,255,255,0.12);padding:3px 14px 3px 10px;border-radius:20px;border:1px solid rgba(255,255,255,0.08);color:white;">
+                    <span class="chip-label" style="font-weight:600;font-size:11px;opacity:0.8;">🎪 Event</span>
+                    <span class="chip-value" style="font-weight:700;font-size:15px;color:#ffb74d;">${totalEvent}</span>
+                </span>
+                <span class="chip-item" style="display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:500;background:rgba(255,255,255,0.12);padding:3px 14px 3px 10px;border-radius:20px;border:1px solid rgba(255,255,255,0.08);color:white;">
+                    <span class="chip-label" style="font-weight:600;font-size:11px;opacity:0.8;">📋 Other</span>
+                    <span class="chip-value" style="font-weight:700;font-size:15px;color:#7eb8ff;">${totalOther}</span>
+                </span>
+                <span class="chip-item" style="display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:500;background:rgba(255,255,255,0.12);padding:3px 14px 3px 10px;border-radius:20px;border:1px solid rgba(255,255,255,0.08);color:white;">
+                    <span class="chip-label" style="font-weight:600;font-size:11px;opacity:0.8;">📊 Total</span>
+                    <span class="chip-value" style="font-weight:700;font-size:16px;color:#81c784;">${grandTotal}</span>
+                </span>
+            </div>
+        </div>
+        
+        <div class="model-pie-grid" id="modelPieGrid">
+    `;
+    
+    validData.forEach((row, index) => {
+        const unitName = row.Unit || 'Unknown';
+        const total = (row['Page Designer'] || 0) + (row['ADVT'] || 0) + (row['Reliever'] || 0) + (row['Event'] || 0) + (row['Other'] || 0);
+        const chartId = 'pie_' + modelType + '_' + index;
+        
+        html += `
+            <div class="model-pie-item">
+                <canvas id="${chartId}" width="140" height="140"></canvas>
+                <div class="pie-title">${escapeHtml(unitName)}</div>
+                <div class="pie-total">Total: ${total}</div>
+                <div class="pie-legend" id="legend_${chartId}"></div>
+            </div>
+        `;
+    });
+    
+    if (validData.length === 0) {
+        html += `
+            <div style="grid-column:1/-1;text-align:center;padding:40px 20px;color:#888;">
+                <i class="fa fa-info-circle" style="font-size:28px;display:block;margin-bottom:10px;opacity:0.5;"></i>
+                No active centres with manpower data available
+            </div>
+        `;
+    }
+    
+    html += `
+        </div>
+    `;
+    
+    container.innerHTML = html;
+    
+    setTimeout(() => {
+        validData.forEach((row, index) => {
+            const chartId = 'pie_' + modelType + '_' + index;
+            drawPieChartForUnit(chartId, row, pieColors);
+        });
+    }, 100);
+}
+
+function drawPieChartForUnit(canvasId, row, pieColors) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    const width = canvas.width;
+    const height = canvas.height;
+    const centerX = width / 2;
+    const centerY = height / 2;
+    const radius = Math.min(width, height) / 2 - 12;
+    
+    const categories = [
+        { key: 'Page Designer', value: row['Page Designer'] || 0 },
+        { key: 'ADVT', value: row['ADVT'] || 0 },
+        { key: 'Reliever', value: row['Reliever'] || 0 },
+        { key: 'Event', value: row['Event'] || 0 },
+        { key: 'Other', value: row['Other'] || 0 }
+    ];
+    
+    const filteredData = categories.filter(item => item.value > 0);
+    
+    if (filteredData.length === 0) {
+        ctx.clearRect(0, 0, width, height);
+        ctx.fillStyle = '#e8ecf1';
+        ctx.font = '12px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('No Data', centerX, centerY);
+        return;
+    }
+    
+    const total = filteredData.reduce((sum, item) => sum + item.value, 0);
+    
+    ctx.clearRect(0, 0, width, height);
+    
+    let startAngle = -Math.PI / 2;
+    
+    filteredData.forEach((item) => {
+        const sliceAngle = (item.value / total) * 2 * Math.PI;
+        const endAngle = startAngle + sliceAngle;
+        
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+        ctx.closePath();
+        ctx.fillStyle = pieColors[item.key] || '#6c757d';
+        ctx.fill();
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        
+        startAngle = endAngle;
+    });
+    
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius * 0.4, 0, 2 * Math.PI);
+    ctx.fillStyle = '#ffffff';
+    ctx.fill();
+    ctx.strokeStyle = '#e8ecf1';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    
+    ctx.fillStyle = '#1a3a6b';
+    ctx.font = 'bold 16px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(total, centerX, centerY);
+    
+    const legendContainer = document.getElementById('legend_' + canvasId);
+    if (legendContainer) {
+        let legendHtml = '';
+        filteredData.forEach(item => {
+            const color = pieColors[item.key] || '#6c757d';
+            legendHtml += `
+                <span class="legend-item">
+                    <span class="legend-color" style="background:${color};"></span>
+                    <span class="legend-label">${item.key}</span>
+                    <span class="legend-value">${item.value}</span>
+                </span>
+            `;
+        });
+        legendContainer.innerHTML = legendHtml;
+    }
+}
+
+// ============================================================
+// RENDER ADVT DESK
+// ============================================================
+function renderAdvtDesk(container) {
+    const slides = [
+        {
+            title: 'The Task, In One Line',
+            content: `
+                <div class="advt-slide-content">
+                    <div class="two-col-layout">
+                        <div class="left-col" style="flex:1.4;">
+                            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px;">
+                                <div style="background:linear-gradient(135deg,#1a3a6b,#2a5298);padding:14px 10px;border-radius:10px;text-align:center;color:white;box-shadow:0 4px 12px rgba(26,58,107,0.25);">
+                                    <div style="font-size:28px;font-weight:700;line-height:1.2;">41 <span style="font-size:16px;font-weight:400;">→</span> 13</div>
+                                    <div style="font-size:11px;opacity:0.85;margin-top:2px;">Centres Consolidated</div>
+                                </div>
+                                <div style="background:linear-gradient(135deg,#e68a2e,#f5a623);padding:14px 10px;border-radius:10px;text-align:center;color:white;box-shadow:0 4px 12px rgba(230,138,46,0.3);">
+                                    <div style="font-size:28px;font-weight:700;line-height:1.2;">~400</div>
+                                    <div style="font-size:11px;opacity:0.85;margin-top:2px;">Ads Handled Daily</div>
+                                </div>
+                                <div style="background:linear-gradient(135deg,#1a8a4a,#28a745);padding:14px 10px;border-radius:10px;text-align:center;color:white;box-shadow:0 4px 12px rgba(40,167,69,0.3);">
+                                    <div style="font-size:28px;font-weight:700;line-height:1.2;">🔄</div>
+                                    <div style="font-size:11px;opacity:0.85;margin-top:2px;">Common Workflow</div>
+                                </div>
+                            </div>
+                            
+                            <div style="background:#f8fafc;padding:14px 18px;border-radius:10px;border-left:4px solid #2a5298;box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+                                <p style="font-size:15px;color:#444;line-height:1.8;margin:0;">
+                                    Bringing advertisement creation from <strong>41 centres</strong> into <strong>13 regional centers</strong> connected through a common workflow system.
+                                </p>
+                                <p style="font-size:15px;color:#444;line-height:1.8;margin:10px 0 0 0;">
+                                    Any Center can support another center when workload is high, helping us produce around <strong>400 advertisements</strong> every day.
+                                </p>
+                            </div>
+                            
+                            <div style="background:linear-gradient(135deg,#1a3a6b,#2a5298);padding:14px 10px;border-radius:10px;text-align:center;color:white;box-shadow:0 4px 12px rgba(26,58,107,0.25);margin-top:12px;">
+                                <div style="font-size:28px;font-weight:700;line-height:1.2;">🤝 Cross-Center Support</div>
+                                <div style="font-size:11px;opacity:0.85;margin-top:2px;">All centre's workload will be synchronised from Central Advertisement Design Desk</div>
+                            </div>
+                        </div>
+                        <div class="right-col" style="flex:0.9;display:flex;align-items:center;justify-content:center;">
+                            <img src="Desk.jpg" alt="Centralised Advertisement Workflow Diagram" 
+                                 style="width:100%;max-width:320px;height:auto;border-radius:10px;border:1px solid #e0e6ef;background:#e8ecf1;box-shadow:0 4px 16px rgba(0,0,0,0.08);">
+                        </div>
+                    </div>
+                </div>
+            `
+        },
+        {
+            title: 'Transformation: Fragmentation to Integration',
+            content: `
+                <div class="advt-slide-content">
+                    <div style="display:flex;gap:30px;height:100%;">
+                        <div style="flex:0 0 38%;display:flex;flex-direction:column;">
+                            <div style="background:white;border-radius:10px;border:1px solid #e0e6ef;padding:24px 28px;flex:1;box-shadow:0 4px 16px rgba(0,0,0,0.05);">
+                                <h2 style="text-align:center;color:#4d5968;letter-spacing:2px;font-size:15px;font-weight:600;margin:0 0 30px 0;text-transform:uppercase;">Physical Nodes</h2>
+                                
+                                <div style="margin-bottom:28px;">
+                                    <div style="font-size:14px;font-weight:600;color:#1a3a6b;">Current State</div>
+                                    <div style="color:#888;font-size:13px;margin-bottom:8px;">Isolated Centres</div>
+                                    <div style="height:44px;background:#e8ecf1;border-radius:6px;overflow:hidden;position:relative;">
+                                        <div style="width:100%;height:100%;background:linear-gradient(90deg,#8192aa,#68788f);color:white;font-size:20px;font-weight:700;display:flex;justify-content:flex-end;align-items:center;padding-right:16px;">
+                                            41
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-bottom:20px;">
+                                    <div style="font-size:14px;font-weight:600;color:#1a3a6b;">Proposed State</div>
+                                    <div style="color:#888;font-size:13px;margin-bottom:8px;">Connected Hubs</div>
+                                    <div style="height:44px;background:#e8ecf1;border-radius:6px;overflow:hidden;position:relative;">
+                                        <div style="width:31.7%;height:100%;background:#2a5298;color:white;font-size:20px;font-weight:700;display:flex;justify-content:center;align-items:center;">
+                                            14
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-top:20px;padding-top:16px;border-top:2px solid #e8ecf1;color:#666;font-style:italic;font-size:14px;line-height:1.6;">
+                                    Both states handle the exact same volume of approximately <strong style="color:#1a3a6b;">400 advertisements daily.</strong> The proposed state eliminates peak bottlenecks.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="flex:1;display:flex;flex-direction:column;gap:16px;">
+                            <div style="background:#fff6f6;border-radius:10px;padding:18px 24px;border-left:5px solid #dc3545;flex:1;box-shadow:0 4px 16px rgba(0,0,0,0.05);">
+                                <h3 style="color:#dc3545;font-size:16px;font-weight:700;margin:0 0 10px 0;letter-spacing:0.5px;">⚠️ CURRENT STATE LIMITATIONS</h3>
+                                <ul style="list-style:none;padding:0;margin:0;">
+                                    <li style="padding:6px 0 6px 20px;font-size:13px;line-height:1.5;border-bottom:1px solid rgba(220,53,69,0.08);">
+                                        Each centre works independently and cannot easily support other centres during heavy workload.
+                                    </li>
+                                    <li style="padding:6px 0 6px 20px;font-size:13px;line-height:1.5;border-bottom:1px solid rgba(220,53,69,0.08);">
+                                        Design quality, turnaround time, and work processes differ from centre to centre.
+                                    </li>
+                                    <li style="padding:6px 0 6px 20px;font-size:13px;line-height:1.5;">
+                                        During festivals, elections and special events, some centres become overloaded while others have spare capacity.
+                                    </li>
+                                </ul>
+                            </div>
+                            
+                            <div style="background:#f4fff8;border-radius:10px;padding:18px 24px;border-left:5px solid #28a745;flex:1;box-shadow:0 4px 16px rgba(0,0,0,0.05);">
+                                <h3 style="color:#28a745;font-size:16px;font-weight:700;margin:0 0 10px 0;letter-spacing:0.5px;">✅ PROPOSED AUTOMATED INTEGRATION</h3>
+                                <ul style="list-style:none;padding:0;margin:0;">
+                                    <li style="padding:5px 0 5px 20px;font-size:13px;line-height:1.5;border-bottom:1px solid rgba(40,167,69,0.08);">
+                                        Create <strong>14 well-equipped regional hubs</strong> across Maharashtra.
+                                    </li>
+                                    <li style="padding:5px 0 5px 20px;font-size:13px;line-height:1.5;border-bottom:1px solid rgba(40,167,69,0.08);">
+                                        Creative production tools assist with layout creation, resizing and adaptation of advertisements.
+                                    </li>
+                                    <li style="padding:5px 0 5px 20px;font-size:13px;line-height:1.5;border-bottom:1px solid rgba(40,167,69,0.08);">
+                                        All centers work through a <strong>common job queue</strong>.
+                                    </li>
+                                    <li style="padding:5px 0 5px 20px;font-size:13px;line-height:1.5;">
+                                        If one centre is busy, another centre can take over the work <strong>without delay</strong>.
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `
+        },
+        {
+            title: 'Strategic Impact Analysis',
+            content: `
+                <div class="advt-slide-content">
+                    <div style="overflow-x:auto;margin-top:4px;">
+                        <table class="data-table" style="font-size:14px;min-width:700px;">
+                            <thead>
+                                <tr>
+                                    <th style="background:#1a3a6b;color:white;padding:12px 16px;text-align:left;font-weight:600;font-size:14px;">Metric</th>
+                                    <th style="background:#1a3a6b;color:white;padding:12px 16px;text-align:left;font-weight:600;font-size:14px;">Current State</th>
+                                    <th style="background:#1a3a6b;color:white;padding:12px 16px;text-align:left;font-weight:600;font-size:14px;">Target State</th>
+                                    <th style="background:#1a3a6b;color:white;padding:12px 16px;text-align:left;font-weight:600;font-size:14px;">Expected Impact</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-weight:600;font-size:13px;">Number of centres</td>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-size:13px;">41 across Maharashtra</td>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-size:13px;font-weight:500;color:#1a3a6b;">14 interconnected hubs</td>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-size:13px;color:#28a745;font-weight:600;">Better resource utilisation</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-weight:600;font-size:13px;">Ad volume handled</td>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-size:13px;">~400 ads spread thinly</td>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-size:13px;font-weight:500;color:#1a3a6b;">~400 ads consolidated</td>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-size:13px;color:#28a745;font-weight:600;">Better workload distribution</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-weight:600;font-size:13px;">Ad creation method</td>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-size:13px;">Manual, centre-by-centre</td>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-size:13px;font-weight:500;color:#1a3a6b;">Automated + templated workflows</td>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-size:13px;color:#28a745;font-weight:600;">Faster advertisement delivery</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-weight:600;font-size:13px;">Workload flexibility</td>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-size:13px;">Each centre handles only its own load</td>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-size:13px;font-weight:500;color:#1a3a6b;">Any hub can pick up another's job</td>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-size:13px;color:#28a745;font-weight:600;">Smooth operations during overload</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-weight:600;font-size:13px;">Consistency of output</td>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-size:13px;">Varies significantly by team</td>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-size:13px;font-weight:500;color:#1a3a6b;">Standardised templates &amp; rules</td>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-size:13px;color:#28a745;font-weight:600;">Consistent design quality</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-weight:600;font-size:13px;">Scalability (Peaks)</td>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-size:13px;">Severe bottlenecks at individual centres</td>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-size:13px;font-weight:500;color:#1a3a6b;">Load automatically redistributed</td>
+                                    <td style="padding:10px 16px;border-bottom:1px solid #e8ecf1;font-size:13px;color:#28a745;font-weight:600;">Better handling of high-volume periods</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px;padding-top:12px;border-top:2px solid #e8ecf1;">
+                        <span style="background:#1a3a6b;color:white;padding:5px 18px;border-radius:20px;font-size:12px;font-weight:500;">41 → 14 Centres</span>
+                        <span style="background:#2a5298;color:white;padding:5px 18px;border-radius:20px;font-size:12px;font-weight:500;">~400 Ads/Day</span>
+                        <span style="background:#28a745;color:white;padding:5px 18px;border-radius:20px;font-size:12px;font-weight:500;">Auto Load Balancing</span>
+                        <span style="background:#ff9800;color:white;padding:5px 18px;border-radius:20px;font-size:12px;font-weight:500;">Standardised Quality</span>
+                    </div>
+                </div>
+            `
+        },
+        {
+            title: 'Centralised Advertisement Workflow',
+            content: `
+                <div class="advt-slide-content">
+                    <div style="width:100%;display:flex;align-items:center;justify-content:center;height:100%;min-height:320px;">
+                        <img src="Flowchart.jpg" alt="Centralised Advertisement Workflow" 
+                             style="width:100%;height:auto;max-height:400px;object-fit:contain;border-radius:8px;border:1px solid #e0e6ef;background:#ffffff;box-shadow:0 4px 16px rgba(0,0,0,0.06);">
+                    </div>
+                </div>
+            `
+        },
+        {
+            title: 'Implementation Roadmap',
+            content: `
+                <div class="advt-slide-content">
+                    <div style="display:flex;align-items:stretch;gap:0;margin-bottom:16px;">
+                        <div style="flex:1;background:white;border-radius:10px;border:1px solid #e0e6ef;padding:14px 16px 16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);display:flex;flex-direction:column;">
+                            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                                <span style="background:#1a3a6b;color:white;font-weight:700;font-size:13px;padding:2px 12px;border-radius:20px;">1</span>
+                                <h4 style="font-size:14px;font-weight:700;color:#1a3a6b;margin:0;">FOUNDATION</h4>
+                            </div>
+                            <p style="font-size:12px;color:#555;line-height:1.6;margin:0;flex:1;">
+                                Consolidate advertisement operations into <strong>13 regional centers</strong>. Implement a common system where all centers can access and manage jobs.
+                            </p>
+                        </div>
+                        
+                        <div style="flex:0 0 30px;text-align:center;color:#2a5298;font-size:20px;font-weight:300;display:flex;align-items:center;justify-content:center;">
+                            ▶
+                        </div>
+                        
+                        <div style="flex:1;background:white;border-radius:10px;border:1px solid #e0e6ef;padding:14px 16px 16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);display:flex;flex-direction:column;">
+                            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                                <span style="background:#2a5298;color:white;font-weight:700;font-size:13px;padding:2px 12px;border-radius:20px;">2</span>
+                                <h4 style="font-size:14px;font-weight:700;color:#2a5298;margin:0;">AUTOMATION</h4>
+                            </div>
+                            <p style="font-size:12px;color:#555;line-height:1.6;margin:0;flex:1;">
+                                Launch a <strong>central job allocation and tracking system</strong> to streamline workflow and improve efficiency.
+                            </p>
+                        </div>
+                        
+                        <div style="flex:0 0 30px;text-align:center;color:#4a7ab8;font-size:20px;font-weight:300;display:flex;align-items:center;justify-content:center;">
+                            ▶
+                        </div>
+                        
+                        <div style="flex:1;background:white;border-radius:10px;border:1px solid #e0e6ef;padding:14px 16px 16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);display:flex;flex-direction:column;">
+                            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                                <span style="background:#4a7ab8;color:white;font-weight:700;font-size:13px;padding:2px 12px;border-radius:20px;">3</span>
+                                <h4 style="font-size:14px;font-weight:700;color:#4a7ab8;margin:0;">OPTIMISATION</h4>
+                            </div>
+                            <p style="font-size:12px;color:#555;line-height:1.6;margin:0;flex:1;">
+                                Automatically assign work to available centers during high workload. Create <strong>dashboards</strong> to monitor workload, time and quality.
+                            </p>
+                        </div>
+                        
+                        <div style="flex:0 0 30px;text-align:center;color:#6f9ad0;font-size:20px;font-weight:300;display:flex;align-items:center;justify-content:center;">
+                            ▶
+                        </div>
+                        
+                        <div style="flex:1;background:white;border-radius:10px;border:1px solid #e0e6ef;padding:14px 16px 16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);display:flex;flex-direction:column;">
+                            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                                <span style="background:#6f9ad0;color:white;font-weight:700;font-size:13px;padding:2px 12px;border-radius:20px;">4</span>
+                                <h4 style="font-size:14px;font-weight:700;color:#6f9ad0;margin:0;">SCALE</h4>
+                            </div>
+                            <p style="font-size:12px;color:#555;line-height:1.6;margin:0;flex:1;">
+                                Review performance, measure savings and <strong>improve processes</strong> based on results for continuous growth.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div style="display:flex;border-radius:10px;overflow:hidden;border:1px solid #e0e6ef;box-shadow:0 4px 16px rgba(0,0,0,0.06);">
+                        <div style="width:180px;min-width:180px;background:linear-gradient(135deg,#1a3a6b,#2a5298);display:flex;justify-content:center;align-items:center;padding:30px 20px;flex-shrink:0;">
+                            <h2 style="font-family:'Segoe UI',Arial,sans-serif;font-size:36px;color:white;line-height:1.2;text-align:center;margin:0;font-weight:700;letter-spacing:1px;">Way<br>Forward</h2>
+                        </div>
+                        <div style="flex:1;min-width:0;background:#f8fafc;padding:22px 28px;">
+                            <div style="font-size:14px;color:#1a3a6b;line-height:1.6;margin-bottom:10px;display:flex;align-items:flex-start;word-wrap:break-word;word-break:break-word;">
+                                <span style="color:#2a5298;font-weight:700;margin-right:10px;flex-shrink:0;font-size:14px;">▶</span>
+                                <span>Advertisement creation, review and approval processes will be managed through a <strong>common digital platform</strong>.</span>
+                            </div>
+                            <div style="font-size:14px;color:#1a3a6b;line-height:1.6;margin-bottom:10px;display:flex;align-items:flex-start;word-wrap:break-word;word-break:break-word;">
+                                <span style="color:#2a5298;font-weight:700;margin-right:10px;flex-shrink:0;font-size:14px;">▶</span>
+                                <span>Advertisement operations will be consolidated from <strong>41 workplaces</strong> into <strong>14 Unit places</strong>.</span>
+                            </div>
+                            <div style="font-size:14px;color:#1a3a6b;line-height:1.6;display:flex;align-items:flex-start;word-wrap:break-word;word-break:break-word;">
+                                <span style="color:#2a5298;font-weight:700;margin-right:10px;flex-shrink:0;font-size:14px;">▶</span>
+                                <span>Selection and implementation of advertisement production tools and a <strong>shared workflow management system</strong>.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `
+        }
+    ];
+
+    let html = `
+        <div class="advt-header">
+            <div class="title-section">
+                <i class="fa fa-newspaper-o" style="color:#2a5298;font-size:20px;"></i>
+                <h3>Centralised Advertisement Management</h3>
+            </div>
+            <div class="nav-controls">
+                <button class="nav-btn" id="prevSlideBtn" onclick="changeSlide(-1)">
+                    <i class="fa fa-chevron-left"></i>
+                </button>
+                <div class="slide-dots" id="slideDots">
+    `;
+    for (let i = 0; i < totalSlides; i++) {
+        html += `<button class="dot ${i === 0 ? 'active' : ''}" onclick="goToSlide(${i})"></button>`;
+    }
+    html += `
+                </div>
+                <span class="slide-counter" id="slideCounter">1 / ${totalSlides}</span>
+                <button class="nav-btn" id="nextSlideBtn" onclick="changeSlide(1)">
+                    <i class="fa fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+        <div class="advt-slide-container">
+            <div class="advt-slide-wrapper" id="advtSlides">
+    `;
+
+    slides.forEach((slide, index) => {
+        html += `
+            <div class="advt-slide ${index === 0 ? 'active' : ''}" data-slide="${index}">
+                <div class="advt-slide-title">${slide.title}</div>
+                ${slide.content}
+            </div>
+        `;
+    });
+
+    html += `
+            </div>
+        </div>
+    `;
+
+    container.innerHTML = html;
+    currentSlide = 0;
+    updateSlideUI();
+}
+
+// ============================================================
+// SLIDE NAVIGATION
+// ============================================================
+function changeSlide(direction) {
+    const newSlide = currentSlide + direction;
+    if (newSlide < 0 || newSlide >= totalSlides) return;
+    currentSlide = newSlide;
+    updateSlideUI();
+}
+
+function goToSlide(index) {
+    if (index < 0 || index >= totalSlides) return;
+    currentSlide = index;
+    updateSlideUI();
+}
+
+function updateSlideUI() {
+    document.querySelectorAll('.advt-slide').forEach((slide, index) => {
+        slide.classList.toggle('active', index === currentSlide);
+    });
+
+    document.querySelectorAll('.dot').forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentSlide);
+    });
+
+    const counter = document.getElementById('slideCounter');
+    if (counter) {
+        counter.textContent = `${currentSlide + 1} / ${totalSlides}`;
+    }
+
+    const prevBtn = document.getElementById('prevSlideBtn');
+    const nextBtn = document.getElementById('nextSlideBtn');
+    if (prevBtn) prevBtn.disabled = currentSlide === 0;
+    if (nextBtn) nextBtn.disabled = currentSlide === totalSlides - 1;
+}
+
+// ============================================================
 // RENDER WORKLOAD (Admin)
 // ============================================================
 function renderWorkload(container) {
     const data = allData.workload || [];
+    const pubTotals = getPublicationTotals();
     
     if (!data || data.length === 0) {
         container.innerHTML = '<div class="no-data"><i class="fa fa-database"></i>No workload data available</div>';
@@ -1901,7 +3186,12 @@ function renderWorkload(container) {
     let html = `
         <div class="section-header">
             <h3><i class="fa fa-tasks"></i> Workload by Unit</h3>
-            <span style="font-size:13px;color:#888;">Total Units: ${data.length}</span>
+            <div class="totals-box">
+                <span>📄 Total Pages: <span class="num">${pubTotals.totalPages}</span></span>
+                <span>🆕 Fresh: <span class="num">${pubTotals.totalFresh}</span></span>
+                <span>🔄 Alter: <span class="num">${pubTotals.totalAlter}</span></span>
+                <span>📢 Advt: <span class="num">400</span></span>
+            </div>
         </div>
         <div class="table-responsive-wrapper">
             <table class="data-table">
@@ -2005,70 +3295,6 @@ function renderSkills(container) {
 }
 
 // ============================================================
-// RENDER MODEL (Admin)
-// ============================================================
-function renderModel(container, modelType, title) {
-    const models = allData.models || {};
-    const data = models[modelType] || [];
-    
-    if (!data || data.length === 0) {
-        container.innerHTML = '<div class="no-data"><i class="fa fa-database"></i>No model data available</div>';
-        return;
-    }
-    
-    let totalPD = 0, totalADVT = 0, totalReliever = 0, totalEvent = 0, totalOther = 0;
-    
-    data.forEach(row => {
-        totalPD += row['Page Designer'] || 0;
-        totalADVT += row['ADVT'] || 0;
-        totalReliever += row['Reliever'] || 0;
-        totalEvent += row['Event'] || 0;
-        totalOther += row['Other'] || 0;
-    });
-    
-    const grandTotal = totalPD + totalADVT + totalReliever + totalEvent + totalOther;
-    const headers = Object.keys(data[0] || {});
-    
-    let html = `
-        <div class="section-header">
-            <h3><i class="fa fa-cubes"></i> ${escapeHtml(title)} - <span style="color:#1a3a6b;font-weight:700;">${grandTotal}</span></h3>
-            <div class="summary-totals">
-                <span>📐 Page Designer: <strong>${totalPD}</strong></span>
-                <span>📢 ADVT: <strong>${totalADVT}</strong></span>
-                <span>🔄 Reliever: <strong>${totalReliever}</strong></span>
-                <span>🎪 Event: <strong>${totalEvent}</strong></span>
-                <span>📋 Other: <strong>${totalOther}</strong></span>
-            </div>
-        </div>
-        <div class="table-responsive-wrapper">
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        ${headers.map(h => `<th>${escapeHtml(h)}</th>`).join('')}
-                    </tr>
-                </thead>
-                <tbody>
-    `;
-    
-    data.forEach(row => {
-        html += '<tr>';
-        headers.forEach(h => {
-            const val = row[h] !== undefined && row[h] !== null ? row[h] : '';
-            html += `<td>${val}</td>`;
-        });
-        html += '</tr>';
-    });
-    
-    html += `
-                </tbody>
-            </table>
-        </div>
-    `;
-    
-    container.innerHTML = html;
-}
-
-// ============================================================
 // RENDER PUBLICATIONS (Admin - All Units)
 // ============================================================
 function renderPublications(container) {
@@ -2097,6 +3323,7 @@ function renderPublications(container) {
                 <span>📄 Total Pages: <span class="num">${grandTotalPages}</span></span>
                 <span>🆕 Fresh: <span class="num">${grandTotalFresh}</span></span>
                 <span>🔄 Alter: <span class="num">${grandTotalAlter}</span></span>
+                <span>📢 Advt: <span class="num">400</span></span>
             </div>
         </div>
     `;
@@ -2188,148 +3415,96 @@ function togglePublication(unitId) {
 }
 
 // ============================================================
-// RENDER LIST EMPLOYEES (Admin - 3 Column Layout)
+// ANALYSIS FUNCTIONS
 // ============================================================
-function renderListEmployees(container, listKey, listTitle) {
-    const data = allData[listKey] || {};
-    const units = Object.keys(data);
-    
-    if (!units || units.length === 0) {
-        container.innerHTML = `<div class="no-data"><i class="fa fa-users"></i>No employee data available for ${listTitle}</div>`;
-        return;
-    }
-    
-    let grandExisting = 0, grandProposed = 0, grandEliminated = 0;
-    units.forEach(unit => {
-        const unitData = data[unit] || [];
-        unitData.forEach(emp => {
-            grandExisting++;
-            if (emp.Continue && emp.Continue.toLowerCase() === 'yes') {
-                grandProposed++;
-            } else if (emp.Continue && emp.Continue.toLowerCase() === 'no') {
-                grandEliminated++;
-            }
-        });
-    });
-    
-    // SUBTRACT 1 FROM GRAND EXISTING ONLY FOR LIST-MODEL-A
-    if (listKey === 'listA') {
-        grandExisting = grandExisting - 1;
-    }
-    
-    let html = `
-        <div class="section-header">
-            <h3><i class="fa fa-users"></i> ${escapeHtml(listTitle)} - Employees by Unit</h3>
-            <div class="totals-box">
-                <span>👥 Existing: <span class="num">${grandExisting}</span></span>
-                <span>✅ Proposed: <span class="num">${grandProposed}</span></span>
-                <span>❌ Eliminated: <span class="num">${grandEliminated}</span></span>
-            </div>
-        </div>
-    `;
-    
-    units.sort().forEach(unit => {
-        const unitData = data[unit] || [];
-        if (unitData.length === 0) return;
-        
-        const existing = [];
-        const proposed = [];
-        const eliminated = [];
-        
-        unitData.forEach(emp => {
-            existing.push(emp);
-            if (emp.Continue && emp.Continue.toLowerCase() === 'yes') {
-                proposed.push(emp);
-            } else if (emp.Continue && emp.Continue.toLowerCase() === 'no') {
-                eliminated.push(emp);
-            }
-        });
-        
-        const sortByName = (arr) => arr.sort((a, b) => (a.Name || '').localeCompare(b.Name || ''));
-        sortByName(existing);
-        sortByName(proposed);
-        sortByName(eliminated);
-        
-        const unitExisting = existing.length;
-        const unitProposed = proposed.length;
-        const unitEliminated = eliminated.length;
-        
-        const maxRows = Math.max(existing.length, proposed.length, eliminated.length);
-        const unitId = 'emp_unit_' + listKey + '_' + unit.replace(/[^a-zA-Z0-9]/g, '_');
-        
-        html += `
-            <div class="unit-employee">
-                <div class="unit-header" onclick="toggleEmployeeUnit('${unitId}')">
-                    <span>
-                        <i class="fa fa-chevron-right pub-collapse-icon" id="${unitId}_icon"></i>
-                        ${escapeHtml(unit)}
-                    </span>
-                    <div class="unit-totals">
-                        <span>👥 Existing: <span class="num">${unitExisting}</span></span>
-                        <span>✅ Proposed: <span class="num">${unitProposed}</span></span>
-                        <span>❌ Eliminated: <span class="num">${unitEliminated}</span></span>
-                    </div>
-                </div>
-                <div class="unit-body" id="${unitId}">
-                    <table class="data-table employee-table">
-                        <thead>
-                            <tr>
-                                <th style="width:33.33%;background:#28a745;color:white;">Existing</th>
-                                <th style="width:33.33%;background:#17a2b8;color:white;">Proposed</th>
-                                <th style="width:33.33%;background:#dc3545;color:white;">Eliminated</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-        `;
-        
-        for (let i = 0; i < maxRows; i++) {
-            const empExisting = existing[i] || null;
-            const empProposed = proposed[i] || null;
-            const empEliminated = eliminated[i] || null;
-            
-            const getNameWithColor = (emp) => {
-                if (!emp) return '';
-                const isCNF = emp.Type && emp.Type.toUpperCase() === 'CNF';
-                const name = escapeHtml(emp.Name || '');
-                return isCNF ? `<span class="text-cnf">${name}</span>` : name;
-            };
-            
-            html += `
-                <tr>
-                    <td>${getNameWithColor(empExisting)}</td>
-                    <td>${getNameWithColor(empProposed)}</td>
-                    <td>${getNameWithColor(empEliminated)}</td>
-                </tr>
-            `;
-        }
-        
-        html += `
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        `;
-    });
-    
-    container.innerHTML = html;
-}
 
-function toggleEmployeeUnit(unitId) {
-    const body = document.getElementById(unitId);
-    const icon = document.getElementById(unitId + '_icon');
-    if (body) {
-        body.classList.toggle('open');
-        if (icon) {
-            icon.classList.toggle('open');
+// NEW: Rebuild Age filter dropdown with dynamic counts
+function rebuildAgeFilter(employees) {
+    const select = document.getElementById('analysisAgeFilter');
+    if (!select) return;
+    
+    const currentValue = select.value;
+    const ageOptions = [50, 51, 52, 53, 54, 55, 56, 57];
+    
+    let html = '<option value="">All</option>';
+    ageOptions.forEach(age => {
+        const count = employees.filter(e => {
+            let empAge = e.Age;
+            if (typeof empAge === 'string') {
+                empAge = empAge.replace(/[^0-9.]/g, '');
+            }
+            empAge = parseInt(empAge) || 0;
+            return empAge >= age;
+        }).length;
+        html += `<option value="${age}">${age} (${count})</option>`;
+    });
+    
+    select.innerHTML = html;
+    if (currentValue) {
+        let found = false;
+        for (let i = 0; i < select.options.length; i++) {
+            if (select.options[i].value === currentValue) {
+                select.value = currentValue;
+                found = true;
+                break;
+            }
         }
+        if (!found) select.value = '';
     }
 }
 
+// NEW: Rebuild Service filter dropdown with dynamic counts
+function rebuildServiceFilter(employees) {
+    const select = document.getElementById('analysisServiceFilter');
+    if (!select) return;
+    
+    const currentValue = select.value;
+    const serviceRanges = [
+        { label: '1-5', min: 1, max: 5 },
+        { label: '6-10', min: 6, max: 10 },
+        { label: '11-15', min: 11, max: 15 },
+        { label: '16-20', min: 16, max: 20 },
+        { label: '21-25', min: 21, max: 25 },
+        { label: '26-30', min: 26, max: 30 },
+        { label: '31-35', min: 31, max: 35 },
+        { label: '36-40', min: 36, max: 40 }
+    ];
+    
+    let html = '<option value="">All</option>';
+    serviceRanges.forEach(range => {
+        const count = employees.filter(e => {
+            let service = e.Service;
+            if (typeof service === 'string') {
+                service = service.replace(/[^0-9.]/g, '');
+            }
+            service = parseFloat(service) || 0;
+            return service >= range.min && service <= range.max;
+        }).length;
+        html += `<option value="${range.min}-${range.max}">${range.label} (${count})</option>`;
+    });
+    
+    select.innerHTML = html;
+    if (currentValue) {
+        let found = false;
+        for (let i = 0; i < select.options.length; i++) {
+            if (select.options[i].value === currentValue) {
+                select.value = currentValue;
+                found = true;
+                break;
+            }
+        }
+        if (!found) select.value = '';
+    }
+}
 
-// Add this to your existing analysis filter state
-let analysisSkillFilter = 'all';
+function setAnalysisTypeFilter(type) {
+    analysisTypeFilter = type;
+    document.querySelectorAll('#analysisEmployeeGrid .type-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.type === type);
+    });
+    applyAnalysisFilters();
+}
 
-// Add this function to handle skill filter clicks
 function setAnalysisSkillFilter(skill) {
     analysisSkillFilter = skill;
     document.querySelectorAll('#analysisSkillFilters .skill-filter-btn').forEach(btn => {
@@ -2338,10 +3513,21 @@ function setAnalysisSkillFilter(skill) {
     applyAnalysisFilters();
 }
 
-// ============================================================
-// RENDER ANALYSIS (Admin & ICD Head - Employee Directory)
-// ============================================================
+function onAgeFilterChange() {
+    const select = document.getElementById('analysisAgeFilter');
+    analysisAgeFilter = select.value;
+    applyAnalysisFilters();
+}
 
+function onServiceFilterChange() {
+    const select = document.getElementById('analysisServiceFilter');
+    analysisServiceFilter = select.value;
+    applyAnalysisFilters();
+}
+
+// ============================================================
+// RENDER ANALYSIS (Admin & ICD Head)
+// ============================================================
 function renderAnalysis(container) {
     if (!allEmployees || allEmployees.length === 0) {
         container.innerHTML = '<div class="no-data"><i class="fa fa-users"></i>No employees found</div>';
@@ -2350,7 +3536,6 @@ function renderAnalysis(container) {
 
     const isAdmin = loggedInUser.role === 'Admin';
     
-    // Get unique units with counts
     const unitMap = {};
     allEmployees.forEach(e => {
         if (e.Unit) {
@@ -2359,7 +3544,6 @@ function renderAnalysis(container) {
     });
     const units = Object.keys(unitMap).sort();
     
-    // Get unique workplaces with counts (ALL workplaces)
     const workplaceMap = {};
     allEmployees.forEach(e => {
         if (e.WorkPlace) {
@@ -2368,26 +3552,22 @@ function renderAnalysis(container) {
     });
     const allWorkplaces = Object.keys(workplaceMap).sort();
     
-    // Calculate counts
     let ftaCount = allEmployees.filter(e => e.Type === 'FTA').length;
     let vouCount = allEmployees.filter(e => e.Type === 'VOU').length;
     let cnfCount = allEmployees.filter(e => e.Type === 'CNF').length;
     
-    // Build unit options with counts - "All Units" selected by default
     let unitOptions = '<option value="" selected>All Units (' + allEmployees.length + ')</option>';
     units.forEach(u => {
         const count = unitMap[u] || 0;
         unitOptions += `<option value="${escapeHtml(u)}">${escapeHtml(u)} (${count})</option>`;
     });
     
-    // Build workplace options with counts - "All Workplaces" selected by default
     let workplaceOptions = '<option value="" selected>All Workplaces (' + allWorkplaces.length + ')</option>';
     allWorkplaces.forEach(w => {
         const count = workplaceMap[w] || 0;
         workplaceOptions += `<option value="${escapeHtml(w)}">${escapeHtml(w)} (${count})</option>`;
     });
     
-    // Build skill strength filter options
     const skillCounts = {
         'Allrounder': 0,
         'Creative/Feature Page Design': 0,
@@ -2404,7 +3584,6 @@ function renderAnalysis(container) {
         }
     });
     
-    // Skill strength filter HTML
     let skillFilterHtml = `
         <div class="filter-group" style="flex:1;min-width:100%;">
             <label><i class="fa fa-trophy"></i> Skill Strength</label>
@@ -2436,18 +3615,77 @@ function renderAnalysis(container) {
         </div>
     `;
     
+    // Build Age filter dropdown with dynamic counts (using all employees initially)
+    const ageOptions = [50, 51, 52, 53, 54, 55, 56, 57];
+    let ageFilterHtml = `
+        <div class="filter-group">
+            <label class="filter-label">Age >=</label>
+            <select class="filter-select" id="analysisAgeFilter" onchange="onAgeFilterChange()">
+                <option value="">All</option>
+    `;
+    ageOptions.forEach(age => {
+        const count = allEmployees.filter(e => {
+            let empAge = e.Age;
+            if (typeof empAge === 'string') {
+                empAge = empAge.replace(/[^0-9.]/g, '');
+            }
+            empAge = parseInt(empAge) || 0;
+            return empAge >= age;
+        }).length;
+        ageFilterHtml += `<option value="${age}">${age} (${count})</option>`;
+    });
+    ageFilterHtml += `
+            </select>
+        </div>
+    `;
+    
+    // Build Service filter dropdown with dynamic counts (using all employees initially)
+    const serviceRanges = [
+        { label: '1-5', min: 1, max: 5 },
+        { label: '6-10', min: 6, max: 10 },
+        { label: '11-15', min: 11, max: 15 },
+        { label: '16-20', min: 16, max: 20 },
+        { label: '21-25', min: 21, max: 25 },
+        { label: '26-30', min: 26, max: 30 },
+        { label: '31-35', min: 31, max: 35 },
+        { label: '36-40', min: 36, max: 40 },
+        { label: '41-45', min: 41, max: 45 },
+        { label: '46-50', min: 46, max: 50 },
+        { label: '51-55', min: 51, max: 55 }
+    ];
+    let serviceFilterHtml = `
+        <div class="filter-group">
+            <label class="filter-label">Service</label>
+            <select class="filter-select" id="analysisServiceFilter" onchange="onServiceFilterChange()">
+                <option value="">All</option>
+    `;
+    serviceRanges.forEach(range => {
+        const count = allEmployees.filter(e => {
+            let service = e.Service;
+            if (typeof service === 'string') {
+                service = service.replace(/[^0-9.]/g, '');
+            }
+            service = parseFloat(service) || 0;
+            return service >= range.min && service <= range.max;
+        }).length;
+        serviceFilterHtml += `<option value="${range.min}-${range.max}">${range.label} (${count})</option>`;
+    });
+    serviceFilterHtml += `
+            </select>
+        </div>
+    `;
+    
     let html = `
         <div class="section-header">
             <h3><i class="fa fa-users"></i> Employee Directory</h3>
             <div class="totals-box">
-                <span>👥 Total: <span class="num">${allEmployees.length}</span></span>
+                <span>👥 Total Strength: <span class="num">${allEmployees.length}</span></span>
                 <span>📋 FTA: <span class="num">${ftaCount}</span></span>
                 <span>📋 VOU: <span class="num">${vouCount}</span></span>
                 <span>📋 CNF: <span class="num">${cnfCount}</span></span>
             </div>
         </div>
         
-        <!-- Filters -->
         <div class="filters-section">
             <div class="filter-group">
                 <label><i class="fa fa-building"></i> Unit</label>
@@ -2470,13 +3708,14 @@ function renderAnalysis(container) {
                     <button class="type-btn" data-type="CNF" onclick="setAnalysisTypeFilter('CNF')">CNF</button>
                 </div>
             </div>
+            ${ageFilterHtml}
+            ${serviceFilterHtml}
             ${skillFilterHtml}
             <div class="filter-group" style="flex:1; justify-content:flex-end;">
                 <input type="text" class="search-box" id="analysisSearchInput" placeholder="🔍 Search by name..." oninput="applyAnalysisFilters()">
             </div>
         </div>
         
-        <!-- Stats Bar -->
         <div class="stats-bar" id="analysisStatsBar">
             <span class="stat-item">👥 <strong id="analysisDisplayCount">${allEmployees.length}</strong> employees shown</span>
             <span class="stat-divider">|</span>
@@ -2488,7 +3727,6 @@ function renderAnalysis(container) {
             <span class="stat-item">📍 <strong id="analysisDisplayWorkplaces">${allWorkplaces.length}</strong> workplaces</span>
         </div>
         
-        <!-- Team Workload Bar -->
         <div class="team-workload-bar" id="analysisTeamWorkloadBar">
             <div class="tw-title"><i class="fa fa-tasks"></i> 📊 Team Workload</div>
             <div class="tw-container" id="twContainer">
@@ -2511,7 +3749,6 @@ function renderAnalysis(container) {
             </div>
         </div>
 
-        <!-- WPOW Bar -->
         <div class="wpow-bar" id="analysisWPOWBar">
             <div class="wpow-title"><i class="fa fa-tasks"></i> 📋 Work Place Other Workload</div>
             <div class="wpow-row">
@@ -2548,7 +3785,6 @@ function renderAnalysis(container) {
             </div>
         </div>
 
-        <!-- Common Unit Projects (Admin only) -->
         <div class="common-unit-projects" id="analysisCommonUnitProjects">
             <div class="cup-container">
                 <div class="cup-header">
@@ -2570,11 +3806,9 @@ function renderAnalysis(container) {
             </div>
         </div>
         
-        <!-- Employee Grid -->
         <div class="employee-grid" id="analysisEmployeeGrid">
     `;
     
-    // Initial render of all employees
     html += buildEmployeeCards(allEmployees);
     
     html += `
@@ -2583,42 +3817,43 @@ function renderAnalysis(container) {
     
     container.innerHTML = html;
     
-    // Store current analysis employees for filtering
     window._analysisEmployees = [...allEmployees];
     
-    // Apply initial filters (shows all employees since "All Units" and "All Workplaces" are selected)
     applyAnalysisFilters();
     
-    // For Admin: Load Common Unit Projects for "All Units" (hide it initially)
     if (isAdmin) {
         const container = document.getElementById('analysisCommonUnitProjects');
         if (container) container.classList.remove('visible');
     }
 }
 
+// ============================================================
+// UNIT CHANGE HANDLER
+// ============================================================
 function onUnitChange() {
     const unit = document.getElementById('analysisUnitFilter').value;
     const workplaceFilter = document.getElementById('analysisWorkplaceFilter');
     
+    let baseEmployees = window._analysisEmployees || allEmployees;
+    
     if (unit) {
-        // A specific unit is selected - populate workplaces for this unit
         populateWorkplacesForUnit(unit);
         
-        // Auto-select "All Workplaces" for this unit
+        const unitEmployees = baseEmployees.filter(e => e.Unit === unit);
+        rebuildAgeFilter(unitEmployees);
+        rebuildServiceFilter(unitEmployees);
+        
         setTimeout(() => {
-            // Set to "All Workplaces" option (first option)
             workplaceFilter.value = '';
             applyAnalysisFilters();
         }, 100);
         
-        // Load Common Unit Projects for this unit (Admin only)
         if (loggedInUser.role === 'Admin') {
             updateCommonUnitProjects(unit);
         }
     } else {
-        // "All Units" selected - show all workplaces
         const workplaceMap = {};
-        allEmployees.forEach(e => {
+        baseEmployees.forEach(e => {
             if (e.WorkPlace) {
                 workplaceMap[e.WorkPlace] = (workplaceMap[e.WorkPlace] || 0) + 1;
             }
@@ -2626,11 +3861,12 @@ function onUnitChange() {
         const workplaces = Object.keys(workplaceMap).sort();
         populateWorkplaceDropdownWithCounts(workplaces, workplaceMap);
         
-        // Select "All Workplaces"
+        rebuildAgeFilter(baseEmployees);
+        rebuildServiceFilter(baseEmployees);
+        
         workplaceFilter.value = '';
         applyAnalysisFilters();
         
-        // Hide Common Unit Projects
         if (loggedInUser.role === 'Admin') {
             const container = document.getElementById('analysisCommonUnitProjects');
             if (container) container.classList.remove('visible');
@@ -2640,7 +3876,6 @@ function onUnitChange() {
 
 function populateWorkplacesForUnit(unit) {
     if (!unit) {
-        // If no unit, show all workplaces with counts
         const workplaceMap = {};
         allEmployees.forEach(e => {
             if (e.WorkPlace) {
@@ -2652,7 +3887,6 @@ function populateWorkplacesForUnit(unit) {
         return;
     }
     
-    // Get workplaces for the selected unit with counts
     const workplaceMap = {};
     allEmployees
         .filter(e => e.Unit === unit && e.WorkPlace)
@@ -2666,18 +3900,36 @@ function populateWorkplacesForUnit(unit) {
     const select = document.getElementById('analysisWorkplaceFilter');
     if (!select) return;
     
-    // Clear and repopulate with "All Workplaces" as first option
-    select.innerHTML = `<option value="">All Workplaces (${totalForUnit})</option>`;
+    const prefixGroups = {};
     workplaces.forEach(w => {
-        const count = workplaceMap[w] || 0;
-        const option = document.createElement('option');
-        option.value = w;
-        option.textContent = w + ' (' + count + ')';
-        select.appendChild(option);
+        const parts = w.split(/[\s-]+/);
+        const prefix = parts[0] || w;
+        if (!prefixGroups[prefix]) {
+            prefixGroups[prefix] = [];
+        }
+        prefixGroups[prefix].push(w);
     });
     
-    // Select "All Workplaces" by default
+    let html = `<option value="">All Workplaces (${totalForUnit})</option>`;
+    
+    Object.keys(prefixGroups).forEach(prefix => {
+        const group = prefixGroups[prefix];
+        if (group.length > 1) {
+            const totalInGroup = group.reduce((sum, w) => sum + (workplaceMap[w] || 0), 0);
+            html += `<option value="prefix:${prefix}">${prefix} All (${totalInGroup})</option>`;
+        }
+        group.forEach(w => {
+            const count = workplaceMap[w] || 0;
+            html += `<option value="${escapeHtml(w)}">${escapeHtml(w)} (${count})</option>`;
+        });
+    });
+    
+    select.innerHTML = html;
     select.value = '';
+    
+    const unitEmployees = allEmployees.filter(e => e.Unit === unit);
+    rebuildAgeFilter(unitEmployees);
+    rebuildServiceFilter(unitEmployees);
 }
 
 function populateWorkplaceDropdownWithCounts(workplaces, workplaceMap) {
@@ -2685,12 +3937,9 @@ function populateWorkplaceDropdownWithCounts(workplaces, workplaceMap) {
     if (!select) return;
     
     const currentValue = select.value;
-    
-    // Clear existing options
     const totalWorkplaces = workplaces.length;
     select.innerHTML = `<option value="">All Workplaces (${totalWorkplaces})</option>`;
     
-    // Sort workplaces alphabetically
     workplaces.sort().forEach(w => {
         const count = workplaceMap[w] || 0;
         const option = document.createElement('option');
@@ -2699,7 +3948,6 @@ function populateWorkplaceDropdownWithCounts(workplaces, workplaceMap) {
         select.appendChild(option);
     });
     
-    // Try to keep current selection if it still exists
     let found = false;
     for (let i = 0; i < select.options.length; i++) {
         if (select.options[i].value === currentValue) {
@@ -2709,51 +3957,86 @@ function populateWorkplaceDropdownWithCounts(workplaces, workplaceMap) {
         }
     }
     
-    // If current selection not found and there are workplaces, select the first one
     if (!found && select.options.length > 1) {
         select.value = select.options[1].value;
     }
 }
 
 // ============================================================
-// ANALYSIS FILTERS
+// APPLY ANALYSIS FILTERS
 // ============================================================
-
-let analysisTypeFilter = 'all';
-
 function applyAnalysisFilters() {
-    const unit = document.getElementById('analysisUnitFilter').value;
-    const workplace = document.getElementById('analysisWorkplaceFilter').value;
-    const searchTerm = document.getElementById('analysisSearchInput').value.toLowerCase().trim();
+    const unit = document.getElementById('analysisUnitFilter')?.value || '';
+    const workplace = document.getElementById('analysisWorkplaceFilter')?.value || '';
+    const searchTerm = document.getElementById('analysisSearchInput')?.value.toLowerCase().trim() || '';
+    
+    // Get base for dropdown counts (before applying age/service filters)
+    let baseForDropdowns = window._analysisEmployees || allEmployees;
+    
+    if (unit) {
+        baseForDropdowns = baseForDropdowns.filter(e => e.Unit === unit);
+    }
+    if (workplace && !workplace.startsWith('prefix:')) {
+        baseForDropdowns = baseForDropdowns.filter(e => e.WorkPlace === workplace);
+    }
+    
+    // Rebuild dropdowns with filtered counts
+    rebuildAgeFilter(baseForDropdowns);
+    rebuildServiceFilter(baseForDropdowns);
     
     let filtered = window._analysisEmployees || allEmployees;
     
-    // Apply unit filter (if a specific unit is selected)
     if (unit) {
         filtered = filtered.filter(e => e.Unit === unit);
     }
     
-    // Apply workplace filter (if a specific workplace is selected)
     if (workplace) {
-        filtered = filtered.filter(e => e.WorkPlace === workplace);
+        if (workplace.startsWith('prefix:')) {
+            const prefix = workplace.replace('prefix:', '');
+            filtered = filtered.filter(e => {
+                return e.WorkPlace && e.WorkPlace.startsWith(prefix);
+            });
+        } else {
+            filtered = filtered.filter(e => e.WorkPlace === workplace);
+        }
     }
     
-    // Apply type filter
     if (analysisTypeFilter !== 'all') {
         filtered = filtered.filter(e => e.Type === analysisTypeFilter);
     }
     
-    // Apply skill filter - THIS IS THE MISSING PART
+    if (analysisAgeFilter) {
+        const minAge = parseInt(analysisAgeFilter);
+        filtered = filtered.filter(e => {
+            let age = e.Age;
+            if (typeof age === 'string') {
+                age = age.replace(/[^0-9.]/g, '');
+            }
+            age = parseInt(age) || 0;
+            return age >= minAge;
+        });
+    }
+    
+    if (analysisServiceFilter) {
+        const [minService, maxService] = analysisServiceFilter.split('-').map(Number);
+        filtered = filtered.filter(e => {
+            let service = e.Service;
+            if (typeof service === 'string') {
+                service = service.replace(/[^0-9.]/g, '');
+            }
+            service = parseFloat(service) || 0;
+            return service >= minService && service <= maxService;
+        });
+    }
+    
     if (analysisSkillFilter !== 'all') {
         filtered = filtered.filter(e => e.Expertise === analysisSkillFilter);
     }
     
-    // Apply search filter
     if (searchTerm) {
         filtered = filtered.filter(e => e.Name.toLowerCase().includes(searchTerm));
     }
     
-    // Update stats bar (DYNAMIC - shows filtered counts)
     const fta = filtered.filter(e => e.Type === 'FTA').length;
     const vou = filtered.filter(e => e.Type === 'VOU').length;
     const cnf = filtered.filter(e => e.Type === 'CNF').length;
@@ -2767,7 +4050,6 @@ function applyAnalysisFilters() {
     document.getElementById('analysisDisplayUnits').textContent = units.length;
     document.getElementById('analysisDisplayWorkplaces').textContent = workplaces.length;
     
-    // Update grids
     const grid = document.getElementById('analysisEmployeeGrid');
     if (filtered.length === 0) {
         grid.innerHTML = `
@@ -2780,26 +4062,34 @@ function applyAnalysisFilters() {
         grid.innerHTML = buildEmployeeCards(filtered);
     }
     
-    // Update workload bars based on selected workplace
-    if (workplace) {
-        // A specific workplace is selected - show its data
+    if (workplace && !workplace.startsWith('prefix:')) {
         updateTeamWorkload(workplace);
         updateWPOWData(workplace);
+    } else if (workplace && workplace.startsWith('prefix:')) {
+        const teamBar = document.getElementById('analysisTeamWorkloadBar');
+        const wpowBar = document.getElementById('analysisWPOWBar');
+        if (teamBar) {
+            teamBar.classList.remove('visible');
+            const content = document.getElementById('teamWorkloadContent');
+            if (content) {
+                const prefix = workplace.replace('prefix:', '');
+                const count = filtered.filter(e => e.WorkPlace && e.WorkPlace.startsWith(prefix)).length;
+                content.innerHTML = `
+                    <div style="padding:10px;background:#f0f4fa;border-radius:6px;text-align:center;color:#1a3a6b;">
+                        <i class="fa fa-users" style="font-size:18px;display:block;margin-bottom:6px;"></i>
+                        <strong>${prefix}</strong> - ${count} employees across all workplaces
+                        <br><span style="font-size:12px;color:#888;">Select a specific workplace to view workload details</span>
+                    </div>
+                `;
+            }
+        }
+        if (wpowBar) wpowBar.classList.remove('visible');
     } else {
-        // "All Workplaces" is selected - hide workload bars or show summary
         const teamBar = document.getElementById('analysisTeamWorkloadBar');
         const wpowBar = document.getElementById('analysisWPOWBar');
         if (teamBar) teamBar.classList.remove('visible');
         if (wpowBar) wpowBar.classList.remove('visible');
     }
-}
-
-function setAnalysisTypeFilter(type) {
-    analysisTypeFilter = type;
-    document.querySelectorAll('#analysisEmployeeGrid .type-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.type === type);
-    });
-    applyAnalysisFilters();
 }
 
 // ============================================================
@@ -2829,16 +4119,31 @@ function buildEmployeeCard(emp) {
     let detailHtml = '<div class="detail-row-inline">';
     detailHtml += `<span class="label">Designation</span>`;
     detailHtml += `<span class="value">${escapeHtml(emp.Designation || '—')}</span>`;
+    
     if (emp.Publication) {
         detailHtml += `<span class="divider">|</span>`;
         detailHtml += `<span class="label">Publications</span>`;
         detailHtml += `<span class="value">${escapeHtml(emp.Publication)}</span>`;
     }
+    
     if (emp.DutyTime) {
         detailHtml += `<span class="divider">|</span>`;
         detailHtml += `<span class="label">Duty</span>`;
         detailHtml += `<span class="value">${escapeHtml(emp.DutyTime)}</span>`;
     }
+    
+    if (emp.Age) {
+        detailHtml += `<span class="divider">|</span>`;
+        detailHtml += `<span class="label">Age</span>`;
+        detailHtml += `<span class="value">${escapeHtml(emp.Age)}</span>`;
+    }
+    
+    if (emp.Service) {
+        detailHtml += `<span class="divider">|</span>`;
+        detailHtml += `<span class="label">Service</span>`;
+        detailHtml += `<span class="value">${escapeHtml(emp.Service)} yrs</span>`;
+    }
+    
     detailHtml += '</div>';
     
     const empEmail = emp.Email || '';
@@ -2957,7 +4262,7 @@ function buildEmployeeCard(emp) {
 }
 
 // ============================================================
-// HELPERS FOR EMPLOYEE CARDS
+// HELPER FUNCTIONS
 // ============================================================
 function getExpertiseDescription(value) {
     const option = EXPERTISE_OPTIONS.find(opt => opt.value === value);
@@ -2982,9 +4287,33 @@ function getCleanSpecialProjects(emp) {
     return cleanText;
 }
 
+function escapeHtml(str) {
+    if (!str) return '';
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
+function showToast(message, type) {
+    const existing = document.querySelector('.custom-toast');
+    if (existing) existing.remove();
+    
+    const toast = document.createElement('div');
+    toast.className = 'custom-toast ' + (type || 'info');
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(10px)';
+        setTimeout(() => toast.remove(), 400);
+    }, 3000);
+}
+
 // ============================================================
-// SAVE EXPERTISE
+// SAVE FUNCTIONS (Expertise, Special Projects, Remark, WPOW, Common Unit Projects, Publication)
 // ============================================================
+
 function saveExpertise(empEmail, empName) {
     const cleanedEmail = empEmail.replace(/[^a-zA-Z0-9@._-]/g, '_');
     const select = document.getElementById('exp_select_' + cleanedEmail);
@@ -3010,7 +4339,11 @@ function saveExpertise(empEmail, empName) {
             }
             statusEl.textContent = '✓ Saved';
             statusEl.className = 'exp-save-status show saved';
-            updateExpertiseDescription(cleanedEmail, selectedValue);
+            const descContainer = document.getElementById('exp_desc_' + cleanedEmail);
+            if (descContainer) {
+                const desc = getExpertiseDescription(selectedValue);
+                descContainer.innerHTML = desc ? '<i class="fa fa-info-circle"></i> ' + desc : '<span class="empty">Select an expertise to see description</span>';
+            }
             showToast('Expertise updated for ' + empName, 'success');
         } else if (result.error === 'Session expired. Please login again.') {
             showToast('Session expired. Please login again.', 'error');
@@ -3034,21 +4367,6 @@ function saveExpertise(empEmail, empName) {
     });
 }
 
-function updateExpertiseDescription(cleanedEmail, value) {
-    const descContainer = document.getElementById('exp_desc_' + cleanedEmail);
-    if (descContainer) {
-        const desc = getExpertiseDescription(value);
-        if (desc) {
-            descContainer.innerHTML = '<i class="fa fa-info-circle"></i> ' + desc;
-        } else {
-            descContainer.innerHTML = '<span class="empty">Select an expertise to see description</span>';
-        }
-    }
-}
-
-// ============================================================
-// SAVE SPECIAL PROJECTS
-// ============================================================
 function saveSpecialProjects(empEmail, empName) {
     if (!empEmail || empEmail === '') {
         showToast('Error: Employee email missing', 'error');
@@ -3136,7 +4454,6 @@ function updateTeamWorkload(workplace) {
         return;
     }
     
-    // Check if the bar element exists
     if (!bar) return;
     
     callAPI('getWPOWData', { 
@@ -3176,7 +4493,6 @@ function updateTeamWorkload(workplace) {
             html += '</div>';
             html += `<div class="tw-total">📄 Total: <strong>${grandTotal}</strong> pages across ${editions.length} editions</div>`;
             
-            // Get employees for this workplace
             const workplaceEmployees = allEmployees.filter(emp => emp.WorkPlace === workplace);
             html += `<div class="tw-employees">👥 ${workplaceEmployees.length} employees in this workplace</div>`;
             
@@ -3785,6 +5101,7 @@ function renderICDPublications(container) {
                         <span>📄 Total Pages: <span class="num">${totalPages}</span></span>
                         <span>🆕 Fresh: <span class="num">${totalFresh}</span></span>
                         <span>🔄 Alter: <span class="num">${totalAlter}</span></span>
+                        <span>📢 Advt: <span class="num">400</span></span>
                     </div>
                 </div>
                 <div class="table-responsive-wrapper">
@@ -3997,39 +5314,9 @@ async function savePublication(unit) {
 }
 
 // ============================================================
-// TOAST NOTIFICATION
-// ============================================================
-function showToast(message, type) {
-    const existing = document.querySelector('.custom-toast');
-    if (existing) existing.remove();
-    
-    const toast = document.createElement('div');
-    toast.className = 'custom-toast ' + (type || 'info');
-    toast.textContent = message;
-    document.body.appendChild(toast);
-    
-    setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.transform = 'translateY(10px)';
-        setTimeout(() => toast.remove(), 400);
-    }, 3000);
-}
-
-// ============================================================
-// HELPER: Escape HTML
-// ============================================================
-function escapeHtml(str) {
-    if (!str) return '';
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
-}
-
-// ============================================================
 // INIT
 // ============================================================
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize login listeners
     document.getElementById('loginPassword').addEventListener('keydown', function(e) {
         if (e.key === 'Enter') handleLogin();
     });
